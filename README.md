@@ -48,3 +48,8 @@ We can use Gather Or [This Google Meet](https://meet.google.com/hjn-uxvy-woq).
 
 #civic-engagement-platform 
 
+
+### Development
+
+- [Common Issues](./WHEN_CODE_GIVES_YOU_LEMONS.md)
+- [Development](./DEVELOPMENT.md)
