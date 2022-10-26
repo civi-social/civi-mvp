@@ -4,6 +4,6 @@
 
 tasks:
   - init: sh ./setup.sh
-    command: npm run start
+    command: npm run dev
 
 
