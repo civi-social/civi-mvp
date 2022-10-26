@@ -1,3 +1,5 @@
+<img src="./civi-temp-logo.png" style="width:200px" />
+
 ### About the group
 
 We want to create a social network for elected officials to get feedback from their residents on real bills & resolutions. 
