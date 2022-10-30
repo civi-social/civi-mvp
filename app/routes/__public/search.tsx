@@ -15,7 +15,6 @@ import type { Bill } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
 import { addressKey, getBills, getRepresentatives } from "~/utils";
-// import { client } from "~/redis.server";
 
 type LoaderData = {
   bills: Bill[];

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=http://json-schema.org/draft-07/schema
 name: 🚀 Deploy
 on:
   push:
@@ -8,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: ⬣ ESLint
+    name: ⬣ ESLint + Spell Check
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -27,6 +28,9 @@ jobs:
 
       - name: 🔬 Lint
         run: npm run lint
+
+      - name: 🔤 Spell Check
+        run: npm run spellcheck
 
   typecheck:
     name: ʦ TypeScript

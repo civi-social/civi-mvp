@@ -1,9 +1,6 @@
 import type { EntryContext } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { renderToString } from "react-dom/server";
-import * as redis from "~/redis.server";
-
-redis.connect();
 
 export default function handleRequest(
   request: Request,

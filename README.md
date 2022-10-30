@@ -2,11 +2,11 @@
 
 ### About the group
 
-We want to create a social network for elected officials to get feedback from their residents on real bills & resolutions. 
+We want to create a social network for elected officials to get feedback from their residents on real bills & resolutions.
 
 A few goals:
 
-- Focus on official things: verified elected officials engaging with registered voters on actual bills & resolutions. 
+- Focus on official things: verified elected officials engaging with registered voters on actual bills & resolutions.
 - Start local (alderpeople, city/county officials).
 - Growth strategy: prefer fewer elected officials with higher engagement than lots of elected officials with low engagement.
 - Maintaining 3rd party status / non-profit-esque/open-source-y status.
@@ -20,7 +20,7 @@ A few goals:
 - UX: Sharing system that creates a natural marketing tool on other sites/social networks.
 - Pilot Marketing: Getting pilot alderperson and highly engaged residents.
 - Revenue: Source of money that can sustain R&D & Growth.
- 
+
 ### Group leaders
 
 Brian Burns - @bbgits (Domain & Software)
@@ -28,9 +28,9 @@ Sartaj - @sartaj (Design & Software)
 
 ### Who we're looking for
 
-Humanists and philosophers who are interested in the intersection of tech & civic engagement would be very useful. 
+Humanists and philosophers who are interested in the intersection of tech & civic engagement would be very useful.
 
-Skills that would be useful include decentralized database experts, ID verification, JavaScript enthusiasts, social network UX design, and civic engagement experts. 
+Skills that would be useful include decentralized database experts, ID verification, JavaScript enthusiasts, social network UX design, and civic engagement experts.
 
 ### Tools
 
@@ -46,8 +46,7 @@ We can use Gather Or [This Google Meet](https://meet.google.com/hjn-uxvy-woq).
 
 ### Chi Hack Night slack channel
 
-#civic-engagement-platform 
-
+#civic-engagement-platform
 
 ### Development
 

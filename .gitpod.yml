@@ -4,6 +4,6 @@
 
 tasks:
   - init: sh ./setup.sh
-    command: npm run dev
+    command: npm run docker && npm run build && npm run dev
 
 
