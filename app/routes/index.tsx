@@ -50,7 +50,7 @@ export default function HomePage() {
 
   return (
     <>
-      <header className="navbar bg-indigo-500 justify-between">
+      <header className="navbar justify-between">
         <div className="form-control mr-5 text-slate-300">{user.address}</div>
         <div className="dropdown-end dropdown">
           <div
