@@ -110,7 +110,7 @@ export const getChicagoBills = async (): Promise<ChicagoBill[]> => {
 };
 
 export const getBills = async (locale: Locales | null): Promise<Bill[]> => {
-  console.log("gettings bills for", locale);
+  console.log("getting bills for", locale);
   let cityData: Bill[] = [];
   switch (locale) {
     case "Chicago":
