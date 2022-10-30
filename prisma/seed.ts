@@ -4,11 +4,11 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function seed() {
-  const hashedPassword = await bcrypt.hash("sartajiscool", 10);
+  const hashedPassword = await bcrypt.hash("password", 10);
   const data = {
-    email: "sartaj@mayustudios.com",
-    firstName: "Sartaj",
-    lastName: "Chowdhury",
+    email: "mock_user+1@civi.social",
+    firstName: "Bill",
+    lastName: "Withers",
     address: "1722 W CARMEN AVE 1 EAST, CHICAGO, IL",
     password: {
       create: {
