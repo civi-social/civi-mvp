@@ -94,7 +94,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-12 flex flex-col justify-center">
-          <p className="text-gray-600 text-center font-light lg:px-16">Hi Neighbors! I'm Rene, and I'm excited to be here!  I've never been very actvie in politics, but am looking forward to changing that and engaging with my neighbors and local officials!</p>
+          <p className="text-gray-600 text-center font-light lg:px-16">Hi Neighbors! I'm Rene, and I'm excited to be here!  I've never been very active in politics, but am looking forward to changing that and engaging with my neighbors and local officials!</p>
         </div>
 
       </div>
