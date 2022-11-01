@@ -1,4 +1,4 @@
-app = "civic-social-mvp"
+app = "civi-social-mvp"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
