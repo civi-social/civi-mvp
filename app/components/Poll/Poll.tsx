@@ -1,17 +1,34 @@
 import React from "react";
 
-const LivePoll = ({ handleSubmit }: { handleSubmit: Function }) => {
+const LivePoll = ({
+  handleSubmit,
+  pollText,
+  subText,
+}: {
+  pollText: string;
+  subText: string;
+  handleSubmit: Function;
+}) => {
   return (
-    <div className="bold bg-gray-100 p-4 text-black">
-      <div className="bold text-3xl uppercase text-green-800 ">New Poll</div>
-      <div className="bold text-xl">
-        Add Dedicated Bike Lane On Halsted From Chicago Ave to Sheridan
-      </div>
-      <div className="italic">Alderperson is voting Thursday Dec 1</div>
+    <div className="bold p-4 text-black">
+      <div className="bold text-xl">{pollText}</div>
+      <div className="italic">{subText}</div>
       <div className="bold mt-4">How should they vote?</div>
       <div className="mt-4">
         {["Yay", "Nay", "Present"].map((s) => (
-          <div className="mb-4 flex items-center justify-center" key={s}>
+          <div
+            className="mb-4 flex items-center justify-center"
+            key={s}
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              borderRadius: "9px",
+              color: "black",
+              border: "1px solid #9a949475",
+              padding: "14px",
+            }}
+          >
             <input
               id={s}
               type="radio"
@@ -72,7 +89,7 @@ enum States {
   FINISHED,
 }
 
-export const Poll = () => {
+export const Poll1 = () => {
   let done = false;
   if (global.window) {
     const windowUrl = window.location.search;
@@ -97,13 +114,17 @@ export const Poll = () => {
     >
       <div
         className="border-radius m-4 border p-4"
-        style={{ maxWidth: "400px" }}
+        style={{ maxWidth: "400px", boxShadow: "0px 2px 3px rgba(0,0,0,0.3)" }}
       >
         {(() => {
           switch (state) {
             case States.LIVE:
               return (
-                <LivePoll handleSubmit={() => setState(States.SUBMITTED)} />
+                <LivePoll
+                  pollText="Add Dedicated Bike Lane On Halsted From Chicago Ave to Sheridan"
+                  subText="Alderperson is voting Thursday Dec 1"
+                  handleSubmit={() => setState(States.SUBMITTED)}
+                />
               );
             case States.SUBMITTED:
               return <SubmittedPoll />;
@@ -113,5 +134,37 @@ export const Poll = () => {
         })()}
       </div>
     </div>
+  );
+};
+
+export const Poll2 = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        className="border-radius m-4 border p-4"
+        style={{ maxWidth: "400px", boxShadow: "0px 2px 3px rgba(0,0,0,0.3)" }}
+      >
+        <LivePoll
+          pollText="Call for City of Chicago to take Equity in Infrastructure Project pledge"
+          subText="Alderperson is voting Thursday Jan 30"
+          handleSubmit={() => {}}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const Poll = () => {
+  return (
+    <>
+      <Poll1 />
+      <Poll2 />
+    </>
   );
 };
