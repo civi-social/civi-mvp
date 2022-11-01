@@ -11,9 +11,9 @@ const LivePoll = ({
 }) => {
   return (
     <div className="bold p-4 text-black">
-      <div className="bold text-xl">{pollText}</div>
+      <div className="bold mb-4 text-xl">{pollText}</div>
       <div className="italic">{subText}</div>
-      <div className="bold mt-4">How should they vote?</div>
+      <div className="bold">How should they vote?</div>
       <div className="mt-4">
         {["Yay", "Nay", "Present"].map((s) => (
           <div
@@ -67,7 +67,7 @@ const FinishedPoll = () => {
   return (
     <div>
       <div className="mb-4 text-xl uppercase">Poll Results</div>
-      <div className="mt-4">
+      <div className="mt-4 pt-4">
         {["Yay: 53%", "Nay: 32%", "Present: 15%"].map((s) => (
           <div className="mb-4 flex items-center justify-center " key={s}>
             <label
