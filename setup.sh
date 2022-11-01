@@ -1,3 +1,7 @@
+curl -L https://fly.io/install.sh | sh
+export FLYCTL_INSTALL="/home/gitpod/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
 cp .env.example .env
 npm i
 npm run docker

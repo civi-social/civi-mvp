@@ -5,6 +5,7 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import React from "react";
+import { Poll } from "~/components/Poll/Poll";
 
 export const loader: LoaderFunction = async ({ request }) => {
   return json({});
@@ -78,9 +79,10 @@ export default function OfficePage() {
             Alderperson Brian Burns
           </h1>
           <p className="mt-2 font-light text-gray-600">Chicago, Illinois</p>
-          <div className="mb-2 inline-block transform rounded bg-green-600 py-2 px-4 font-medium uppercase text-white shadow transition hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-lg">
+          <div className="mb-2 inline-block transform bg-blue-600 py-2 px-4 font-medium uppercase text-white shadow ">
             This Office Represents You
           </div>
+          <Poll />
         </div>
       </div>
     </div>
