@@ -2,13 +2,19 @@
   "version": "0.2",
   "language": "en",
   "useGitignore": true,
-  "ignorePaths": ["node_modules", "build", "postgres-data", ".gitpod.yml"],
+  "ignorePaths": [
+    "node_modules",
+    "build",
+    "postgres-data",
+    ".gitpod.yml"
+  ],
   "words": [
     "alderpeople",
     "alderperson",
     "bahmutov",
     "bbgits",
     "buildx",
+    "CICD",
     "civi",
     "civicinfo",
     "cuid",

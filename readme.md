@@ -38,17 +38,15 @@ Current prototype is built with Node/React/TypeScript via [React Remix](https://
 
 ### Relevant Links
 
-- [Prototype: socratic.center](https://socratic.center)
+- [Production: civi.social](https://civi.social)
 
-### Where we meet
+### Discussions
 
-We can use Gather Or [This Google Meet](https://meet.google.com/hjn-uxvy-woq).
+We meet in the Chi Hack Night [#civic-engagement-platform
+](https://chihacknight.slack.com/archives/C047500M5RS) Slack Channel. During hack nights, we may also meet on [this Google Meet](https://meet.google.com/hjn-uxvy-woq).
 
 ### Chi Hack Night slack channel
 
-#civic-engagement-platform
-
 ### Development
 
-- [Common Issues](./WHEN_CODE_GIVES_YOU_LEMONS.md)
-- [Development](./DEVELOPMENT.md)
+[See `docs/development.md`](./docs/development.md)

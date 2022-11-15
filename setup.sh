@@ -4,7 +4,7 @@ export FLYCTL_INSTALL="/home/gitpod/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 # Setting up .env file
-./env-setup
+./env-setup.sh
 
 # Prepare
 npm i
