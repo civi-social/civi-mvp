@@ -5,5 +5,11 @@
 tasks:
   - init: sh ./setup.sh
     command: npm run docker && npm run build && npm run dev
-
-
+vscode:
+  extensions:
+    - dbaeumer.vscode-eslint
+    - eamodio.gitlens
+    - esbenp.prettier-vscode
+    - ms-azuretools.vscode-docker
+    - streetsidesoftware.code-spell-checker
+    - tyriar.sort-lines
