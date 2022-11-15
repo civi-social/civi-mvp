@@ -14,7 +14,8 @@ import {
 import type { Bill } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
-import { addressKey, getBills, getRepresentatives } from "~/utils";
+import { getBills, getRepresentatives } from "~/utils";
+import { getEnv } from "~/config";
 
 type LoaderData = {
   bills: Bill[];
@@ -23,6 +24,9 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
+  const env = getEnv();
+  const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
+
   const address = url.searchParams.get(addressKey);
   let representatives: RepresentativesResult | null = null;
   let bills: Bill[] = [];
@@ -52,7 +56,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function SearchPage() {
   const { bills, representatives } = useLoaderData<LoaderData>();
   const transition = useTransition();
-
+  const env = getEnv();
+  const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
   const [searchParams] = useSearchParams();
   const formattedAddress = searchParams.get(addressKey);
   const level = (searchParams.get("level") as RepLevel) ?? RepLevel.City;

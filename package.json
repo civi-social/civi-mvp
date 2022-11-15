@@ -49,6 +49,7 @@
     "cheerio": "^1.0.0-rc.10",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
+    "csstype": "^3.1.1",
     "daisyui": "^2.15.4",
     "express": "^4.17.3",
     "fast-csv": "^4.3.6",

@@ -6,6 +6,7 @@
     "node_modules",
     "build",
     "postgres-data",
+    "setup-scripts",
     ".gitpod.yml"
   ],
   "words": [
@@ -17,6 +18,7 @@
     "CICD",
     "civi",
     "civicinfo",
+    "csstype",
     "cuid",
     "daisyui",
     "datasource",

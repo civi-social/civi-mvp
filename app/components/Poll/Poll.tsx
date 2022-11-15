@@ -1,4 +1,5 @@
 import React from "react";
+import { Skin, Spacing } from "~/styles";
 
 const LivePoll = ({
   handleSubmit,
@@ -24,9 +25,9 @@ const LivePoll = ({
               display: "flex",
               justifyContent: "space-between",
               borderRadius: "9px",
-              color: "black",
+              color: Skin.Black,
               border: "1px solid #9a949475",
-              padding: "14px",
+              padding: Spacing.THREE,
             }}
           >
             <input
@@ -55,7 +56,7 @@ const LivePoll = ({
   );
 };
 
-const SubmittedPoll = ({}) => {
+const SubmittedPoll = () => {
   return (
     <div className="bold bg-gray-100 p-4 text-black">
       Your Vote Has Been Submitted. Results Will Be Shown On November 26.
