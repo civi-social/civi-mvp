@@ -1,5 +1,7 @@
 <img src="./civi-temp-logo.png" style="width:200px" />
 
+[civi.social](https://civi.social)
+
 ### About the group
 
 We want to create a social network for elected officials to get feedback from their residents on real bills & resolutions.
@@ -32,23 +34,11 @@ Humanists and philosophers who are interested in the intersection of tech & civi
 
 Skills that would be useful include decentralized database experts, ID verification, JavaScript enthusiasts, social network UX design, and civic engagement experts.
 
-### Tools
+### Discussions
 
-Current prototype is built with Node/React/TypeScript via [React Remix](https://remix.run), but based on the direction we choose that could change.
-
-### Relevant Links
-
-- [Prototype: socratic.center](https://socratic.center)
-
-### Where we meet
-
-We can use Gather Or [This Google Meet](https://meet.google.com/hjn-uxvy-woq).
-
-### Chi Hack Night slack channel
-
-#civic-engagement-platform
+We meet in the Chi Hack Night [#civic-engagement-platform
+](https://chihacknight.slack.com/archives/C047500M5RS) Slack Channel. During hack nights, we may also meet on [this Google Meet](https://meet.google.com/hjn-uxvy-woq).
 
 ### Development
 
-- [Common Issues](./WHEN_CODE_GIVES_YOU_LEMONS.md)
-- [Development](./DEVELOPMENT.md)
+[See `docs/development.md`](./docs/development.md)
