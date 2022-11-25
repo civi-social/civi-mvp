@@ -58,7 +58,7 @@ This starts your app in development mode, rebuilding assets on file changes.
 
 The database seed script creates a new user with some data you can use to get started:
 
-- Email: `mock_user@civic.social`
+- Email: `mock_user@civi.social`
 - Password: `password`
 
 If you'd prefer not to use Docker, you can also use Fly's Wireguard VPN to connect to a development database (or even your production database). You can find the instructions to set up Wireguard [here](https://fly.io/docs/reference/private-networking/#install-your-wireguard-app), and the instructions for creating a development database [here](https://fly.io/docs/reference/postgres/).
@@ -90,8 +90,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Create two apps on Fly, one for staging and one for production:
 
   ```sh
-  fly create civic-social-mvp
-  fly create civic-social-mvp-staging
+  fly create civi-social-mvp
+  fly create civi-social-mvp-staging
   ```
 
 - Initialize Git.
@@ -111,14 +111,14 @@ Prior to your first deployment, you'll need to do a few things:
 - Add a `SESSION_SECRET` to your fly app secrets, to do this you can run the following commands:
 
   ```sh
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app civic-social-mvp
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app civic-social-mvp-staging
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app civi-social-mvp
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app civi-social-mvp-staging
   ```
 
   > **Note:** When creating the staging secret, you may get a warning from the Fly CLI that looks like this:
   >
   > ```
-  > WARN app flag 'civic-social-mvp-staging' does not match app name in config file 'civic-social-mvp'
+  > WARN app flag 'civi-social-mvp-staging' does not match app name in config file 'civi-social-mvp'
   > ```
   >
   > This simply means that the current directory contains a config that references the production app we created in the first step. Ignore this warning and proceed to create the secret.
@@ -128,11 +128,11 @@ Prior to your first deployment, you'll need to do a few things:
 - Create a database for both your staging and production environments. Run the following:
 
   ```sh
-  fly postgres create --name civic-social-mvp-db
-  fly postgres attach --postgres-app civic-social-mvp-db --app civic-social-mvp
+  fly postgres create --name civi-social-mvp-db
+  fly postgres attach --postgres-app civi-social-mvp-db --app civi-social-mvp
 
-  fly postgres create --name civic-social-mvp-staging-db
-  fly postgres attach --postgres-app civic-social-mvp-staging-db --app civic-social-mvp-staging
+  fly postgres create --name civi-social-mvp-staging-db
+  fly postgres attach --postgres-app civi-social-mvp-staging-db --app civi-social-mvp-staging
   ```
 
   > **Note:** You'll get the same warning for the same reason when attaching the staging database that you did in the `fly set secret` step above. No worries. Proceed!
