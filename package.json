@@ -5,7 +5,7 @@
   "license": "",
   "sideEffects": false,
   "scripts": {
-    "giddyup": "sh ./setup.sh",
+    "giddyup": "sh ./setup-scripts/setup.sh",
     "build": "run-s build:*",
     "build:css": "npm run generate:css -- --minify",
     "build:remix": "remix build",

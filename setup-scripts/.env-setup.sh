@@ -24,9 +24,9 @@ setenv(){
 }
 
 # set env files
-cp .env.example .env
-setenv -env GOOGLE_API_KEY .env
-setenv SESSION_SECRET $(openssl rand -hex 32) .env
+cp .env.example ../.env
+setenv -env GOOGLE_API_KEY ../.env
+setenv SESSION_SECRET $(openssl rand -hex 32) ../.env
 
 echo "    🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲"
 echo "    🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲"

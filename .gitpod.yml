@@ -3,7 +3,7 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: sh ./setup.sh
+  - init: sh ./setup-scripts/setup.sh
     command: npm run docker && npm run build && npm run dev
 vscode:
   extensions:
