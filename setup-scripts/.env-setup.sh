@@ -1,5 +1,7 @@
 #!/bin/sh
 
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 # Set .env file values from environment (aka env | grep ...)
 # usage:
 # setenv -env GOOGLE_API_KEY .env // for getting from environment
@@ -24,9 +26,9 @@ setenv(){
 }
 
 # set env files
-cp .env.example ../.env
-setenv -env GOOGLE_API_KEY ../.env
-setenv SESSION_SECRET $(openssl rand -hex 32) ../.env
+cp $SCRIPTPATH/.env.example $SCRIPTPATH/../.env
+setenv -env GOOGLE_API_KEY $SCRIPTPATH/../.env
+setenv SESSION_SECRET $(openssl rand -hex 32) $SCRIPTPATH/../.env
 
 echo "    🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲"
 echo "    🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲"
