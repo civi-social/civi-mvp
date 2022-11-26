@@ -2,7 +2,7 @@
 sh ./.env-setup.sh
 
 # Installing Fly Deployment Stuff
-sh ./fly.sh
+sh ./fly-install.sh
 
 # Prepare
 npm i
