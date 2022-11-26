@@ -4,7 +4,7 @@
 
 tasks:
   - init: sh ./setup-scripts/setup.sh
-    command: npm run docker && npm run build && npm run dev
+    command: source ./setup-scripts/.fly-profile && npm run docker && npm run build && npm run dev
 vscode:
   extensions:
     - dbaeumer.vscode-eslint

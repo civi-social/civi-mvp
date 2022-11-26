@@ -6,6 +6,3 @@ then
     curl -L https://fly.io/install.sh | sh
     exit
 fi
-
-export FLYCTL_INSTALL="/home/gitpod/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
