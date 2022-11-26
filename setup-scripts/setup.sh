@@ -1,8 +1,11 @@
+#!/usr/bin/env bash
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 # Setting up .env file
-sh ./.env-setup.sh
+sh $SCRIPTPATH/.env-setup.sh
 
 # Installing Fly Deployment Stuff
-sh ./fly-install.sh
+sh $SCRIPTPATH/fly-install.sh
 
 # Prepare
 npm i
