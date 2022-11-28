@@ -3,74 +3,53 @@ import { createStyleSheet, Skin, Spacing } from "~/styles";
 
 export default function HomePage() {
   return (
-    <div style={styles.container}>
-      <AutoGrid>
-        <div style={styles.section}>
+    <Container>
+      <Grid>
+        <Col>
           <img src={civiLogo} alt="Civi Logo" style={styles.logo} />
-        </div>
-        <AutoColumn>
+        </Col>
+        <Col style={styles.name}>
           A Social Network To Directly Connect Elected Officials To Verified
           Residents
-        </AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>The Anti Hot Take Social Network</AutoColumn>
-        <AutoColumn>Reliable Poll Data</AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>For Residents</AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>know what issues are on the table</AutoColumn>
-        <AutoColumn>have topical, civil social interactions</AutoColumn>
-        <AutoColumn>make their voices heard by those in power</AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>For Elected Officials</AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>get feedback from verified constituents</AutoColumn>
-        <AutoColumn>poll verified constituents on current topics</AutoColumn>
-        <AutoColumn>demonstrate they are listening</AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>
+        </Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>The Anti Hot Take Social Network</Col>
+        <Col style={styles.name}>Reliable Poll Data</Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>For Residents</Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>know what issues are on the table</Col>
+        <Col style={styles.name}>have topical, civil social interactions</Col>
+        <Col style={styles.name}>make their voices heard by those in power</Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>For Elected Officials</Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>get feedback from verified constituents</Col>
+        <Col style={styles.name}>
+          poll verified constituents on current topics
+        </Col>
+        <Col style={styles.name}>demonstrate they are listening</Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>
           “The preferences of the average American appear to have only a
           miniscule, near-zero, statistically non-significant impact upon public
           policy.” -Gilens & Page, Perspectives in Politics
-        </AutoColumn>
-      </AutoGrid>
-      <AutoGrid>
-        <AutoColumn>We Want Your Help</AutoColumn>
-      </AutoGrid>
-    </div>
+        </Col>
+      </Grid>
+      <Grid>
+        <Col style={styles.name}>We Want Your Help</Col>
+      </Grid>
+    </Container>
   );
 }
 
-const AutoGrid: React.FC = ({ children }) => (
-  <section style={styles.autoGrid}>{children}</section>
-);
-
-const AutoColumn: React.FC = ({ children }) => (
-  <div style={styles.section}>
-    <div style={styles.name}>{children}</div>
-  </div>
-);
-
 const styles = createStyleSheet({
-  container: {
-    minHeight: "100vh",
-    padding: Spacing.FOUR,
-  },
-  flex1: {
-    flex: 1,
-  },
-  hero: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-  },
   name: {
     color: Skin.Black,
     fontWeight: 700,
@@ -80,21 +59,43 @@ const styles = createStyleSheet({
     //   filter: "brightness(0) invert(1)",
     maxHeight: "60px",
   },
-  section: {
-    //   background: Skin.PrimaryPink,
+});
+
+/**
+ * Layout related components
+ */
+
+interface StyleComponent {
+  style?: React.CSSProperties;
+}
+
+const Container: React.FC = ({ children }) => (
+  <div style={layoutStyles.container}>{children}</div>
+);
+
+const Grid: React.FC<StyleComponent> = ({ children, style }) => (
+  <section style={{ ...layoutStyles.autoGrid, ...(style || {}) }}>
+    {children}
+  </section>
+);
+
+const Col: React.FC<StyleComponent> = ({ children, style }) => (
+  <div style={{ ...layoutStyles.gridCol, ...(style || {}) }}>{children}</div>
+);
+
+const layoutStyles = createStyleSheet({
+  container: {
+    minHeight: "100vh",
     padding: Spacing.FOUR,
-    textAlign: "center",
-    fontSize: "1.2rem",
-  },
-  flexDirCol: {
-    flexDirection: "column",
-  },
-  flexDirRow: {
-    flexDirection: "row",
   },
   autoGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
     gridGap: "1rem",
+  },
+  gridCol: {
+    padding: Spacing.FOUR,
+    textAlign: "center",
+    fontSize: "1.2rem",
   },
 });
