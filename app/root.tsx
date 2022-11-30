@@ -13,14 +13,18 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import invariant from "tiny-invariant";
 
+import mainStylesheetUrl from "~/styles/main.css";
 import tailwindStylesheetUrl from "~/styles/tailwind.css";
 import type { Config } from "~/types";
 import AppProvider from "./context/AppProvider";
+import { getEnv } from "~/config";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    { rel: "stylesheet", href: mainStylesheetUrl },
+  ];
 };
 
 export const meta: MetaFunction = () => ({
@@ -30,11 +34,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  invariant(
-    typeof process.env.GOOGLE_API_KEY === "string",
-    "⛔️ GOOGLE_API_KEY env var not set."
-  );
-  const apiKey = process.env.GOOGLE_API_KEY;
+  const env = getEnv(process.env);
+  const apiKey = env.GOOGLE_API_KEY;
   return json<Config>({
     apiKey,
   });

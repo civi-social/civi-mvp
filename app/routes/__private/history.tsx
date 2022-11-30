@@ -131,13 +131,25 @@ export const loader: LoaderFunction = async ({ request }) => {
       history: [],
     });
   }
+  if (
+    // if a file doesn't exist
+    ![historyCsvPath, historyJsonPath, votersCsvPath, votersJsonPath].every(
+      fs.existsSync
+    )
+  ) {
+    return json<LoaderData>({
+      user,
+      info: null,
+      history: [],
+    });
+  }
 
   try {
     if (allVoters.length === 0) {
       allVoters = await loadVoters();
     }
   } catch (error) {
-    console.error("failed in loading voters:", error);
+    console.warn("failed in loading voters:", error);
   }
 
   try {
@@ -145,7 +157,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       voteHistory = await loadVoteHistory();
     }
   } catch (error) {
-    console.error("failed in loading vote history:", error);
+    console.warn("failed in loading vote history:", error);
   }
 
   const info = allVoters.find(

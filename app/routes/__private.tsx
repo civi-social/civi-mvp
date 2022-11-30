@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function PrivateRoute() {
-  const { user } = useLoaderData();
+  const { user } = useLoaderData<LoaderData>();
   const avatarText = [user.firstName.charAt(0), user.lastName.charAt(0)]
     .filter(Boolean)
     .join("");

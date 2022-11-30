@@ -3,11 +3,13 @@ import { useSearchParams } from "@remix-run/react";
 import type { FC } from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useAppContext } from "~/context/AppContext";
-import { addressKey, levelKey } from "~/utils";
+import type { Env } from "~/config";
 
-const AddressLookup: FC = () => {
+const AddressLookup: FC<{ env: Env }> = ({ env }) => {
   const config = useAppContext();
   const [searchParams, setSearchParams] = useSearchParams();
+  const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
+  const levelKey = env.REP_LEVEL_SEARCH_KEY;
 
   return config?.apiKey ? (
     <Autocomplete

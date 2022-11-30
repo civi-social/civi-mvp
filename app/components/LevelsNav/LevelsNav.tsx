@@ -1,10 +1,11 @@
 import { useSearchParams } from "@remix-run/react";
 import type { FC } from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import type { Env } from "~/config";
 import { RepLevel } from "~/types";
-import { levelKey } from "~/utils";
 
-const LevelsNav: FC = () => {
+const LevelsNav: FC<{ env: Env }> = ({ env }) => {
+  const levelKey = env.REP_LEVEL_SEARCH_KEY;
   const [searchParams, setSearchParams] = useSearchParams();
   const levelValue = searchParams.get(levelKey);
   const level =
