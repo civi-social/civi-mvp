@@ -34,7 +34,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const env = getEnv();
+  const env = getEnv(process.env);
   const apiKey = env.GOOGLE_API_KEY;
   return json<Config>({
     apiKey,

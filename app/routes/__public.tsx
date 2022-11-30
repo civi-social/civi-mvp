@@ -1,26 +1,38 @@
 import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
-import { Link, Outlet, useLocation } from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useLocation } from "@remix-run/react";
 import { FaUserCircle } from "react-icons/fa";
 import { getUserId } from "~/session.server";
 import { AddressLookup } from "~/components";
+import type { Env } from "~/config";
+import { getEnv } from "~/config";
+
+type LoaderData = {
+  env: Env;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId) return redirect("/");
-  return json({});
+  const env = getEnv(process.env);
+  return json<LoaderData>({ env });
 };
 
 export default function PublicRoute() {
+  const { env } = useLoaderData<LoaderData>();
   const { pathname } = useLocation();
   const isSearch = pathname === "/search";
 
   return (
     <>
-      <header className={`navbar bg-indigo-500 ${isSearch ? 'justify-between' : 'justify-end'}`}>
+      <header
+        className={`navbar bg-indigo-500 ${
+          isSearch ? "justify-between" : "justify-end"
+        }`}
+      >
         {isSearch && (
           <div className="form-control">
-            <AddressLookup />
+            <AddressLookup env={env} />
           </div>
         )}
         <div className="dropdown-end dropdown">

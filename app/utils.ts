@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { getEnv } from "~/config";
+import type { Env } from "~/config";
 import type { Bill, ChicagoBill, Locales } from "~/entities/bills";
 import type { GoogleRepresentativesResponse } from "~/entities/representatives";
 import { transformGoogleCivicInfo } from "~/entities/representatives";
@@ -123,8 +123,7 @@ export const getBills = async (locale: Locales | null): Promise<Bill[]> => {
   return cityData;
 };
 
-export const getRepresentatives = async (address: string) => {
-  const env = getEnv();
+export const getRepresentatives = async (address: string, env: Env) => {
   console.log("searching for representatives for", address);
   const results = await axios.get<GoogleRepresentativesResponse>(
     `https://www.googleapis.com/civicinfo/v2/representatives`,

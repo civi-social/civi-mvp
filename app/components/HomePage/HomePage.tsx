@@ -1,63 +1,98 @@
 import civiLogo from "~/assets/civi-temp-logo.png";
+import chiSkylineOutline from "~/assets/chicago-skyline-outline.png";
+import type { StyleHack } from "~/styles";
 import { createStyleSheet, Skin, Spacing } from "~/styles";
+import { useNavigate } from "@remix-run/react";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
-    <Container>
-      <Grid>
-        <Col>
+    <Container style={styles.background}>
+      <Grid style={{ background: Skin.White }}>
+        <Col style={{ display: "flex", justifyContent: "center" }}>
           <img src={civiLogo} alt="Civi Logo" style={styles.logo} />
         </Col>
-        <Col style={styles.name}>
-          A Social Network To Directly Connect Elected Officials To Verified
-          Residents
+      </Grid>
+      <Grid style={styles.mainHero}>
+        <Col style={styles.hero}>
+          <div style={styles.heroTitle}>Vote With Your Representative</div>
+          <div style={styles.heroDescription}>
+            We want to build a way for you connect to your representative. Vote
+            on legislation they will vote on, and let them know what you think.
+          </div>
+          <img
+            src={chiSkylineOutline}
+            style={{ width: "300px" }}
+            alt="Chicago Skyline Outline"
+          />
+          <div>Our pilot market is Chicago. Do you live here?</div>
+          <div>
+            <button
+              style={styles.ctaButton}
+              onClick={() => {
+                navigate("/search");
+              }}
+            >
+              Find Your Chicago Rep
+            </button>
+          </div>
         </Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>The Anti Hot Take Social Network</Col>
-        <Col style={styles.name}>Reliable Poll Data</Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>For Residents</Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>know what issues are on the table</Col>
-        <Col style={styles.name}>have topical, civil social interactions</Col>
-        <Col style={styles.name}>make their voices heard by those in power</Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>For Elected Officials</Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>get feedback from verified constituents</Col>
-        <Col style={styles.name}>
-          poll verified constituents on current topics
-        </Col>
-        <Col style={styles.name}>demonstrate they are listening</Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>
-          “The preferences of the average American appear to have only a
-          miniscule, near-zero, statistically non-significant impact upon public
-          policy.” -Gilens & Page, Perspectives in Politics
-        </Col>
-      </Grid>
-      <Grid>
-        <Col style={styles.name}>We Want Your Help</Col>
+        {/* empty column to half this grid */}
+        <Col />
       </Grid>
     </Container>
   );
 }
 
 const styles = createStyleSheet({
-  name: {
+  background: {
+    backgroundSize: "cover",
+    backgroundImage:
+      "url('https://upload.wikimedia.org/wikipedia/commons/e/e5/BigLaw_Chicago.jpg')",
+  },
+  heroTitle: {
     color: Skin.Black,
-    fontWeight: 700,
+    fontWeight: 900,
     fontSize: "2rem",
   },
+  mainHero: {
+    minHeight: "calc(100vh - 90px)",
+    alignItems: "center",
+    background: "rgb(255 255 255 / 50%)" as StyleHack,
+    backdropFilter: "blur(20px)",
+  },
+  hero: {
+    height: "100%",
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+    borderRadius: "0 20px 20px 0",
+  },
+  heroDescription: {
+    color: Skin.Black,
+    fontWeight: 400,
+    fontSize: "1.5rem",
+  },
   logo: {
-    //   filter: "brightness(0) invert(1)",
-    maxHeight: "60px",
+    height: "50px",
+  },
+  ctaButton: {
+    marginTop: Spacing.FOUR,
+    paddingLeft: Spacing.TWO,
+    paddingRight: Spacing.TWO,
+    paddingTop: Spacing.ONE,
+    paddingBottom: Spacing.ONE,
+
+    background: Skin.PrimaryPink,
+    color: Skin.White,
+
+    textTransform: "uppercase",
+    fontWeight: 700,
+    fontSize: "1.1rem",
+
+    boxShadow: "0px 1px 3px rgb(0 0 0 / 30%)",
+    borderRadius: "5px",
   },
 });
 
@@ -69,8 +104,8 @@ interface StyleComponent {
   style?: React.CSSProperties;
 }
 
-const Container: React.FC = ({ children }) => (
-  <div style={layoutStyles.container}>{children}</div>
+const Container: React.FC<StyleComponent> = ({ children, style }) => (
+  <div style={{ ...layoutStyles.container, ...(style || {}) }}>{children}</div>
 );
 
 const Grid: React.FC<StyleComponent> = ({ children, style }) => (
@@ -86,7 +121,6 @@ const Col: React.FC<StyleComponent> = ({ children, style }) => (
 const layoutStyles = createStyleSheet({
   container: {
     minHeight: "100vh",
-    padding: Spacing.FOUR,
   },
   autoGrid: {
     display: "grid",

@@ -13,4 +13,4 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(null);
 };
 
-export default HomePage
+export default HomePage;

@@ -7,6 +7,8 @@ import {
   useTransition,
 } from "@remix-run/react";
 import { LevelsNav, Loading, Representatives } from "~/components";
+import type { Env } from "~/config";
+import { getEnv } from "~/config";
 import type { Bill } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { getUser } from "~/session.server";
@@ -17,10 +19,12 @@ type LoaderData = {
   user: User;
   bills: Bill[];
   representatives: RepresentativesResult | null;
+  env: Env;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
+  const env = getEnv(process.env);
 
   if (!user) {
     return redirect("/search");
@@ -29,23 +33,23 @@ export const loader: LoaderFunction = async ({ request }) => {
   let representatives: RepresentativesResult | null = null;
   let bills: Bill[] = [];
   if (address) {
-    representatives = await getRepresentatives(address);
+    representatives = await getRepresentatives(address, env);
     const locale = /Chicago, IL/gi.test(address) ? "Chicago" : null;
     bills = await getBills(locale);
   }
 
-  return json({ user, bills, representatives });
+  return json({ user, bills, representatives, env });
 };
 
 export default function HomePage() {
-  const { user, bills, representatives } = useLoaderData<LoaderData>();
+  const { user, bills, representatives, env } = useLoaderData<LoaderData>();
   const transition = useTransition();
   const [searchParams] = useSearchParams();
   const level = (searchParams.get("level") as RepLevel) ?? RepLevel.City;
 
   return (
     <div className="flex w-full flex-col items-center gap-y-6">
-      <LevelsNav />
+      <LevelsNav env={env} />
       {transition.submission ? (
         <Loading />
       ) : (
