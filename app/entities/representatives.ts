@@ -4,7 +4,7 @@ export interface OfficialOffice {
 }
 
 export interface RepresentativesResult {
-  normalizedInput: GoogleRepresentativesResponse['normalizedInput'];
+  normalizedInput: GoogleRepresentativesResponse["normalizedInput"];
   offices: {
     national: OfficialOffice[];
     state: OfficialOffice[];
@@ -13,16 +13,22 @@ export interface RepresentativesResult {
   };
 }
 
+export interface RepresentativesOcIdResult {
+  offices: Office[];
+  officials: Official[];
+  divisions: Divisions;
+}
+
 export type Levels =
-  | 'international'
-  | 'country' // national reps
-  | 'administrativeArea1' // state reps
-  | 'administrativeArea2' // county reps
-  | 'locality' // city reps
-  | 'regional'
-  | 'special'
-  | 'subLocality1'
-  | 'subLocality2';
+  | "international"
+  | "country" // national reps
+  | "administrativeArea1" // state reps
+  | "administrativeArea2" // county reps
+  | "locality" // city reps
+  | "regional"
+  | "special"
+  | "subLocality1"
+  | "subLocality2";
 
 export interface Office {
   name: string;
@@ -64,8 +70,16 @@ export interface Official {
   ];
 }
 
+interface Divisions {
+  [key: string]: {
+    name: string;
+    alsoKnownAs: [string];
+    officeIndices: [number];
+  };
+}
+
 export interface GoogleRepresentativesResponse {
-  kind: 'civicinfo#representativeInfoResponse';
+  kind: "civicinfo#representativeInfoResponse";
   normalizedInput: {
     locationName: string;
     line1: string;
@@ -75,13 +89,7 @@ export interface GoogleRepresentativesResponse {
     state: string;
     zip: string;
   };
-  divisions: {
-    [key: string]: {
-      name: string;
-      alsoKnownAs: [string];
-      officeIndices: [number];
-    };
-  };
+  divisions: Divisions;
   offices: [Office];
   officials: [Official];
 }
@@ -102,14 +110,14 @@ export const transformGoogleCivicInfo = (
   const response: RepresentativesResult = {
     normalizedInput: data.normalizedInput,
     offices: {
-      city: offices.filter((off) => off.office.levels[0] === 'locality'),
+      city: offices.filter((off) => off.office.levels[0] === "locality"),
       county: offices.filter(
-        (off) => off.office.levels[0] === 'administrativeArea2'
+        (off) => off.office.levels[0] === "administrativeArea2"
       ),
       state: offices.filter(
-        (off) => off.office.levels[0] === 'administrativeArea1'
+        (off) => off.office.levels[0] === "administrativeArea1"
       ),
-      national: offices.filter((off) => off.office.levels[0] === 'country'),
+      national: offices.filter((off) => off.office.levels[0] === "country"),
     },
   };
   return response;

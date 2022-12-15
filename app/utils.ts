@@ -132,3 +132,14 @@ export const getRepresentatives = async (address: string, env: Env) => {
 
   return transformGoogleCivicInfo(results.data);
 };
+
+export const getWard = async (id: string, env: Env) => {
+  console.log("searching for ward by id", id);
+  // https://github.com/opencivicdata/ocd-division-ids/blob/master/identifiers/country-us/state-il-local_gov.csv
+  const results = await axios.get<GoogleRepresentativesResponse>(
+    `https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Ail%2Fplace%3Achicago%2Fward%3A${id}`,
+    { params: { key: env.GOOGLE_API_KEY } }
+  );
+
+  return results.data;
+};
