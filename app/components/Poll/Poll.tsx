@@ -5,16 +5,18 @@ const LivePoll = ({
   handleSubmit,
   pollText,
   subText,
+  extraText,
 }: {
   pollText: string;
   subText: string;
+  extraText?: string;
   handleSubmit: Function;
 }) => {
   return (
     <div className="bold p-4 text-black">
       <div className="bold mb-4 text-xl">{pollText}</div>
       <div className="italic">{subText}</div>
-      <div className="bold">How should they vote?</div>
+      <div className="bold">{extraText || "How should they vote?"}</div>
       <div className="mt-4">
         {["Yay", "Nay", "Present"].map((s) => (
           <div
@@ -167,5 +169,62 @@ export const Poll = () => {
       <Poll1 />
       <Poll2 />
     </>
+  );
+};
+
+export const DynamicPoll = ({
+  pollText,
+  subText,
+  extraText,
+}: {
+  pollText: string;
+  subText: string;
+  extraText: string;
+}) => {
+  let done = false;
+  if (global.window) {
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);
+    if (params.get("done")) {
+      done = true;
+    }
+  }
+
+  const [state, setState] = React.useState<States>(
+    done ? States.FINISHED : States.LIVE
+  );
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      key={state}
+    >
+      <div
+        className="border-radius m-4 border p-4"
+        style={{ maxWidth: "400px", boxShadow: "0px 2px 3px rgba(0,0,0,0.3)" }}
+      >
+        {(() => {
+          switch (state) {
+            case States.LIVE:
+              return (
+                <LivePoll
+                  pollText={pollText}
+                  subText={subText}
+                  extraText={extraText}
+                  handleSubmit={() => setState(States.SUBMITTED)}
+                />
+              );
+            case States.SUBMITTED:
+              return <SubmittedPoll />;
+            case States.FINISHED:
+              return <FinishedPoll />;
+          }
+        })()}
+      </div>
+    </div>
   );
 };
