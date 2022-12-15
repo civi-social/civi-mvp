@@ -82,6 +82,7 @@ export default function OfficePage() {
         <div
           style={{
             background: Skin.PrimaryPink,
+            margin: Spacing.FOUR,
             paddingTop: Spacing.TWO,
             paddingBottom: Spacing.TWO,
             paddingRight: Spacing.ONE,
