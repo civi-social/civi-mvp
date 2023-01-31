@@ -56,7 +56,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function OfficePage() {
-  const { bills, representative, env } = useLoaderData<LoaderData>();
+  const { bills, representative } = useLoaderData<LoaderData>();
   const name = getOfficialsName(representative);
   const officeName = getOfficeName(representative);
   const photoUrl =
