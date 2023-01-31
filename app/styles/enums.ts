@@ -12,6 +12,7 @@ export enum Spacing {
   TWO = "10px",
   THREE = "15px",
   FOUR = "20px",
+  AUTO = "auto",
 }
 
 export enum ZIndex {
