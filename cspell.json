@@ -33,8 +33,11 @@
     "healthcheck",
     "kentcdodds",
     "legislations",
+    "mailchimp",
     "mswjs",
     "myapp",
+    "octo",
+    "octocat",
     "outdir",
     "password",
     "pkey",
@@ -49,6 +52,7 @@
     "tailwindcss",
     "textbox",
     "typecheck",
-    "Vitest"
+    "Vitest",
+    "Waitlist"
   ]
 }
