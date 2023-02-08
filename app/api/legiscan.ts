@@ -43,11 +43,15 @@ interface LegiscanResult {
 }
 
 const getIllinoisBills = async (env: Env): Promise<LegislationData[]> => {
-  const sessionId = "2020"; // todo: get from api
-  const results = axios.get<LegiscanResult>(
-    `https://api.legiscan.com/?op=getMasterList&id=${sessionId}&key=${env.LEGISCAN_API_KEY}`
-  );
-  return Promise.reject(results);
+  try {
+    const sessionId = "2020"; // todo: get from api
+    const results = axios.get<LegiscanResult>(
+      `https://api.legiscan.com/?op=getMasterList&id=${sessionId}&key=${env.LEGISCAN_API_KEY}`
+    );
+    return Promise.reject(results);
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
 
 export const legiscan = {

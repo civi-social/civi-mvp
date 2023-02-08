@@ -9,18 +9,18 @@ export const getLegislations = async (
   env: Env
 ): Promise<LegislationData[]> => {
   console.log("getting bills for", locale);
-  let bills: LegislationData[] = [];
+  let legislation: LegislationData[] = [];
   switch (locale) {
     case "Chicago":
-      bills = await councilmatic.getChicagoBills();
+      legislation = await councilmatic.getChicagoBills();
       break;
     case "Illinois":
-      bills = await legiscan.getIllinoisBills(env);
+      legislation = await legiscan.getIllinoisBills(env);
     default:
-      bills = [];
+      legislation = [];
       break;
   }
-  return bills;
+  return legislation;
 };
 
 export const getRepresentatives = google.getRepresentatives;

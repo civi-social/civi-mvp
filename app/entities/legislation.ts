@@ -9,3 +9,9 @@ export interface LegislationData {
 }
 
 export type Locales = "Illinois" | "Chicago";
+
+export const getLocale = (formattedAddress: string | null): null | Locales => {
+  return formattedAddress && /Chicago, IL/gi.test(formattedAddress)
+    ? "Chicago"
+    : null;
+};

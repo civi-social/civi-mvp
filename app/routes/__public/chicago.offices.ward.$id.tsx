@@ -19,7 +19,7 @@ interface LoaderData {
   representative: RepresentativesOcIdResult;
   env: Env;
 }
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const id = params.id;
   const env = getEnv(process.env);
 
@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   );
   const bills: LegislationData[] = await getLegislations("Chicago", env);
 
-  return json({ bills, representative, env });
+  return json<LoaderData>({ bills, representative, env });
 };
 
 const getOfficialsName = (r: RepresentativesOcIdResult) => r.officials[0].name;
