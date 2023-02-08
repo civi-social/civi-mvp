@@ -2,9 +2,16 @@ import { STATUS_MAP } from "~/api/legiscan.types";
 import type { LegiscanBill } from "~/api/legiscan.types";
 import type { LegislationData } from "../legislation";
 
+/**
+ * Illinois bills have either SB0000, HB0000, HJR0000, or SJR0000.
+ * Get the number from the last 4
+ */
 const getNumberFromBill = (s: string): number =>
   Number(s.substring(s.length - 4));
 
+/**
+ * Converts the Legiscan master list to data that can be rendered by the UI
+ */
 export const legiscanResultToIllinoisLegislation = (
   bills: LegiscanBill[]
 ): LegislationData[] => {
@@ -18,6 +25,7 @@ export const legiscanResultToIllinoisLegislation = (
           firstSentence.includes("Amends the ")
         );
       })
+      // Ignore budget bills for now. They are pretty complicated.
       .filter((bill) => bill.title !== "BUDGET IMPLEMENTATION-TECH")
       // don't include task forces
       .filter((bill) => !bill.number.includes("HJR"))
