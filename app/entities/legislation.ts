@@ -1,4 +1,4 @@
-export interface ChicagoBill {
+export interface LegislationData {
   status: string;
   date: string;
   sponsor: string;
@@ -7,7 +7,5 @@ export interface ChicagoBill {
   link: string;
   tags: string[];
 }
-
-export type Bill = ChicagoBill;
 
 export type Locales = "Illinois" | "Chicago";

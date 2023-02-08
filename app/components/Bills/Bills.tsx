@@ -1,10 +1,10 @@
 import type { FC } from "react";
-import type { Bill } from "~/entities/bills";
+import type { LegislationData } from "~/entities/bills";
 import { DataField } from "../DataField/DataField";
 import { ResultCard } from "../ResultCard/ResultCard";
 
 type Props = {
-  bills: Bill[];
+  bills: LegislationData[];
 };
 
 const Bills: FC<Props> = ({ bills }) => {

@@ -6,18 +6,18 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
-import { getBills, getRepresentatives } from "~/api";
+import { getLegislations, getRepresentatives } from "~/api";
 import { LevelsNav, Loading, Representatives } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { Bill } from "~/entities/bills";
+import type { LegislationData } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { getUser } from "~/session.server";
 import { RepLevel } from "~/types";
 
 type LoaderData = {
   user: User;
-  bills: Bill[];
+  bills: LegislationData[];
   representatives: RepresentativesResult | null;
   env: Env;
 };
@@ -31,11 +31,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   const address = user.address;
   let representatives: RepresentativesResult | null = null;
-  let bills: Bill[] = [];
+  let bills: LegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
     const locale = /Chicago, IL/gi.test(address) ? "Chicago" : null;
-    bills = await getBills(locale, env);
+    bills = await getLegislations(locale, env);
   }
 
   return json({ user, bills, representatives, env });

@@ -5,7 +5,7 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
-import { getBills, getRepresentatives } from "~/api";
+import { getLegislations, getRepresentatives } from "~/api";
 import {
   Instructions,
   LevelsNav,
@@ -14,12 +14,12 @@ import {
 } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { Bill } from "~/entities/bills";
+import type { LegislationData } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
 
 type LoaderData = {
-  bills: Bill[];
+  bills: LegislationData[];
   representatives: RepresentativesResult | null;
   env: Env;
 };
@@ -31,7 +31,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const address = url.searchParams.get(addressKey);
   let representatives: RepresentativesResult | null = null;
-  let bills: Bill[] = [];
+  let bills: LegislationData[] = [];
   if (address) {
     // const previousSearchKey = await client.json.get("previous_search", {
     //   path: ".address",
@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     // }
     representatives = await getRepresentatives(address, env);
     const locale = /Chicago, IL/gi.test(address) ? "Chicago" : null;
-    bills = await getBills(locale, env);
+    bills = await getLegislations(locale, env);
   }
 
   return json({ bills, representatives, env });

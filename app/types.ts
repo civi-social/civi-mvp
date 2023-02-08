@@ -1,4 +1,4 @@
-import type { Bill } from "./entities/bills";
+import type { LegislationData } from "./entities/legislation";
 import type { RepresentativesResult } from "./entities/representatives";
 
 export enum RepLevel {
@@ -11,7 +11,7 @@ export enum RepLevel {
 export type AppData = {
   apiKey: string;
   representatives: RepresentativesResult | null;
-  bills: Bill[];
+  bills: LegislationData[];
 };
 
 export type Config = {

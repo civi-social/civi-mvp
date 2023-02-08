@@ -249,7 +249,7 @@ const CardTitle: React.FC = ({ children }) => (
 );
 
 const textColor = "#000000b3" as StyleHack;
-const makeImageWhite = { filter: "brightness(0) invert(1);" };
+const makeImageWhite = { filter: "brightness(0) invert(1)" };
 
 const styles = createStyleSheet({
   card: {

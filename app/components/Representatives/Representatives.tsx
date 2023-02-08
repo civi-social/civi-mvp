@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { Bill, Locales } from "~/entities/bills";
+import type { LegislationData, Locales } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
 import Bills from "../Bills/Bills";
@@ -8,7 +8,7 @@ import OfficialOfficeList from "../OfficialOfficeList/OfficialOfficeList";
 type Props = {
   formattedAddress: string | null;
   representatives: RepresentativesResult | null;
-  bills: Bill[];
+  bills: LegislationData[];
   level: RepLevel;
 };
 
