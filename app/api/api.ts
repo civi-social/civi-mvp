@@ -25,4 +25,4 @@ export const getLegislations = async (
 
 export const getRepresentatives = google.getRepresentatives;
 
-export const getWard = google.getWard;
+export const getChicagoWard = google.getChicagoWard;

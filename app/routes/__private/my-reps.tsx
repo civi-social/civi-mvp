@@ -10,7 +10,7 @@ import { getLegislations, getRepresentatives } from "~/api";
 import { LevelsNav, Loading, Representatives } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/entities/bills";
+import type { LegislationData } from "~/entities/legislation";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { getUser } from "~/session.server";
 import { RepLevel } from "~/types";

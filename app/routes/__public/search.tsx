@@ -14,7 +14,7 @@ import {
 } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/entities/bills";
+import type { LegislationData } from "~/entities/legislation";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
 

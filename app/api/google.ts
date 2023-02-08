@@ -13,7 +13,7 @@ const getRepresentatives = async (address: string, env: Env) => {
   return transformGoogleCivicInfo(results.data);
 };
 
-const getWard = async (id: string, env: Env) => {
+const getChicagoWard = async (id: string, env: Env) => {
   console.log("searching for ward by id", id);
   // https://github.com/opencivicdata/ocd-division-ids/blob/master/identifiers/country-us/state-il-local_gov.csv
   const results = await axios.get<GoogleRepresentativesResponse>(
@@ -26,5 +26,5 @@ const getWard = async (id: string, env: Env) => {
 
 export const google = {
   getRepresentatives,
-  getWard,
+  getChicagoWard,
 };
