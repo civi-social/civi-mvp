@@ -1,21 +1,30 @@
 import type { Env } from "~/config";
 import type { LegislationData, Locales } from "~/entities/legislation";
+import { RepLevel } from "~/types";
 import { councilmatic } from "./councilmatic";
 import { google } from "./google";
 import { legiscan } from "./legiscan";
 
 export const getLegislations = async (
-  locale: Locales | null,
-  env: Env
+  env: Env,
+  levels: RepLevel,
+  locale: Locales | null
 ): Promise<LegislationData[]> => {
-  console.log("getting bills for", locale);
+  console.log("getting bills for", locale, levels);
   let legislation: LegislationData[] = [];
   switch (locale) {
     case "Chicago":
-      legislation = await councilmatic.getChicagoBills();
+      switch (levels) {
+        case RepLevel.City:
+          legislation = await councilmatic.getChicagoBills();
+          break;
+        case RepLevel.State:
+          legislation = await legiscan.getIllinoisBills(env);
+          break;
+        default:
+          break;
+      }
       break;
-    case "Illinois":
-      legislation = await legiscan.getIllinoisBills(env);
     default:
       legislation = [];
       break;

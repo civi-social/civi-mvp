@@ -32,19 +32,25 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let representatives: RepresentativesResult | null = null;
   let legislation: LegislationData[] = [];
-
   if (address) {
     representatives = await getRepresentatives(address, env);
     switch (level) {
-      case RepLevel.County:
-      case RepLevel.State:
-      case RepLevel.National:
-        legislation = [];
-        break;
       case RepLevel.City:
-        const locale = getLocale(address);
-        legislation = await getLegislations(locale, env);
+        legislation = await getLegislations(
+          env,
+          RepLevel.City,
+          getLocale(address)
+        );
         break;
+      case RepLevel.State:
+        legislation = await getLegislations(
+          env,
+          RepLevel.State,
+          getLocale(address)
+        );
+        break;
+      case RepLevel.National:
+      case RepLevel.County:
       default:
         legislation = [];
         break;
