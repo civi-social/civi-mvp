@@ -4,4 +4,5 @@ export default [
   "DATABASE_URL",
   "FORMATTED_ADDRESS_SEARCH_KEY",
   "REP_LEVEL_SEARCH_KEY",
+  "LEGISCAN_API_KEY",
 ] as const;

@@ -10,4 +10,4 @@ export interface ChicagoBill {
 
 export type Bill = ChicagoBill;
 
-export type Locales = 'Chicago';
+export type Locales = "Illinois" | "Chicago";

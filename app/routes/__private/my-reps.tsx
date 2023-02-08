@@ -6,6 +6,7 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
+import { getBills, getRepresentatives } from "~/api";
 import { LevelsNav, Loading, Representatives } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
@@ -13,7 +14,6 @@ import type { Bill } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { getUser } from "~/session.server";
 import { RepLevel } from "~/types";
-import { getBills, getRepresentatives } from "~/utils";
 
 type LoaderData = {
   user: User;
@@ -35,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (address) {
     representatives = await getRepresentatives(address, env);
     const locale = /Chicago, IL/gi.test(address) ? "Chicago" : null;
-    bills = await getBills(locale);
+    bills = await getBills(locale, env);
   }
 
   return json({ user, bills, representatives, env });

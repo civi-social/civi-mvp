@@ -1,22 +1,22 @@
-import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   useLoaderData,
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
+import { getBills, getRepresentatives } from "~/api";
 import {
   Instructions,
   LevelsNav,
   Loading,
   Representatives,
 } from "~/components";
+import type { Env } from "~/config";
+import { getEnv } from "~/config";
 import type { Bill } from "~/entities/bills";
 import type { RepresentativesResult } from "~/entities/representatives";
 import { RepLevel } from "~/types";
-import { getBills, getRepresentatives } from "~/utils";
-import type { Env } from "~/config";
-import { getEnv } from "~/config";
 
 type LoaderData = {
   bills: Bill[];
@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     // }
     representatives = await getRepresentatives(address, env);
     const locale = /Chicago, IL/gi.test(address) ? "Chicago" : null;
-    bills = await getBills(locale);
+    bills = await getBills(locale, env);
   }
 
   return json({ bills, representatives, env });

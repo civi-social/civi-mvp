@@ -6,13 +6,13 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
+import { getBills, getWard } from "~/api";
 import { DynamicPoll } from "~/components/Poll/Poll";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { Bill } from "~/entities/bills";
 import type { RepresentativesOcIdResult } from "~/entities/representatives";
 import { Skin, Spacing } from "~/styles";
-import { getBills, getWard } from "~/utils";
 
 interface LoaderData {
   bills: Bill[];
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     id || "",
     env
   );
-  const bills: Bill[] = await getBills("Chicago");
+  const bills: Bill[] = await getBills("Chicago", env);
 
   return json({ bills, representative, env });
 };

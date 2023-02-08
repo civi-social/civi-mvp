@@ -285,7 +285,6 @@ const styles = createStyleSheet({
     display: "flex",
     flexDirection: "column",
     textAlign: "left",
-    maxWidth: "500px",
     background: "#f86a9c" as StyleHack,
   },
   heroDescription: {
