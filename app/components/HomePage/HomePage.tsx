@@ -43,7 +43,8 @@ export default function HomePage() {
               >
                 <li>✅ Find your local, state, and national representative</li>
                 <li>✅ Find active Chicago legislation</li>
-                <li>⏺ Find active Illinois and National legislation</li>
+                <li>✅ Find active Illinois legislation</li>
+                <li>⏺ Find active National legislation</li>
                 <li>⏺ Vote on active legislation</li>
               </ul>
             </CardSection>
