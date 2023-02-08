@@ -39,3 +39,12 @@ export interface LegiscanResult {
   status: string;
   masterlist: Masterlist;
 }
+
+// https://api.legiscan.com/dl/LegiScan_API_User_Manual.pdf
+export const STATUS_MAP: { [k: number]: string } = {
+  1: "Intro",
+  2: "Engross",
+  3: "Enroll",
+  4: "Pass",
+  5: "Veto",
+};

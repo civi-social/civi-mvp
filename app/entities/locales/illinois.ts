@@ -1,14 +1,6 @@
+import { STATUS_MAP } from "~/api/legiscan.types";
 import type { LegiscanBill } from "~/api/legiscan.types";
 import type { LegislationData } from "../legislation";
-
-// https://api.legiscan.com/dl/LegiScan_API_User_Manual.pdf
-const STATUS_MAP: { [k: number]: string } = {
-  1: "Intro",
-  2: "Engross",
-  3: "Enroll",
-  4: "Pass",
-  5: "Veto",
-};
 
 const getNumberFromBill = (s: string): number =>
   Number(s.substring(s.length - 4));
