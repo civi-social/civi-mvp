@@ -129,7 +129,7 @@ export default function OfficePage() {
                 <DynamicPoll
                   key={title}
                   pollText={title}
-                  subText={sponsor}
+                  subText={sponsor || ""}
                   extraText={date}
                 />
               ))}
