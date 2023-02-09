@@ -6,30 +6,35 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
+import { getLegislations, getChicagoWard } from "~/api";
 import { DynamicPoll } from "~/components/Poll/Poll";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { Bill } from "~/entities/bills";
+import type { LegislationData } from "~/entities/legislation";
 import type { RepresentativesOcIdResult } from "~/entities/representatives";
 import { Skin, Spacing } from "~/styles";
-import { getBills, getWard } from "~/utils";
+import { RepLevel } from "~/types";
 
 interface LoaderData {
-  bills: Bill[];
+  legislation: LegislationData[];
   representative: RepresentativesOcIdResult;
   env: Env;
 }
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const id = params.id;
   const env = getEnv(process.env);
 
-  const representative: RepresentativesOcIdResult = await getWard(
+  const representative: RepresentativesOcIdResult = await getChicagoWard(
     id || "",
     env
   );
-  const bills: Bill[] = await getBills("Chicago");
+  const legislation: LegislationData[] = await getLegislations(
+    env,
+    RepLevel.City,
+    "Chicago"
+  );
 
-  return json({ bills, representative, env });
+  return json<LoaderData>({ legislation, representative, env });
 };
 
 const getOfficialsName = (r: RepresentativesOcIdResult) => r.officials[0].name;
@@ -56,7 +61,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function OfficePage() {
-  const { bills, representative } = useLoaderData<LoaderData>();
+  const { legislation, representative } = useLoaderData<LoaderData>();
   const name = getOfficialsName(representative);
   const officeName = getOfficeName(representative);
   const photoUrl =
@@ -120,11 +125,11 @@ export default function OfficePage() {
             </h2>
             <h1 className="text-4xl font-medium text-gray-700">{name}</h1>
             <div>
-              {bills.map(({ title, sponsor, date }) => (
+              {legislation.map(({ title, sponsor, date }) => (
                 <DynamicPoll
                   key={title}
                   pollText={title}
-                  subText={sponsor}
+                  subText={sponsor || ""}
                   extraText={date}
                 />
               ))}

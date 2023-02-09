@@ -43,7 +43,8 @@ export default function HomePage() {
               >
                 <li>✅ Find your local, state, and national representative</li>
                 <li>✅ Find active Chicago legislation</li>
-                <li>⏺ Find active Illinois and National legislation</li>
+                <li>✅ Find active Illinois legislation</li>
+                <li>⏺ Find active National legislation</li>
                 <li>⏺ Vote on active legislation</li>
               </ul>
             </CardSection>
@@ -249,7 +250,7 @@ const CardTitle: React.FC = ({ children }) => (
 );
 
 const textColor = "#000000b3" as StyleHack;
-const makeImageWhite = { filter: "brightness(0) invert(1);" };
+const makeImageWhite = { filter: "brightness(0) invert(1)" };
 
 const styles = createStyleSheet({
   card: {
@@ -285,7 +286,6 @@ const styles = createStyleSheet({
     display: "flex",
     flexDirection: "column",
     textAlign: "left",
-    maxWidth: "500px",
     background: "#f86a9c" as StyleHack,
   },
   heroDescription: {

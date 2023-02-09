@@ -14,7 +14,7 @@ type Props = {
   id: string;
 };
 
-const Channel: FC<Props> = ({ type, id }) => {
+export const DataField: FC<Props> = ({ type, id }) => {
   switch (type) {
     case "Facebook":
       return (
@@ -70,4 +70,4 @@ const Channel: FC<Props> = ({ type, id }) => {
   }
 };
 
-export default Channel;
+export default DataField;

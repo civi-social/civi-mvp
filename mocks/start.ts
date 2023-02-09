@@ -2,7 +2,8 @@ import { setupServer } from "msw/node";
 
 const server = setupServer();
 
-server.listen({ onUnhandledRequest: "warn" });
+// todo: make this warn after beginning to mock apis
+server.listen({ onUnhandledRequest: "bypass" });
 console.info("🔶 Mock server running");
 
 process.once("SIGINT", () => server.close());

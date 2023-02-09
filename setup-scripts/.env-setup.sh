@@ -28,6 +28,7 @@ setenv(){
 # set env files
 cp $SCRIPTPATH/.env.example $SCRIPTPATH/../.env
 setenv -env GOOGLE_API_KEY $SCRIPTPATH/../.env
+setenv -env LEGISCAN_API_KEY $SCRIPTPATH/../.env
 setenv SESSION_SECRET $(openssl rand -hex 32) $SCRIPTPATH/../.env
 
 echo "    🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲"

@@ -1,25 +1,26 @@
 import type { FC } from "react";
-import type { Bill } from "~/entities/bills";
-import Channel from "../Channel/Channel";
-import ResultCard from "../ResultCard/ResultCard";
+import type { LegislationData } from "~/entities/legislation";
+import { DataField } from "../DataField/DataField";
+import { ResultCard } from "../ResultCard/ResultCard";
 
 type Props = {
-  bills: Bill[];
+  bills: LegislationData[];
 };
 
 const Bills: FC<Props> = ({ bills }) => {
   return (
     <>
-      {bills.map(({ id, title, date, sponsor, link }) => (
+      {bills.map(({ id, title, date, sponsor, link, description }) => (
         <ResultCard
           key={id}
           title={title}
-          subtitle={date}
+          subtitle={description}
           channels={
             <>
-              <Channel type="Text" id={id} />
-              <Channel type="Text" id={sponsor} />
-              <Channel type="URL" id={link} />
+              <DataField type="Text" id={id} />
+              {sponsor && <DataField type="Text" id={sponsor} />}
+              <DataField type="Text" id={date} />
+              <DataField type="URL" id={link} />
             </>
           }
         />
