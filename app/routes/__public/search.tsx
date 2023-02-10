@@ -34,27 +34,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let legislation: LegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
-    switch (level) {
-      case RepLevel.City:
-        legislation = await getLegislations(
-          env,
-          RepLevel.City,
-          getLocale(address)
-        );
-        break;
-      case RepLevel.State:
-        legislation = await getLegislations(
-          env,
-          RepLevel.State,
-          getLocale(address)
-        );
-        break;
-      case RepLevel.National:
-      case RepLevel.County:
-      default:
-        legislation = [];
-        break;
-    }
+    legislation = await getLegislations(env, level, getLocale(address));
   }
 
   return json<LoaderData>({
