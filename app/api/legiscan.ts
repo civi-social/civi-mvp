@@ -3,6 +3,7 @@ import type { Env } from "~/config";
 import type { LegislationData } from "~/entities/legislation";
 import { legiscanResultToIllinoisLegislation } from "~/entities/locales/illinois";
 import { legiscanResultToUSALegislation } from "~/entities/locales/usa";
+import { legislationCache } from "./legislation-cache";
 import type {
   LegiscanBill,
   LegiscanResult,
@@ -24,11 +25,19 @@ const getMasterList = async (
 ): Promise<LegiscanBill[]> => {
   console.log("Get Master List", sessionId);
   try {
+    const cacheKey = `legiscan:getMasterList:${sessionId}`;
+    const cachedData = legislationCache.get(cacheKey);
+    if (cachedData) {
+      return cachedData as LegiscanBill[];
+    }
+
     const results = await axios.get<LegiscanResult>(
       `https://api.legiscan.com/?op=getMasterList&id=${sessionId}&key=${env.LEGISCAN_API_KEY}`
     );
 
     const bills = legiscanResultToLegiscanBills(results.data);
+
+    legislationCache.set(cacheKey, cachedData);
 
     return bills;
   } catch (e) {

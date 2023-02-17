@@ -12,7 +12,7 @@ const Bills: FC<Props> = ({ bills }) => {
     <>
       {bills.map(({ id, title, date, sponsor, link, description }) => (
         <ResultCard
-          key={id}
+          key={id + title}
           title={title}
           subtitle={description}
           channels={
