@@ -15,7 +15,7 @@ import { getEnv } from "~/config";
 import type { LegislationData } from "~/entities/legislation";
 import { getLocale } from "~/entities/legislation";
 import type { RepresentativesResult } from "~/entities/representatives";
-import { RepLevel } from "~/types";
+import { RepLevel } from "~/entities/levels";
 
 type LoaderData = {
   legislation: LegislationData[];

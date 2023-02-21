@@ -9,7 +9,7 @@ import * as React from "react";
 import { FaChevronLeft } from "react-icons/fa";
 
 import { createUserSession, getUserId } from "~/session.server";
-import { verifyLogin } from "~/models/user.server";
+import { verifyLogin } from "~/db/user.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {

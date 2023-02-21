@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { LegislationData } from "~/entities/legislation";
 import type { RepresentativesResult } from "~/entities/representatives";
-import type { RepLevel } from "~/types";
+import type { RepLevel } from "~/entities/levels";
 import Bills from "../Bills/Bills";
 import OfficialOfficeList from "../OfficialOfficeList/OfficialOfficeList";
 

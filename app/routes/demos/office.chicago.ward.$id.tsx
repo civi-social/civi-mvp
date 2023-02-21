@@ -13,7 +13,7 @@ import { getEnv } from "~/config";
 import type { LegislationData } from "~/entities/legislation";
 import type { RepresentativesOcIdResult } from "~/entities/representatives";
 import { Skin, Spacing } from "~/styles";
-import { RepLevel } from "~/types";
+import { RepLevel } from "~/entities/levels";
 
 interface LoaderData {
   legislation: LegislationData[];
