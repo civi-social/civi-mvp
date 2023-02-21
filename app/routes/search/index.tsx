@@ -12,10 +12,10 @@ import {
 } from "~/components";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/entities/legislation";
-import { getLocale } from "~/entities/legislation";
-import type { RepresentativesResult } from "~/entities/representatives";
-import { RepLevel } from "~/entities/levels";
+import type { LegislationData } from "~/modules/legislation";
+import { getLocale } from "~/modules/legislation";
+import type { RepresentativesResult } from "~/modules/representatives";
+import { RepLevel } from "~/modules/levels";
 
 type LoaderData = {
   legislation: LegislationData[];

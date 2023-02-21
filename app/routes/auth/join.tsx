@@ -10,8 +10,9 @@ import { FaChevronLeft } from "react-icons/fa";
 
 import { getUserId, createUserSession } from "~/session.server";
 
-import { createUser, getUserByEmail } from "~/db/user.server";
-import { safeRedirect, validateEmail } from "~/utils";
+import { createUser, getUserByEmail } from "~/modules/user/user.server";
+import { safeRedirect } from "~/modules/router/router.utils";
+import { validateEmail } from "~/modules/user/user.utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);

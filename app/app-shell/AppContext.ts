@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Config } from "~/entities/levels";
+import type { Config } from "./types";
 
 const AppContext = createContext<Config | null>(null);
 

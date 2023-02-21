@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { OfficialOffice } from "~/entities/representatives";
+import type { OfficialOffice } from "~/modules/representatives";
 import { DataField } from "../DataField/DataField";
 import { ResultCard } from "../ResultCard/ResultCard";
 

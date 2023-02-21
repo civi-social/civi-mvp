@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Env } from "~/config";
-import { transformGoogleCivicInfo } from "~/entities/representatives";
+import { transformGoogleCivicInfo } from "~/modules/representatives";
 import type { GoogleRepresentativesResponse } from "./google.types";
 
 const getRepresentatives = async (address: string, env: Env) => {

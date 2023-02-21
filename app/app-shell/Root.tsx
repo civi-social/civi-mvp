@@ -14,11 +14,11 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
+import { getEnv } from "~/config";
 import mainStylesheetUrl from "~/styles/main.css";
 import tailwindStylesheetUrl from "~/styles/tailwind.css";
-import type { Config } from "~/entities/levels";
 import AppProvider from "./AppProvider";
-import { getEnv } from "~/config";
+import type { Config } from "./types";
 
 export const links: LinksFunction = () => {
   return [

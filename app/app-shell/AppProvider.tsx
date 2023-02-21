@@ -1,8 +1,7 @@
 import type { FC } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import type { Config } from "~/entities/levels";
+import { useEffect, useState } from "react";
 import AppContext from "./AppContext";
+import type { Config } from "./types";
 
 const AppProvider: FC<{ value: Config }> = ({ children, value }) => {
   const [config, setConfig] = useState<Config | null>(null);

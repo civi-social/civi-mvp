@@ -2,7 +2,7 @@ import { useSearchParams } from "@remix-run/react";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 import type { Env } from "~/config";
-import { RepLevel } from "~/entities/levels";
+import { RepLevel } from "~/modules/levels";
 
 const LevelsNav: FC<{ env: Env }> = ({ env }) => {
   const levelKey = env.REP_LEVEL_SEARCH_KEY;

@@ -10,10 +10,10 @@ import { getLegislations, getChicagoWard } from "~/api";
 import { DynamicPoll } from "~/components/Poll/Poll";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/entities/legislation";
-import type { RepresentativesOcIdResult } from "~/entities/representatives";
+import type { LegislationData } from "~/modules/legislation";
+import type { RepresentativesOcIdResult } from "~/modules/representatives";
 import { Skin, Spacing } from "~/styles";
-import { RepLevel } from "~/entities/levels";
+import { RepLevel } from "~/modules/levels";
 
 interface LoaderData {
   legislation: LegislationData[];
