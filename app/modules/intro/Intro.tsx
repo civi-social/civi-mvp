@@ -1,9 +1,9 @@
-import civiLogo from "~/assets/civi-temp-logo.png";
-import type { StyleHack } from "~/styles";
-import { createStyleSheet, Skin, Spacing } from "~/styles";
+import civiLogo from "~/modules/app-shell/assets/civi-temp-logo.png";
+import type { StyleHack } from "~/components/styles";
+import { createStyleSheet, Skin, Spacing } from "~/components/styles";
 import { useNavigate } from "@remix-run/react";
 
-export default function HomePage() {
+export const Intro = () => {
   const navigate = useNavigate();
   return (
     <Container>
@@ -93,7 +93,7 @@ export default function HomePage() {
       </Grid>
     </Container>
   );
-}
+};
 
 /**
  * src: https://tholman.com/github-corners/

@@ -2,7 +2,7 @@ import type { Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
-import type { UserCreateRequest } from "~/modules/user";
+import type { UserCreateRequest } from "~/modules/user/user.types";
 export type { User } from "@prisma/client";
 
 export async function getUserById(id: User["id"]) {

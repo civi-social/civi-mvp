@@ -1,13 +1,13 @@
 import type { FC } from "react";
 import type { LegislationData } from "~/modules/legislation";
-import { DataField } from "../DataField/DataField";
-import { ResultCard } from "../ResultCard/ResultCard";
+import { DataField } from "../../../components/DataField/DataField";
+import { ResultCard } from "../../../components/ResultCard/ResultCard";
 
 type Props = {
   bills: LegislationData[];
 };
 
-const Bills: FC<Props> = ({ bills }) => {
+export const Bills: FC<Props> = ({ bills }) => {
   return (
     <>
       {bills.map(({ id, title, date, sponsor, link, description }) => (
@@ -28,5 +28,3 @@ const Bills: FC<Props> = ({ bills }) => {
     </>
   );
 };
-
-export default Bills;

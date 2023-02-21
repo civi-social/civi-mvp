@@ -1,5 +1,5 @@
 import React from "react";
-import { Skin, Spacing } from "~/styles";
+import { Skin, Spacing } from "~/components/styles";
 
 const LivePoll = ({
   handleSubmit,

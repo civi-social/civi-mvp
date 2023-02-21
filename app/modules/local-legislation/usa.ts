@@ -1,6 +1,6 @@
 import type { LegiscanBill } from "~/api/legiscan.types";
 import { STATUS_MAP } from "~/api/legiscan.types";
-import type { LegislationData } from "../legislation";
+import type { LegislationData } from "~/modules/legislation";
 
 export const legiscanResultToUSALegislation = (
   bills: LegiscanBill[]

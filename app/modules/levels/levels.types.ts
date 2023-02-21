@@ -4,3 +4,5 @@ export enum RepLevel {
   State = "state",
   National = "national",
 }
+
+export type Locales = "Chicago";

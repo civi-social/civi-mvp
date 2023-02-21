@@ -1,9 +1,9 @@
 import type { FC } from "react";
-import type { OfficialOffice } from "~/modules/representatives";
-import { DataField } from "../DataField/DataField";
-import { ResultCard } from "../ResultCard/ResultCard";
+import type { OfficialOffice } from "~/modules/representatives/representatives.types";
+import { DataField } from "~/components/DataField/DataField";
+import { ResultCard } from "~/components/ResultCard/ResultCard";
 
-const OfficialOfficeList: FC<{
+export const OfficialOfficeList: FC<{
   officialOffice: OfficialOffice[];
 }> = ({ officialOffice }) => {
   return (
@@ -42,5 +42,3 @@ const OfficialOfficeList: FC<{
     </>
   );
 };
-
-export default OfficialOfficeList;

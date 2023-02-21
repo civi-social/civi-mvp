@@ -6,7 +6,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getUser } from "~/session.server";
-import type { VoteRecord, VoterInfo } from "~/modules/voter";
+import type { VoteRecord, VoterInfo } from "~/modules/voter/voter.types";
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;

@@ -1,5 +1,5 @@
 export { default as AddressLookup } from "./AddressLookup/AddressLookup";
 export { default as Instructions } from "./Instructions/Instructions";
-export { default as LevelsNav } from "./LevelsNav/LevelsNav";
+export { default as LevelsNav } from "../modules/levels/react/LevelsNav";
 export { default as Loading } from "./Loading/Loading";
-export { default as Representatives } from "./Representatives/Representatives";
+export { default as Representatives } from "../modules/representatives/react/Representatives";

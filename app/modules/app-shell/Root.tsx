@@ -15,8 +15,8 @@ import {
 } from "@remix-run/react";
 
 import { getEnv } from "~/config";
-import mainStylesheetUrl from "~/styles/main.css";
-import tailwindStylesheetUrl from "~/styles/tailwind.css";
+import mainStylesheetUrl from "~/components/styles/main.css";
+import tailwindStylesheetUrl from "~/components/styles/tailwind.css";
 import AppProvider from "./AppProvider";
 import type { Config } from "./types";
 
