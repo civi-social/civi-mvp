@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import HomePage from "~/components/HomePage/HomePage";
+import { Intro } from "~/modules/intro/Intro";
 import { getUser } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -13,4 +13,4 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(null);
 };
 
-export default HomePage;
+export default Intro;

@@ -2,7 +2,7 @@
 import { useSearchParams } from "@remix-run/react";
 import type { FC } from "react";
 import Autocomplete from "react-google-autocomplete";
-import { useAppContext } from "~/context/AppContext";
+import { useAppContext } from "~/app-shell/AppContext";
 import type { Env } from "~/config";
 
 const AddressLookup: FC<{ env: Env }> = ({ env }) => {
