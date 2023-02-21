@@ -48,7 +48,7 @@ export default function PrivateRoute() {
               <Link to="/history">Vote History</Link>
             </li>
             <li>
-              <Form action="/logout" method="post">
+              <Form action="/auth/logout" method="post">
                 <button type="submit">Logout</button>
               </Form>
             </li>
