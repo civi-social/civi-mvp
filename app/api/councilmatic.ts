@@ -1,12 +1,18 @@
 import axios from "axios";
 import type { LegislationData } from "~/entities/legislation";
 import * as cheerio from "cheerio";
+import { legislationCache } from "./legislation-cache";
 
 /**
  * Scrape Councilmatic site for non-routine data
  * todo: stop scraping, use councilmatic's site to directly get the data
  */
 const getChicagoBills = async (): Promise<LegislationData[]> => {
+  const cachedData = legislationCache.get("councilmatic:chicago");
+  if (cachedData) {
+    console.log("Returning cached data");
+    return cachedData as LegislationData[];
+  }
   console.log("Scraping Chicago Bills from Councilmatic");
   try {
     const results = await axios.get(
@@ -38,6 +44,9 @@ const getChicagoBills = async (): Promise<LegislationData[]> => {
           .toArray(),
       };
     });
+
+    legislationCache.set("councilmatic:chicago", legislationsJson);
+
     return legislationsJson;
   } catch (e) {
     return Promise.reject(e);

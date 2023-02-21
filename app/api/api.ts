@@ -21,6 +21,9 @@ export const getLegislations = async (
         case RepLevel.State:
           legislation = await legiscan.getIllinoisBills(env);
           break;
+        case RepLevel.National:
+          legislation = await legiscan.getNationalBills(env);
+          break;
         default:
           break;
       }
