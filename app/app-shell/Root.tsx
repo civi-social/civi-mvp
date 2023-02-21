@@ -15,9 +15,9 @@ import {
 } from "@remix-run/react";
 
 import { getEnv } from "~/config";
-import mainStylesheetUrl from "~/components/styles/main.css";
-import tailwindStylesheetUrl from "~/components/styles/tailwind.css";
 import AppProvider from "./AppProvider";
+import mainStylesheetUrl from "./css/main.css";
+import tailwindStylesheetUrl from "./css/tailwind.css";
 import type { Config } from "./types";
 
 export const links: LinksFunction = () => {

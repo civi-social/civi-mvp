@@ -2,7 +2,7 @@
   "exclude": ["./cypress"],
   "include": [
     "remix.env.d.ts",
-    "app/modules/app-shell/style.d.ts",
+    "app/app-shell/style.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

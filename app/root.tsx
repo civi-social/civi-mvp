@@ -1,2 +1,2 @@
-export * from "~/modules/app-shell/Root";
-export { default } from "~/modules/app-shell/Root";
+export * from "~/app-shell/Root";
+export { default } from "~/app-shell/Root";

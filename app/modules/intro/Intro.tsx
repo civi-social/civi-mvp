@@ -1,4 +1,4 @@
-import civiLogo from "~/modules/app-shell/assets/civi-temp-logo.png";
+import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
 import type { StyleHack } from "~/components/styles";
 import { createStyleSheet, Skin, Spacing } from "~/components/styles";
 import { useNavigate } from "@remix-run/react";

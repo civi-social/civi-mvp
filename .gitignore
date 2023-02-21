@@ -8,5 +8,5 @@ node_modules
 /cypress/videos
 /postgres-data
 
-/app/components/styles/tailwind.css
+/app/app-shell/styles/tailwind.css
 /csvs
