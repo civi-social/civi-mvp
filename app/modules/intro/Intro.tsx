@@ -1,7 +1,9 @@
+import { useNavigate } from "@remix-run/react";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
+import { Card, CardSection, CardTitle } from "~/components/Card";
+import { Col, Container, Grid } from "~/components/Layout";
 import type { StyleHack } from "~/components/styles";
 import { createStyleSheet, Skin, Spacing } from "~/components/styles";
-import { useNavigate } from "@remix-run/react";
 
 export const Intro = () => {
   const navigate = useNavigate();
@@ -225,42 +227,10 @@ const MailChimpForm = () => {
   );
 };
 
-const Card: React.FC<StyleComponent> = ({ children, style }) => (
-  <div style={{ ...styles.card, ...(style || {}) }}>{children}</div>
-);
-
-const CardSection: React.FC = ({ children }) => (
-  <section style={{ margin: Spacing.FOUR, fontSize: "0.9rem" }}>
-    {children}
-  </section>
-);
-
-const CardTitle: React.FC = ({ children }) => (
-  <h2
-    style={{
-      fontWeight: "bold",
-      padding: Spacing.ZERO,
-      marginTop: Spacing.TWO,
-      marginBottom: Spacing.TWO,
-      fontSize: "1.2rem",
-      textAlign: "left",
-    }}
-  >
-    {children}
-  </h2>
-);
-
 const textColor = "#000000b3" as StyleHack;
 const makeImageWhite = { filter: "brightness(0) invert(1)" };
 
 const styles = createStyleSheet({
-  card: {
-    padding: Spacing.FOUR,
-    marginTop: Spacing.FOUR,
-    marginBottom: Spacing.FOUR,
-    background: Skin.White,
-    textAlign: "left",
-  },
   link: {
     textDecoration: "underline",
     color: "#3886df" as StyleHack,
@@ -316,43 +286,5 @@ const styles = createStyleSheet({
     fontSize: "1.1rem",
 
     borderRadius: "5px",
-  },
-});
-
-/**
- * Layout related components
- */
-
-interface StyleComponent {
-  style?: React.CSSProperties;
-}
-
-const Container: React.FC<StyleComponent> = ({ children, style }) => (
-  <div style={{ ...layoutStyles.container, ...(style || {}) }}>{children}</div>
-);
-
-const Grid: React.FC<StyleComponent> = ({ children, style }) => (
-  <section style={{ ...layoutStyles.autoGrid, ...(style || {}) }}>
-    {children}
-  </section>
-);
-
-const Col: React.FC<StyleComponent> = ({ children, style }) => (
-  <div style={{ ...layoutStyles.gridCol, ...(style || {}) }}>{children}</div>
-);
-
-const layoutStyles = createStyleSheet({
-  container: {
-    minHeight: "100vh",
-  },
-  autoGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gridGap: "1rem",
-  },
-  gridCol: {
-    padding: Spacing.FOUR,
-    textAlign: "center",
-    fontSize: "1.2rem",
   },
 });
