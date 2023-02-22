@@ -7,11 +7,13 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import { getLegislations } from "~/legislation/api";
-import { Bills } from "~/legislation";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/legislation";
 import { RepLevel } from "~/levels";
+import ResultCard from "~/ui/ResultCard/ResultCard";
+import DataField from "~/ui/DataField/DataField";
+import { Spacing } from "~/ui/styles";
 
 interface LoaderData {
   legislation: LegislationData[];
@@ -60,20 +62,33 @@ export default function OfficePage() {
   const { legislation } = useLoaderData<LoaderData>();
 
   return (
-    <div>
-      <Bills bills={legislation} />
-      {/* {legislation.map((bill) => {
-        return (
-          <div key={bill.id + bill.title}>{JSON.stringify(bill, null, 2)}</div>
-        );
-      })} */}
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          maxWidth: "500px",
+          alignContent: "center",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        {legislation.map(({ id, title, date, sponsor, link, description }) => (
+          <div key={id + title} style={{ marginTop: Spacing.FOUR }}>
+            <ResultCard
+              title={title}
+              subtitle={description}
+              channels={
+                <>
+                  <DataField type="Text" id={id} />
+                  {sponsor && <DataField type="Text" id={sponsor} />}
+                  <DataField type="Text" id={date} />
+                  <DataField type="URL" id={link} />
+                </>
+              }
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  profileImage: {
-    clipPath: "circle(90px at center)",
-    width: "300px",
-  },
-};
