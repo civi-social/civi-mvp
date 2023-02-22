@@ -3,7 +3,7 @@ import type { Spacing, ZIndex, Skin } from "../components/styles";
 import type * as CSS from "csstype";
 
 declare module "csstype" {
-  interface Properties {
+  interface Properties extends CSS.Properties {
     padding?: Spacing;
     paddingTop?: Spacing;
     paddingBottom?: Spacing;

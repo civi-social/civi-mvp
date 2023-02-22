@@ -1,6 +1,10 @@
 import { MediaQueries } from "./enums";
 import type { Style } from "./types";
 
+export const css = <T extends Style.Properties>(s: T): { style: T } => {
+  return { style: s };
+};
+
 export const createStyleSheet = <
   T extends { [P in keyof T]: Style.Properties }
 >(
