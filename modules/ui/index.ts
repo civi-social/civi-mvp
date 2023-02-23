@@ -4,6 +4,5 @@ export * from "./DataField/DataField";
 export * from "./Instructions/Instructions";
 export * from "./Layout/Layout";
 export * from "./Loading/Loading";
-export * from "./Poll/Poll";
 export * from "./ResultCard/ResultCard";
 export * from "./styles";
