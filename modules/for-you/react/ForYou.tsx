@@ -13,7 +13,7 @@ export const ForYou = ({ legislation }: { legislation: LegislationData[] }) => {
           flexDirection: "column",
         }}
       >
-        {legislation.map(({ id, title, date, sponsor, link, description }) => (
+        {legislation.map(({ id, title, date, sponsors, link, description }) => (
           <div key={id + title} style={{ marginTop: Spacing.FOUR }}>
             <ResultCard
               title={title}
@@ -21,7 +21,9 @@ export const ForYou = ({ legislation }: { legislation: LegislationData[] }) => {
               channels={
                 <>
                   <DataField type="Text" id={id} />
-                  {sponsor && <DataField type="Text" id={sponsor} />}
+                  {sponsors && (
+                    <DataField type="Text" id={sponsors.join(", ")} />
+                  )}
                   <DataField type="Text" id={date} />
                   <DataField type="URL" id={link} />
                 </>

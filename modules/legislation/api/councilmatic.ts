@@ -29,7 +29,7 @@ const getChicagoBills = async (): Promise<LegislationData[]> => {
       return {
         status: _$("span.label").text().trim(),
         date: _$("i.fa-calendar-o").parent().text().trim(),
-        sponsor: _$("i.fa-user").parent().text().trim(),
+        sponsors: [_$("i.fa-user").parent().text().trim()],
         link: `https://chicago.councilmatic.org${_$("a.small")
           ?.attr("href")
           ?.trim()}`,

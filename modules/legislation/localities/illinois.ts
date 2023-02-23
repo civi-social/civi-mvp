@@ -1,6 +1,6 @@
-import type { LegiscanBill } from "~/legislation/api/legiscan.types";
-import { STATUS_MAP } from "~/legislation/api/legiscan.types";
-import type { LegislationData } from "~/legislation";
+import type { LegiscanMasterListBill } from "../api/legiscan.types";
+import { STATUS_MAP } from "../api/legiscan.types";
+import type { LegislationData } from "../legislation.types";
 
 /**
  * Illinois bills have either SB0000, HB0000, HJR0000, or SJR0000.
@@ -13,7 +13,7 @@ const getNumberFromBill = (s: string): number =>
  * Converts the Legiscan master list to data that can be rendered by the UI
  */
 export const legiscanResultToIllinoisLegislation = (
-  bills: LegiscanBill[]
+  bills: LegiscanMasterListBill[]
 ): LegislationData[] => {
   return (
     bills
@@ -58,7 +58,8 @@ export const legiscanResultToIllinoisLegislation = (
           date: bill.last_action_date,
           // only get first two sentences
           description,
-          sponsor: "",
+          sponsors: [],
+          source_id: String(bill.bill_id),
           id: bill.number,
           title,
           link: bill.url,

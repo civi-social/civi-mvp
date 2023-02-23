@@ -5,6 +5,7 @@ export interface LegislationData {
   title: string;
   link: string;
   tags: string[];
+  sponsors: string[];
   description?: string;
-  sponsor?: string;
+  source_id?: string;
 }

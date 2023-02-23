@@ -7,7 +7,8 @@ import LRUCache from "lru-cache";
 const opts = {
   max: 500,
   // cache for 2 hours
-  ttl: 1000 * 60 * 60 * 2,
+  ttl: 1000,
+  // ttl: 1000 * 60 * 60 * 2,
   allowStale: false,
 };
 

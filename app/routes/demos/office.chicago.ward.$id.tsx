@@ -126,11 +126,11 @@ export default function OfficePage() {
             </h2>
             <h1 className="text-4xl font-medium text-gray-700">{name}</h1>
             <div>
-              {legislation.map(({ title, sponsor, date }) => (
+              {legislation.map(({ title, sponsors, date }) => (
                 <DynamicPoll
                   key={title}
                   pollText={title}
-                  subText={sponsor || ""}
+                  subText={sponsors.join(",") || ""}
                   extraText={date}
                 />
               ))}

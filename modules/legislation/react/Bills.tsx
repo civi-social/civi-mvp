@@ -10,7 +10,7 @@ type Props = {
 export const Bills: FC<Props> = ({ bills }) => {
   return (
     <>
-      {bills.map(({ id, title, date, sponsor, link, description }) => (
+      {bills.map(({ id, title, date, sponsors, link, description }) => (
         <ResultCard
           key={id + title}
           title={title}
@@ -18,7 +18,7 @@ export const Bills: FC<Props> = ({ bills }) => {
           channels={
             <>
               <DataField type="Text" id={id} />
-              {sponsor && <DataField type="Text" id={sponsor} />}
+              {sponsors && <DataField type="Text" id={sponsors.join(", ")} />}
               <DataField type="Text" id={date} />
               <DataField type="URL" id={link} />
             </>

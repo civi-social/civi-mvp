@@ -12,7 +12,20 @@ export interface Session {
   session_name: string;
 }
 
-export interface LegiscanBill {
+export interface LegiscanMasterListBill {
+  bill_id: number;
+  number: string;
+  change_hash: string;
+  url: string;
+  status_date: string;
+  status: number;
+  last_action_date: string;
+  last_action: string;
+  title: string;
+  description: string;
+}
+
+export interface LegiscanBillByID {
   bill_id: number;
   number: string;
   change_hash: string;
@@ -30,7 +43,7 @@ export type SessionMetaData = {
 };
 
 export type LegiscanResults = {
-  [number: string]: LegiscanBill;
+  [number: string]: LegiscanMasterListBill;
 };
 
 export type Masterlist = SessionMetaData & LegiscanResults;
@@ -38,6 +51,11 @@ export type Masterlist = SessionMetaData & LegiscanResults;
 export interface LegiscanResult {
   status: string;
   masterlist: Masterlist;
+}
+
+export interface LegiscanBillResult {
+  status: string;
+  bill: LegiscanBillByID;
 }
 
 // https://api.legiscan.com/dl/LegiScan_API_User_Manual.pdf

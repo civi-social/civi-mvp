@@ -1,9 +1,9 @@
-import type { LegiscanBill } from "~/legislation/api/legiscan.types";
-import { STATUS_MAP } from "~/legislation/api/legiscan.types";
-import type { LegislationData } from "~/legislation";
+import type { LegiscanMasterListBill } from "../api/legiscan.types";
+import { STATUS_MAP } from "../api/legiscan.types";
+import type { LegislationData } from "../legislation.types";
 
 export const legiscanResultToUSALegislation = (
-  bills: LegiscanBill[]
+  bills: LegiscanMasterListBill[]
 ): LegislationData[] => {
   return (
     bills
@@ -15,7 +15,7 @@ export const legiscanResultToUSALegislation = (
           date: bill.last_action_date,
           // only get first two sentences
           description: bill.description,
-          sponsor: "",
+          sponsors: [],
           id: bill.number,
           title: bill.title,
           link: bill.url,
