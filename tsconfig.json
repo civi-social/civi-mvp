@@ -19,7 +19,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "~app/*": ["./modules/*"],
+      "~app/*": ["./app/*"],
       "~/*": ["./modules/*"]
     },
     "skipLibCheck": true,

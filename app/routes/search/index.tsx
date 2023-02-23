@@ -8,14 +8,14 @@ import {
   LevelsNav,
   Loading,
   Representatives,
-} from "modules/ui";
+} from "~/ui";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "modules/legislation";
-import { getLegislations } from "modules/legislation/api";
-import { getRepresentatives } from "modules/representatives/api";
-import { getLocale, RepLevel } from "modules/levels";
-import type { RepresentativesResult } from "modules/representatives";
+import type { LegislationData } from "~/legislation";
+import { getLegislations } from "~/legislation/api";
+import { getRepresentatives } from "~/representatives/api";
+import { getLocale, RepLevel } from "~/levels";
+import type { RepresentativesResult } from "~/representatives";
 
 type LoaderData = {
   legislation: LegislationData[];
@@ -54,7 +54,7 @@ const Header = ({ env }: { env: Env }) => {
       <div className="form-control">
         <AddressLookup env={env} />
       </div>
-      <div className="dropdown-end dropdown">
+      <div className="dropdown dropdown-end">
         <label
           tabIndex={0}
           className="avatar placeholder btn btn-ghost btn-circle"

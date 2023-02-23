@@ -6,12 +6,12 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import { getLegislations } from "~/api";
-import { Bills } from "modules/legislation";
+import { getLegislations } from "~/legislation/api";
+import { Bills } from "~/legislation";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "modules/legislation";
-import { RepLevel } from "modules/levels";
+import type { LegislationData } from "~/legislation";
+import { RepLevel } from "~/levels";
 
 interface LoaderData {
   legislation: LegislationData[];
