@@ -6,8 +6,8 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import { DynamicPoll } from "~/components/Poll/Poll";
-import { Skin, Spacing } from "~/components/styles";
+import { DynamicPoll } from "~/modules/ui/Poll/Poll";
+import { Skin, Spacing } from "~/modules/ui/styles";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/modules/legislation";

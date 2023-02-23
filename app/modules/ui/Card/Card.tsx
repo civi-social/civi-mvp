@@ -1,6 +1,6 @@
-import type { Style } from "~/components/styles";
-import { css, Skin } from "~/components/styles";
-import { Spacing } from "~/components/styles";
+import type { Style } from "~/modules/ui/styles";
+import { css, Skin } from "~/modules/ui/styles";
+import { Spacing } from "~/modules/ui/styles";
 // import type { LeftAlign } from "csstype";
 
 interface StyleComponent {

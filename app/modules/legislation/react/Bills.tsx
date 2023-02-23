@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { LegislationData } from "~/modules/legislation";
-import { DataField } from "../../../components/DataField/DataField";
-import { ResultCard } from "../../../components/ResultCard/ResultCard";
+import { DataField } from "../../ui/DataField/DataField";
+import { ResultCard } from "../../ui/ResultCard/ResultCard";
 
 type Props = {
   bills: LegislationData[];

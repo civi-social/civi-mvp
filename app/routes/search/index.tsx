@@ -8,7 +8,7 @@ import {
   LevelsNav,
   Loading,
   Representatives,
-} from "~/components";
+} from "~/modules/ui";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/modules/legislation";

@@ -2,7 +2,7 @@
  * Layout related components
  */
 
-import { createStyleSheet, Spacing } from "~/components/styles";
+import { createStyleSheet, Spacing } from "~/modules/ui/styles";
 
 interface StyleComponent {
   style?: React.CSSProperties;
