@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import { getUser } from "~/session.server";
+import { getUser } from "~/user/session.server";
 
 type LoaderData = {
   user: User;

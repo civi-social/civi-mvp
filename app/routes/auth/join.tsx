@@ -8,11 +8,11 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 import { FaChevronLeft } from "react-icons/fa";
 
-import { getUserId, createUserSession } from "~/session.server";
+import { getUserId, createUserSession } from "~/user/session.server";
 
-import { createUser, getUserByEmail } from "~/modules/user/user.server";
-import { safeRedirect } from "~/modules/router/router.utils";
-import { validateEmail } from "~/modules/user/user.utils";
+import { createUser, getUserByEmail } from "~/user/user.server";
+import { safeRedirect } from "~/router/router.utils";
+import { validateEmail } from "~/user/user.utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);

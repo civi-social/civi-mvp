@@ -5,8 +5,8 @@ import { parseFile } from "fast-csv";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getUser } from "~/session.server";
-import type { VoteRecord, VoterInfo } from "~/modules/voter/voter.types";
+import { getUser } from "~/user/session.server";
+import type { VoteRecord, VoterInfo } from "~/voter/voter.types";
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;

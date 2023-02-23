@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Intro } from "~/modules/intro/Intro";
-import { getUser } from "~/session.server";
+import { Intro } from "~/intro/Intro";
+import { getUser } from "~/user/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
