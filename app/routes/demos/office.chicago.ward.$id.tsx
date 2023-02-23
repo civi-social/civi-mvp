@@ -6,15 +6,15 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import { DynamicPoll } from "~/ui/Poll/Poll";
-import { Skin, Spacing } from "~/ui/styles";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/legislation";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
+import { DynamicPoll } from "~/poll/Poll";
 import { getChicagoWard } from "~/representatives/api";
 import type { RepresentativesOcIdResult } from "~/representatives/representatives.types";
+import { Skin, Spacing } from "~/ui";
 
 interface LoaderData {
   legislation: LegislationData[];

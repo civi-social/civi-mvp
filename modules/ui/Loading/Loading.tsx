@@ -1,4 +1,4 @@
-function Loading() {
+export function Loading() {
   return (
     <div className="grow pt-5 text-center">
       <button
@@ -31,5 +31,3 @@ function Loading() {
     </div>
   );
 }
-
-export default Loading;

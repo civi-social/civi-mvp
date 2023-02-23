@@ -1,7 +1,5 @@
 import type { Style } from "~/ui/styles";
-import { css, Skin } from "~/ui/styles";
-import { Spacing } from "~/ui/styles";
-// import type { LeftAlign } from "csstype";
+import { css, Skin, Spacing } from "~/ui/styles";
 
 interface StyleComponent {
   style?: Style.Properties;

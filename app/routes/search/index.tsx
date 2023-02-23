@@ -2,20 +2,16 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useTransition } from "@remix-run/react";
 import { FaUserCircle } from "react-icons/fa";
-import {
-  AddressLookup,
-  Instructions,
-  LevelsNav,
-  Loading,
-  Representatives,
-} from "~/ui";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/legislation";
 import { getLegislations } from "~/legislation/api";
-import { getRepresentatives } from "~/representatives/api";
 import { getLocale, RepLevel } from "~/levels";
+import LevelsNav from "~/levels/react/LevelsNav";
 import type { RepresentativesResult } from "~/representatives";
+import { getRepresentatives } from "~/representatives/api";
+import Representatives from "~/representatives/react/Representatives";
+import { AddressLookup, Instructions, Loading } from "~/ui";
 
 type LoaderData = {
   legislation: LegislationData[];
@@ -54,7 +50,7 @@ const Header = ({ env }: { env: Env }) => {
       <div className="form-control">
         <AddressLookup env={env} />
       </div>
-      <div className="dropdown dropdown-end">
+      <div className="dropdown-end dropdown">
         <label
           tabIndex={0}
           className="avatar placeholder btn btn-ghost btn-circle"

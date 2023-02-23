@@ -5,7 +5,7 @@ import Autocomplete from "react-google-autocomplete";
 import { useAppContext } from "~/app-shell/AppContext";
 import type { Env } from "~/config";
 
-const AddressLookup: FC<{ env: Env }> = ({ env }) => {
+export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
   const config = useAppContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
@@ -39,5 +39,3 @@ const AddressLookup: FC<{ env: Env }> = ({ env }) => {
     />
   );
 };
-
-export default AddressLookup;
