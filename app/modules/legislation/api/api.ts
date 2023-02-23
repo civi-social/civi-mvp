@@ -1,9 +1,8 @@
 import type { Env } from "~/config";
-import type { LegislationData } from "~/modules/legislation";
 import type { Locales } from "~/modules/levels";
 import { RepLevel } from "~/modules/levels";
+import type { LegislationData } from "../legislation.types";
 import { councilmatic } from "./councilmatic";
-import { google } from "../../representatives/api/google";
 import { legiscan } from "./legiscan";
 
 export const getLegislations = async (
@@ -35,7 +34,3 @@ export const getLegislations = async (
   }
   return legislation;
 };
-
-export const getRepresentatives = google.getRepresentatives;
-
-export const getChicagoWard = google.getChicagoWard;

@@ -1,6 +1,6 @@
 import axios from "axios";
-import type { LegislationData } from "~/modules/legislation";
 import * as cheerio from "cheerio";
+import type { LegislationData } from "../legislation.types";
 import { legislationCache } from "./legislation-cache";
 
 /**
