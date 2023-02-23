@@ -8,14 +8,14 @@ import {
   LevelsNav,
   Loading,
   Representatives,
-} from "~/modules/ui";
+} from "modules/ui";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/modules/legislation";
-import { getLegislations } from "~/modules/legislation/api";
-import { getRepresentatives } from "~/modules/representatives/api";
-import { getLocale, RepLevel } from "~/modules/levels";
-import type { RepresentativesResult } from "~/modules/representatives";
+import type { LegislationData } from "modules/legislation";
+import { getLegislations } from "modules/legislation/api";
+import { getRepresentatives } from "modules/representatives/api";
+import { getLocale, RepLevel } from "modules/levels";
+import type { RepresentativesResult } from "modules/representatives";
 
 type LoaderData = {
   legislation: LegislationData[];

@@ -1,4 +1,4 @@
-import type { GoogleRepresentativesResponse } from "~/modules/representatives/api/google.types";
+import type { GoogleRepresentativesResponse } from "modules/representatives/api/google.types";
 import type { RepresentativesResult } from "./representatives.types";
 
 export const transformGoogleCivicInfo = (

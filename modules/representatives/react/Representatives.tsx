@@ -1,9 +1,9 @@
 import type { FC } from "react";
-import { Bills } from "~/modules/legislation";
-import type { LegislationData } from "~/modules/legislation";
-import type { RepLevel } from "~/modules/levels";
-import { OfficialOfficeList } from "~/modules/representatives";
-import type { RepresentativesResult } from "~/modules/representatives";
+import { Bills } from "modules/legislation";
+import type { LegislationData } from "modules/legislation";
+import type { RepLevel } from "modules/levels";
+import { OfficialOfficeList } from "modules/representatives";
+import type { RepresentativesResult } from "modules/representatives";
 
 type Props = {
   formattedAddress: string | null;

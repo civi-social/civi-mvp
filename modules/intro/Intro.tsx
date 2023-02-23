@@ -1,9 +1,9 @@
 import { useNavigate } from "@remix-run/react";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
-import { Card, CardSection, CardTitle } from "~/modules/ui/Card";
-import { Col, Container, Grid } from "~/modules/ui/Layout";
-import type { StyleHack } from "~/modules/ui/styles";
-import { createStyleSheet, Skin, Spacing } from "~/modules/ui/styles";
+import { Card, CardSection, CardTitle } from "modules/ui/Card";
+import { Col, Container, Grid } from "modules/ui/Layout";
+import type { StyleHack } from "modules/ui/styles";
+import { createStyleSheet, Skin, Spacing } from "modules/ui/styles";
 
 export const Intro = () => {
   const navigate = useNavigate();

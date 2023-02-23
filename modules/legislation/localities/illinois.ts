@@ -1,6 +1,6 @@
-import type { LegiscanBill } from "~/modules/legislation/api/legiscan.types";
-import { STATUS_MAP } from "~/modules/legislation/api/legiscan.types";
-import type { LegislationData } from "~/modules/legislation";
+import type { LegiscanBill } from "modules/legislation/api/legiscan.types";
+import { STATUS_MAP } from "modules/legislation/api/legiscan.types";
+import type { LegislationData } from "modules/legislation";
 
 /**
  * Illinois bills have either SB0000, HB0000, HJR0000, or SJR0000.

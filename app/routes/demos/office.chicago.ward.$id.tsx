@@ -6,15 +6,15 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import { DynamicPoll } from "~/modules/ui/Poll/Poll";
-import { Skin, Spacing } from "~/modules/ui/styles";
+import { DynamicPoll } from "modules/ui/Poll/Poll";
+import { Skin, Spacing } from "modules/ui/styles";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/modules/legislation";
-import { getLegislations } from "~/modules/legislation/api";
-import { RepLevel } from "~/modules/levels";
-import { getChicagoWard } from "~/modules/representatives/api";
-import type { RepresentativesOcIdResult } from "~/modules/representatives/representatives.types";
+import type { LegislationData } from "modules/legislation";
+import { getLegislations } from "modules/legislation/api";
+import { RepLevel } from "modules/levels";
+import { getChicagoWard } from "modules/representatives/api";
+import type { RepresentativesOcIdResult } from "modules/representatives/representatives.types";
 
 interface LoaderData {
   legislation: LegislationData[];

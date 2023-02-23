@@ -8,9 +8,9 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 import { FaChevronLeft } from "react-icons/fa";
 
-import { safeRedirect } from "~/modules/router/router.utils";
-import { verifyLogin } from "~/modules/user/user.server";
-import { validateEmail } from "~/modules/user/user.utils";
+import { safeRedirect } from "modules/router/router.utils";
+import { verifyLogin } from "modules/user/user.server";
+import { validateEmail } from "modules/user/user.utils";
 import { createUserSession, getUserId } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
