@@ -3,7 +3,7 @@ import type { LegislationData } from "~/modules/legislation";
 import type { Locales } from "~/modules/levels";
 import { RepLevel } from "~/modules/levels";
 import { councilmatic } from "./councilmatic";
-import { google } from "./google";
+import { google } from "../../representatives/api/google";
 import { legiscan } from "./legiscan";
 
 export const getLegislations = async (

@@ -2,7 +2,6 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useTransition } from "@remix-run/react";
 import { FaUserCircle } from "react-icons/fa";
-import { getLegislations, getRepresentatives } from "~/api";
 import {
   AddressLookup,
   Instructions,
@@ -13,6 +12,7 @@ import {
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import type { LegislationData } from "~/modules/legislation";
+import { getLegislations, getRepresentatives } from "~/modules/legislation/api";
 import { getLocale, RepLevel } from "~/modules/levels";
 import type { RepresentativesResult } from "~/modules/representatives";
 

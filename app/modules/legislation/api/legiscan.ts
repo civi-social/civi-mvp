@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { Env } from "~/config";
-import type { LegislationData } from "~/modules/legislation";
-import { legiscanResultToIllinoisLegislation } from "~/modules/local-legislation/illinois";
-import { legiscanResultToUSALegislation } from "~/modules/local-legislation/usa";
+import type { LegislationData } from "../legislation.types";
+import { legiscanResultToIllinoisLegislation } from "../localities/illinois";
+import { legiscanResultToUSALegislation } from "../localities/usa";
 import { legislationCache } from "./legislation-cache";
 import type {
   LegiscanBill,

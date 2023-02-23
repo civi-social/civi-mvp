@@ -6,7 +6,7 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import { getChicagoWard, getLegislations } from "~/api";
+import { getChicagoWard, getLegislations } from "~/modules/legislation/api";
 import { DynamicPoll } from "~/components/Poll/Poll";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
