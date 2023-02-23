@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { LegislationData } from "modules/legislation";
+import type { LegislationData } from "~/legislation";
 import { DataField } from "../../ui/DataField/DataField";
 import { ResultCard } from "../../ui/ResultCard/ResultCard";
 

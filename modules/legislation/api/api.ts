@@ -1,6 +1,6 @@
 import type { Env } from "~/config";
-import type { Locales } from "modules/levels";
-import { RepLevel } from "modules/levels";
+import type { Locales } from "~/levels";
+import { RepLevel } from "~/levels";
 import type { LegislationData } from "../legislation.types";
 import { councilmatic } from "./councilmatic";
 import { legiscan } from "./legiscan";

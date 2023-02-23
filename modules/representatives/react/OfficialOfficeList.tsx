@@ -1,7 +1,7 @@
 import type { FC } from "react";
-import type { OfficialOffice } from "modules/representatives/representatives.types";
-import { DataField } from "modules/ui/DataField/DataField";
-import { ResultCard } from "modules/ui/ResultCard/ResultCard";
+import type { OfficialOffice } from "~/representatives/representatives.types";
+import { DataField } from "~/ui/DataField/DataField";
+import { ResultCard } from "~/ui/ResultCard/ResultCard";
 
 export const OfficialOfficeList: FC<{
   officialOffice: OfficialOffice[];

@@ -1,4 +1,4 @@
-import type { Spacing, ZIndex, Skin } from "../modules/ui/styles";
+import type { Spacing, ZIndex, Skin } from "../ui/styles";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type * as CSS from "csstype";
 

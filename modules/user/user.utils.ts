@@ -1,5 +1,5 @@
 import type { User } from "@prisma/client";
-import { useMatchesData } from "modules/router/router.utils";
+import { useMatchesData } from "~/router/router.utils";
 
 function isUser(user: any): user is User {
   return user && typeof user === "object" && typeof user.email === "string";
