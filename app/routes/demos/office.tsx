@@ -5,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import React from "react";
-import { Poll } from "~/ui/Poll/Poll";
+import { Poll } from "~/ui";
 
 export const loader: LoaderFunction = async ({ request }) => {
   return json({});

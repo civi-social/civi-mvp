@@ -5,15 +5,11 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import React from "react";
-import { getLegislations } from "~/legislation/api";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
+import { forYouData } from "~/for-you";
 import type { LegislationData } from "~/legislation";
-import { RepLevel } from "~/levels";
-import ResultCard from "~/ui/ResultCard/ResultCard";
-import DataField from "~/ui/DataField/DataField";
-import { Spacing } from "~/ui/styles";
+import { DataField, ResultCard, Spacing } from "~/ui";
 
 interface LoaderData {
   legislation: LegislationData[];
@@ -22,24 +18,7 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({ params }) => {
   const env = getEnv(process.env);
 
-  const city: LegislationData[] = await getLegislations(
-    env,
-    RepLevel.City,
-    "Chicago"
-  );
-  const state: LegislationData[] = await getLegislations(
-    env,
-    RepLevel.State,
-    "Chicago"
-  );
-
-  const national: LegislationData[] = await getLegislations(
-    env,
-    RepLevel.National,
-    "Chicago"
-  );
-
-  const legislation = [...city, ...state, ...national];
+  const legislation = await forYouData(env);
 
   return json<LoaderData>({ legislation, env });
 };
