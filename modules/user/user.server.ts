@@ -1,8 +1,8 @@
 import type { Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-import { prisma } from "~app/db.server";
-import type { UserCreateRequest } from "~/user/user.types";
+import { prisma } from "../../app/db.server";
+import type { UserCreateRequest } from "./user.types";
 export type { User } from "@prisma/client";
 
 export async function getUserById(id: User["id"]) {
