@@ -48,10 +48,15 @@ const getMasterList = async (
 const getIllinoisBills = async (env: Env): Promise<LegislationData[]> => {
   console.log("Get Illinois Bills");
   try {
+    const cacheKey = "illinois-bills";
+    const cache = legislationCache.get(cacheKey);
+    if (cache) {
+      return cache as LegislationData[];
+    }
     const sessionId = "2020"; // todo: get from api
     const bills = await getMasterList(env, sessionId);
     const legislations = legiscanResultToIllinoisLegislation(bills);
-
+    legislationCache.set(cacheKey, legislations);
     return legislations;
   } catch (e) {
     return Promise.reject(e);
