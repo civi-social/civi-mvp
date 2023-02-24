@@ -5,13 +5,13 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import type { CiviLegislationData } from "civi-legislation-data";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import { ForYou, forYouData } from "~/for-you";
-import type { LegislationData } from "~/legislation";
 
 interface LoaderData {
-  legislation: LegislationData[];
+  legislation: CiviLegislationData[];
   env: Env;
 }
 export const loader: LoaderFunction = async ({ params }) => {

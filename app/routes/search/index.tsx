@@ -1,10 +1,10 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useTransition } from "@remix-run/react";
+import type { CiviLegislationData } from "civi-legislation-data";
 import { FaUserCircle } from "react-icons/fa";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/legislation";
 import { getLegislations } from "~/legislation/api";
 import { getLocale, RepLevel } from "~/levels";
 import LevelsNav from "~/levels/react/LevelsNav";
@@ -14,7 +14,7 @@ import Representatives from "~/representatives/react/Representatives";
 import { AddressLookup, Instructions, Loading } from "~/ui";
 
 type LoaderData = {
-  legislation: LegislationData[];
+  legislation: CiviLegislationData[];
   address: string | null;
   level: RepLevel;
   representatives: RepresentativesResult | null;
@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const level = (url.searchParams.get("level") as RepLevel) ?? RepLevel.City;
 
   let representatives: RepresentativesResult | null = null;
-  let legislation: LegislationData[] = [];
+  let legislation: CiviLegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
     legislation = await getLegislations(env, level, getLocale(address));

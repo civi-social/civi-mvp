@@ -5,10 +5,10 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import type { CiviLegislationData } from "civi-legislation-data";
 import React from "react";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { LegislationData } from "~/legislation";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
 import { DynamicPoll } from "~/poll/Poll";
@@ -17,7 +17,7 @@ import type { RepresentativesOcIdResult } from "~/representatives/representative
 import { Skin, Spacing } from "~/ui";
 
 interface LoaderData {
-  legislation: LegislationData[];
+  legislation: CiviLegislationData[];
   representative: RepresentativesOcIdResult;
   env: Env;
 }
@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     id || "",
     env
   );
-  const legislation: LegislationData[] = await getLegislations(
+  const legislation: CiviLegislationData[] = await getLegislations(
     env,
     RepLevel.City,
     "Chicago"
@@ -126,12 +126,12 @@ export default function OfficePage() {
             </h2>
             <h1 className="text-4xl font-medium text-gray-700">{name}</h1>
             <div>
-              {legislation.map(({ title, sponsors, date }) => (
+              {legislation.map(({ title, sponsors, statusDate }) => (
                 <DynamicPoll
                   key={title}
                   pollText={title}
-                  subText={sponsors.join(",") || ""}
-                  extraText={date}
+                  subText={sponsors.map((s) => s.name).join(",") || ""}
+                  extraText={statusDate}
                 />
               ))}
             </div>
