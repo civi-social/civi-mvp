@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Bills } from "~/legislation";
-import type { LegislationData } from "~/legislation";
+import type { CiviLegislationData } from "civi-legislation-data";
 import type { RepLevel } from "~/levels";
 import { OfficialOfficeList } from "~/representatives";
 import type { RepresentativesResult } from "~/representatives";
@@ -8,7 +8,7 @@ import type { RepresentativesResult } from "~/representatives";
 type Props = {
   formattedAddress: string | null;
   representatives: RepresentativesResult | null;
-  legislation: LegislationData[];
+  legislation: CiviLegislationData[];
   level: RepLevel;
 };
 

@@ -1,21 +1,21 @@
 import type { Env } from "~/config";
-import type { LegislationData } from "~/legislation";
+import type { CiviLegislationData } from "civi-legislation-data";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
 
-export const forYouData = async (env: Env): Promise<LegislationData[]> => {
-  const city: LegislationData[] = await getLegislations(
+export const forYouData = async (env: Env): Promise<CiviLegislationData[]> => {
+  const city: CiviLegislationData[] = await getLegislations(
     env,
     RepLevel.City,
     "Chicago"
   );
-  const state: LegislationData[] = await getLegislations(
+  const state: CiviLegislationData[] = await getLegislations(
     env,
     RepLevel.State,
     "Chicago"
   );
 
-  const national: LegislationData[] = await getLegislations(
+  const national: CiviLegislationData[] = await getLegislations(
     env,
     RepLevel.National,
     "Chicago"

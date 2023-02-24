@@ -1,16 +1,15 @@
+import type { CiviLegislationData } from "civi-legislation-data";
 import type { FC } from "react";
-import type { LegislationData } from "~/legislation";
-import { DataField } from "../../ui/DataField/DataField";
-import { ResultCard } from "../../ui/ResultCard/ResultCard";
+import { DataField, ResultCard } from "~/ui";
 
 type Props = {
-  bills: LegislationData[];
+  bills: CiviLegislationData[];
 };
 
 export const Bills: FC<Props> = ({ bills }) => {
   return (
     <>
-      {bills.map(({ id, title, date, sponsor, link, description }) => (
+      {bills.map(({ id, title, statusDate, sponsors, link, description }) => (
         <ResultCard
           key={id + title}
           title={title}
@@ -18,8 +17,10 @@ export const Bills: FC<Props> = ({ bills }) => {
           channels={
             <>
               <DataField type="Text" id={id} />
-              {sponsor && <DataField type="Text" id={sponsor} />}
-              <DataField type="Text" id={date} />
+              {sponsors && (
+                <DataField type="Text" id={sponsors.map((s) => s.name)?.[0]} />
+              )}
+              <DataField type="Text" id={statusDate} />
               <DataField type="URL" id={link} />
             </>
           }
