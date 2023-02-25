@@ -29,11 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     id || "",
     env
   );
-  const legislation: CiviLegislationData[] = await getLegislations(
-    env,
-    RepLevel.City,
-    "Chicago"
-  );
+  const { legislation } = await getLegislations(env, RepLevel.City, "Chicago");
 
   return json<LoaderData>({ legislation, representative, env });
 };

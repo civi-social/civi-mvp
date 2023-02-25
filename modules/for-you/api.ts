@@ -4,18 +4,18 @@ import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
 
 export const forYouData = async (env: Env): Promise<CiviLegislationData[]> => {
-  const city: CiviLegislationData[] = await getLegislations(
+  const { legislation: city } = await getLegislations(
     env,
     RepLevel.City,
     "Chicago"
   );
-  const state: CiviLegislationData[] = await getLegislations(
+  const { legislation: state } = await getLegislations(
     env,
     RepLevel.State,
     "Chicago"
   );
 
-  const national: CiviLegislationData[] = await getLegislations(
+  const { legislation: national } = await getLegislations(
     env,
     RepLevel.National,
     "Chicago"

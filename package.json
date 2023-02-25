@@ -46,7 +46,7 @@
     "@remix-run/server-runtime": "^1.4.1",
     "axios": "^1.3.4",
     "bcryptjs": "^2.4.3",
-    "civi-legislation-data": "https://github.com/civi-social/civi-legislation-data.git",
+    "civi-legislation-data": "https://github.com/civi-social/civi-legislation-data.git#main",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "csstype": "^3.1.1",

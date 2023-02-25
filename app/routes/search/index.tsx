@@ -32,7 +32,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   let legislation: CiviLegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
-    legislation = await getLegislations(env, level, getLocale(address));
+    const res = await getLegislations(env, level, getLocale(address));
+    legislation = res.legislation;
   }
 
   return json<LoaderData>({
