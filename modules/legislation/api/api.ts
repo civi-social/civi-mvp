@@ -35,7 +35,7 @@ const getCachedLegislationData = async (
 const getCachedLegislationGptData = async (
   name: Parameters<typeof civiLegislationApi.getLegislationDataUrl>[0]
 ): Promise<CiviGptLegislationData> => {
-  const cacheKey = `civi-legislation-data:${name}`;
+  const cacheKey = `civi-legislation-gpt-data:${name}`;
 
   // return cache if it exists
   if (legislationCache.has(cacheKey)) {
@@ -58,7 +58,10 @@ export const getLegislations = async (
   env: Env,
   levels: RepLevel,
   locale: Locales | null
-): Promise<{ legislation: CiviLegislationData[]  gpt: CiviGptLegislationData}> => {
+): Promise<{
+  legislation: CiviLegislationData[];
+  gpt: CiviGptLegislationData;
+}> => {
   console.log("getting bills for", locale, levels);
   let legislation: CiviLegislationData[] = [];
   let gpt: CiviGptLegislationData = {};

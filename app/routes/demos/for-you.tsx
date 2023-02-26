@@ -5,13 +5,13 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import type { CiviLegislationData } from "civi-legislation-data";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
+import type { CiviLegislationDataWithGpt } from "~/for-you";
 import { ForYou, forYouData } from "~/for-you";
 
 interface LoaderData {
-  legislation: CiviLegislationData[];
+  legislation: CiviLegislationDataWithGpt[];
   env: Env;
 }
 export const loader: LoaderFunction = async ({ params }) => {
@@ -36,8 +36,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
   };
 };
 
-export default function OfficePage() {
+export default function ForYouPage() {
   const { legislation } = useLoaderData<LoaderData>();
-
   return <ForYou legislation={legislation} />;
 }
