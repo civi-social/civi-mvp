@@ -1,10 +1,12 @@
-import { DataField, ResultCard, Spacing } from "~/ui";
-import type { CiviLegislationDataWithGpt } from "../legislation-with-gpt";
+import { DataField, Spacing } from "~/ui";
+import type { ForYouBill } from "../selector";
 
 export const ForYou = ({
   legislation,
+  tags,
 }: {
-  legislation: CiviLegislationDataWithGpt[];
+  legislation: ForYouBill[];
+  tags: string[];
 }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -18,8 +20,14 @@ export const ForYou = ({
           marginBottom: Spacing.FOUR,
         }}
       >
+        {tags.map((tag) => (
+          <span key={tag}>{tag}</span>
+        ))}
         {legislation.map(
-          ({ id, title, statusDate, sponsors, link, description, gpt }) => (
+          ({
+            bill: { id, title, statusDate, sponsors, link, description },
+            gpt,
+          }) => (
             <div key={id + title} style={{ marginTop: Spacing.FOUR }}>
               <div className="flex flex-col gap-y-2 rounded-lg border border-solid border-gray-200 px-4 py-2">
                 <span>{id}</span>
