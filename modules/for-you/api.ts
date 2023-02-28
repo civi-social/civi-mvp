@@ -37,7 +37,16 @@ export const forYouData = async ({
   );
 
   const fullLegislation = [...city, ...state, ...national];
-  let legislation: typeof fullLegislation = fullLegislation;
+
+  let levelsFiltered: typeof fullLegislation = fullLegislation;
+
+  if (filters.level) {
+    levelsFiltered = fullLegislation.filter(
+      (bill) => bill.level === filters.level
+    );
+  }
+
+  let legislation: typeof levelsFiltered = levelsFiltered;
 
   if (filters.tags && Array.isArray(filters.tags)) {
     const filterTags = filters.tags;

@@ -1,10 +1,9 @@
-import { useLocation } from "@remix-run/react";
-import type { StyleHack } from "~/ui";
-import { Skin } from "~/ui";
-import { DataField, Spacing } from "~/ui";
-import type { ForYouBill } from "../selector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RepLevel } from "~/levels";
+import type { StyleHack } from "~/ui";
+import { RadioPicker } from "~/ui";
+import { DataField, Skin, Spacing } from "~/ui";
+import type { ForYouBill } from "../selector";
 
 const Tag: React.FC<{ text: string }> = ({ children, text }) => {
   return (
@@ -24,7 +23,7 @@ const Tag: React.FC<{ text: string }> = ({ children, text }) => {
   );
 };
 
-export default function Tagging({
+const Tagging = ({
   tags,
   filters,
   updateFilters,
@@ -32,7 +31,7 @@ export default function Tagging({
   tags: string[];
   filters: FilterParams;
   updateFilters: UpdateFiltersFn;
-}) {
+}) => {
   const [selectedTags, setSelectedTags] = useState<string[]>(
     filters.tags ?? []
   );
@@ -72,7 +71,7 @@ export default function Tagging({
       ))}
     </div>
   );
-}
+};
 
 export interface FilterParams {
   address?: string | null;
@@ -105,6 +104,28 @@ export const ForYou = ({
           marginBottom: Spacing.FOUR,
         }}
       >
+        <RadioPicker<RepLevel | null | undefined>
+          handleChange={(next) => {
+            if (!next) {
+              updateFilters({
+                ...filters,
+                level: null,
+              });
+            } else {
+              updateFilters({
+                ...filters,
+                level: next,
+              });
+            }
+          }}
+          defaultValue={filters.level}
+          options={[
+            { label: "All", value: "" },
+            { label: "City", value: RepLevel.City },
+            { label: "State", value: RepLevel.State },
+            { label: "National", value: RepLevel.National },
+          ]}
+        />
         <Tagging tags={tags} filters={filters} updateFilters={updateFilters} />
         {legislation.map(
           ({
@@ -130,12 +151,6 @@ export const ForYou = ({
                 )}
                 <div style={{ fontFamily: "monospace" }}>{description}</div>
                 <ul className="flex list-none flex-wrap items-center gap-x-2">
-                  {/* {sponsors && (
-                    <DataField
-                      type="Text"
-                      id={sponsors.map((s) => s.name).join(", ")}
-                    />
-                  )} */}
                   <DataField type="Text" id={statusDate} />
                   <DataField type="URL" id={link} />
                 </ul>
