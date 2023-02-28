@@ -24,27 +24,28 @@ const Tag: React.FC<{ text: string }> = ({ children, text }) => {
   );
 };
 
-export default function Tagging({ tags }: { tags: string[] }) {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+export default function Tagging({
+  tags,
+  filters,
+  updateFilters,
+}: {
+  tags: string[];
+  filters: FilterParams;
+  updateFilters: UpdateFiltersFn;
+}) {
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    searchParams.get("tags")?.split(",") ?? []
+    filters.tags ?? []
   );
 
-  // useEffect(() => {
-  //   // Update the URL parameters when the selected tags change
-  //   const searchParams = new URLSearchParams(location.search);
-  //   searchParams.set("tags", selectedTags.join(","));
-  //   window.history.replaceState(null, "", `/?${searchParams.toString()}`);
-  // }, [selectedTags, location.search]);
-
   const handleTagClick = (tag: string) => {
+    let updatedTags: string[] = [];
     if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
+      updatedTags = selectedTags.filter((t) => t !== tag);
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      updatedTags = [...selectedTags, tag];
     }
-    d;
+    updateFilters({ ...filters, tags: updatedTags });
+    setSelectedTags(updatedTags);
   };
 
   return (
@@ -63,6 +64,7 @@ export default function Tagging({ tags }: { tags: string[] }) {
             borderRadius: "20px",
             border: "none",
             cursor: "pointer",
+            fontSize: "10px",
           }}
         >
           {tag}
@@ -72,12 +74,24 @@ export default function Tagging({ tags }: { tags: string[] }) {
   );
 }
 
+export interface FilterParams {
+  address?: string | null;
+  tags?: string[] | null;
+  level?: RepLevel | null;
+}
+
+export type UpdateFiltersFn = (p: FilterParams) => void;
+
 export const ForYou = ({
   legislation,
   tags,
+  updateFilters,
+  filters,
 }: {
   legislation: ForYouBill[];
   tags: string[];
+  updateFilters: UpdateFiltersFn;
+  filters: FilterParams;
 }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -91,7 +105,7 @@ export const ForYou = ({
           marginBottom: Spacing.FOUR,
         }}
       >
-        <Tagging tags={tags} />
+        <Tagging tags={tags} filters={filters} updateFilters={updateFilters} />
         {legislation.map(
           ({
             bill: { id, title, statusDate, sponsors, link, description },
@@ -109,9 +123,7 @@ export const ForYou = ({
                   </div>
                 )}
                 {level !== RepLevel.City && (
-                  <div className="text-lg">
-                    {title}
-                  </div>
+                  <div className="text-lg">{title}</div>
                 )}
                 {gpt?.gpt_summary && (
                   <h4 className="text-xl font-semibold">{gpt.gpt_summary}</h4>
