@@ -28,12 +28,12 @@ export const forYouData = async ({
 
   const state = selectData(
     await getLegislations(env, RepLevel.State, "Chicago"),
-    RepLevel.City
+    RepLevel.State
   );
 
   const national = selectData(
     await getLegislations(env, RepLevel.National, "Chicago"),
-    RepLevel.City
+    RepLevel.National
   );
 
   const fullLegislation = [...city, ...state, ...national];
@@ -56,7 +56,7 @@ export const forYouData = async ({
   }
 
   const tags = new Set<string>();
-  fullLegislation.forEach((bill) => {
+  levelsFiltered.forEach((bill) => {
     bill.gpt?.gpt_tags?.forEach((tag) => {
       tags.add(tag);
     });

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Spacing } from "../styles";
 
 interface Option {
   label: string;
@@ -25,7 +26,7 @@ export const RadioPicker = <T extends string | null | undefined>({
   return (
     <div>
       {options.map((option) => (
-        <label key={option.value}>
+        <label key={option.value} style={{ margin: Spacing.ONE }}>
           <input
             type="radio"
             value={option.value}
