@@ -47,7 +47,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function ForYouPage() {
-  const { legislation, tags, filters } = useLoaderData<LoaderData>();
+  const { legislation, tags, filters, env } = useLoaderData<LoaderData>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateFilters: UpdateFiltersFn = ({ address, tags, level }) => {
@@ -67,6 +67,7 @@ export default function ForYouPage() {
 
   return (
     <ForYou
+      env={env}
       tags={tags}
       legislation={legislation}
       filters={filters}

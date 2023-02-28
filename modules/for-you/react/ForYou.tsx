@@ -1,6 +1,8 @@
 import { useState } from "react";
+import type { Env } from "~/config";
 import { RepLevel } from "~/levels";
 import type { StyleHack } from "~/ui";
+import { AddressLookup } from "~/ui";
 import { RadioPicker } from "~/ui";
 import { DataField, Skin, Spacing } from "~/ui";
 import type { ForYouBill } from "../selector";
@@ -86,11 +88,13 @@ export const ForYou = ({
   tags,
   updateFilters,
   filters,
+  env,
 }: {
   legislation: ForYouBill[];
   tags: string[];
   updateFilters: UpdateFiltersFn;
   filters: FilterParams;
+  env: Env;
 }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -104,6 +108,9 @@ export const ForYou = ({
           marginBottom: Spacing.FOUR,
         }}
       >
+        <div style={{ background: "#99cc99" as StyleHack }}>
+          <AddressLookup env={env} />
+        </div>
         <RadioPicker<RepLevel | null | undefined>
           handleChange={(next) => {
             if (!next) {
