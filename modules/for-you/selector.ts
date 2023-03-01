@@ -4,7 +4,6 @@ import type {
 } from "civi-legislation-data";
 import type { RepLevel } from "~/levels";
 import type { RepresentativesResult } from "~/representatives";
-import { convertLegiscanDistrictToOcd } from "./legiscan-office-to-ocd";
 import { findOverlap } from "./utils";
 
 // todo: put this type directly in civi-legislation-data
@@ -30,20 +29,15 @@ export const selectData = (
   stateAbbreviation: "il"
 ): ForYouBill[] => {
   return legislation.map((bill) => {
-    const sponsors = convertLegiscanDistrictToOcd(
-      bill.sponsors,
-      level,
-      stateAbbreviation
-    );
-
     return {
-      bill: {
-        ...bill,
-        sponsors,
-      },
+      bill,
       gpt: gpt[bill.id],
       level,
-      sponsoredByRep: findBillsSponsoredByRep(representatives, sponsors, level),
+      sponsoredByRep: findBillsSponsoredByRep(
+        representatives,
+        bill.sponsors,
+        level
+      ),
     } as ForYouBill;
   });
 };
