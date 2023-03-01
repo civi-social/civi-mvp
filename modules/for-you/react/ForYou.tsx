@@ -1,6 +1,6 @@
 import type { Env } from "~/config";
 import { RepLevel } from "~/levels";
-import type { StyleHack } from "~/ui";
+import type { Style, StyleHack } from "~/ui";
 import {
   AddressLookup,
   DataField,
@@ -33,49 +33,42 @@ export const ForYou = ({
   env: Env;
 }) => {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div
-        style={{
-          maxWidth: "500px",
-          alignContent: "center",
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-          marginBottom: Spacing.FOUR,
-        }}
-      >
-        <div style={{ background: "#99cc99" as StyleHack }}>
-          <AddressLookup env={env} />
+    <div style={styles.flexCenter}>
+      <div style={styles.mainContainer}>
+        <div style={styles.filterContainer}>
+          <div style={styles.addressContainer}>
+            <AddressLookup env={env} />
+          </div>
+          <RadioPicker<RepLevel | null | undefined>
+            handleChange={(next) => {
+              if (!next) {
+                updateFilters({
+                  ...filters,
+                  level: null,
+                });
+              } else {
+                updateFilters({
+                  ...filters,
+                  level: next,
+                });
+              }
+            }}
+            defaultValue={filters.level}
+            options={[
+              { label: "All", value: "" },
+              { label: "City", value: RepLevel.City },
+              { label: "State", value: RepLevel.State },
+              { label: "National", value: RepLevel.National },
+            ]}
+          />
+          <Tagging
+            tags={tags}
+            selected={filters.tags || []}
+            handleClick={(updatedTags) => {
+              updateFilters({ ...filters, tags: updatedTags });
+            }}
+          />
         </div>
-        <RadioPicker<RepLevel | null | undefined>
-          handleChange={(next) => {
-            if (!next) {
-              updateFilters({
-                ...filters,
-                level: null,
-              });
-            } else {
-              updateFilters({
-                ...filters,
-                level: next,
-              });
-            }
-          }}
-          defaultValue={filters.level}
-          options={[
-            { label: "All", value: "" },
-            { label: "City", value: RepLevel.City },
-            { label: "State", value: RepLevel.State },
-            { label: "National", value: RepLevel.National },
-          ]}
-        />
-        <Tagging
-          tags={tags}
-          selected={filters.tags || []}
-          handleClick={(updatedTags) => {
-            updateFilters({ ...filters, tags: updatedTags });
-          }}
-        />
         {legislation.map(
           ({
             bill: { id, title, statusDate, link, description },
@@ -117,4 +110,27 @@ export const ForYou = ({
       </div>
     </div>
   );
+};
+
+const styles: Style.StyleSheet<
+  "mainContainer" | "addressContainer" | "flexCenter" | "filterContainer"
+> = {
+  flexCenter: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  mainContainer: {
+    maxWidth: "500px",
+    alignContent: "center",
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    marginBottom: Spacing.FOUR,
+  },
+  addressContainer: {
+    // background: "#99cc99" as StyleHack,
+  },
+  filterContainer: {
+    padding: Spacing.FOUR,
+  },
 };
