@@ -5,15 +5,7 @@ import { getRepresentatives } from "~/representatives/api";
 import type { FilterParams } from "./react/ForYou";
 import type { ForYouBill } from "./selector";
 import { selectData } from "./selector";
-
-const hasOverlap = (arr1: string[], arr2: string[]): boolean => {
-  for (let i = 0; i < arr1.length; i++) {
-    if (arr2.includes(arr1[i])) {
-      return true;
-    }
-  }
-  return false;
-};
+import { hasOverlap } from "./utils";
 
 export const forYouData = async ({
   env,
@@ -22,35 +14,29 @@ export const forYouData = async ({
   env: Env;
   filters: FilterParams;
 }): Promise<{ legislation: ForYouBill[]; tags: string[] }> => {
-  if (filters.address) {
-    const representatives = await getRepresentatives(filters.address, env);
-    const stateD = selectData(
-      await getLegislations(env, RepLevel.City, "Chicago"),
-      "il",
-      RepLevel.City
-    );
-    console.log(
-      representatives.offices.national.map((a) => a.office),
-      stateD.map((bill) => bill.bill.sponsors)
-    );
-  }
+  const representatives = filters.address
+    ? await getRepresentatives(filters.address, env)
+    : null;
 
   const city = selectData(
     await getLegislations(env, RepLevel.City, "Chicago"),
-    "il",
-    RepLevel.City
+    RepLevel.City,
+    representatives,
+    "il"
   );
 
   const state = selectData(
     await getLegislations(env, RepLevel.State, "Chicago"),
-    "il",
-    RepLevel.State
+    RepLevel.State,
+    representatives,
+    "il"
   );
 
   const national = selectData(
     await getLegislations(env, RepLevel.National, "Chicago"),
-    "il",
-    RepLevel.National
+    RepLevel.National,
+    representatives,
+    "il"
   );
 
   const fullLegislation = [...city, ...state, ...national];
