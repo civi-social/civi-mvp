@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { StyleHack } from "../styles";
+import type { Style, StyleHack } from "../styles";
 import { Skin } from "../styles";
 
 export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
@@ -9,15 +9,11 @@ export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
   return (
     <span
       style={{
+        ...styles.tagMain,
         backgroundColor: backgroundColor
           ? backgroundColor
           : ("grey" as StyleHack),
         color: Skin.White,
-        padding: "5px 10px" as StyleHack,
-        margin: "5px 5px 5px 0" as StyleHack,
-        borderRadius: "20px",
-        border: "none",
-        fontSize: "12px",
       }}
     >
       {text}
@@ -54,16 +50,11 @@ export const Tagging = ({
           key={tag}
           onClick={() => handleTagClick(tag)}
           style={{
+            ...styles.tagMain,
             backgroundColor: selectedTags.includes(tag)
               ? ("blue" as StyleHack)
               : ("grey" as StyleHack),
             color: Skin.White,
-            padding: "5px 10px" as StyleHack,
-            margin: "5px" as StyleHack,
-            borderRadius: "20px",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "10px",
           }}
         >
           {tag}
@@ -71,4 +62,14 @@ export const Tagging = ({
       ))}
     </div>
   );
+};
+
+const styles: Style.StyleSheet<"tagMain"> = {
+  tagMain: {
+    padding: "5px 10px" as StyleHack,
+    margin: "5px 5px 5px 0" as StyleHack,
+    borderRadius: "20px",
+    border: "none",
+    fontSize: "12px",
+  },
 };
