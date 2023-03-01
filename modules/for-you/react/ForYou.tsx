@@ -7,11 +7,16 @@ import { RadioPicker } from "~/ui";
 import { DataField, Skin, Spacing } from "~/ui";
 import type { ForYouBill } from "../selector";
 
-const Tag: React.FC<{ text: string }> = ({ children, text }) => {
+const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
+  backgroundColor,
+  text,
+}) => {
   return (
     <span
       style={{
-        backgroundColor: "grey" as StyleHack,
+        backgroundColor: backgroundColor
+          ? backgroundColor
+          : ("grey" as StyleHack),
         color: Skin.White,
         padding: "5px 10px" as StyleHack,
         margin: "5px 5px 5px 0" as StyleHack,
@@ -136,13 +141,20 @@ export const ForYou = ({
         <Tagging tags={tags} filters={filters} updateFilters={updateFilters} />
         {legislation.map(
           ({
-            bill: { id, title, statusDate, sponsors, link, description },
+            bill: { id, title, statusDate, link, description },
             gpt,
             level,
+            sponsoredByRep,
           }) => (
             <div key={id + title} style={{ marginTop: Spacing.FOUR }}>
               <div className="flex flex-col gap-y-2 rounded-lg border border-solid border-gray-200 px-4 py-2">
                 <span>{id}</span>
+                {sponsoredByRep && (
+                  <Tag
+                    backgroundColor="red"
+                    text={`Sponsored By Your Rep: ${sponsoredByRep}`}
+                  ></Tag>
+                )}
                 {gpt?.gpt_tags && (
                   <div>
                     {gpt.gpt_tags.map((v) => (
