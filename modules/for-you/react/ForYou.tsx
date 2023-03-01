@@ -1,84 +1,15 @@
-import { useState } from "react";
 import type { Env } from "~/config";
 import { RepLevel } from "~/levels";
 import type { StyleHack } from "~/ui";
-import { AddressLookup } from "~/ui";
-import { RadioPicker } from "~/ui";
-import { DataField, Skin, Spacing } from "~/ui";
+import {
+  AddressLookup,
+  DataField,
+  RadioPicker,
+  Spacing,
+  Tag,
+  Tagging,
+} from "~/ui";
 import type { ForYouBill } from "../selector";
-
-const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
-  backgroundColor,
-  text,
-}) => {
-  return (
-    <span
-      style={{
-        backgroundColor: backgroundColor
-          ? backgroundColor
-          : ("grey" as StyleHack),
-        color: Skin.White,
-        padding: "5px 10px" as StyleHack,
-        margin: "5px 5px 5px 0" as StyleHack,
-        borderRadius: "20px",
-        border: "none",
-        fontSize: "12px",
-      }}
-    >
-      {text}
-    </span>
-  );
-};
-
-const Tagging = ({
-  tags,
-  filters,
-  updateFilters,
-}: {
-  tags: string[];
-  filters: FilterParams;
-  updateFilters: UpdateFiltersFn;
-}) => {
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    filters.tags ?? []
-  );
-
-  const handleTagClick = (tag: string) => {
-    let updatedTags: string[] = [];
-    if (selectedTags.includes(tag)) {
-      updatedTags = selectedTags.filter((t) => t !== tag);
-    } else {
-      updatedTags = [...selectedTags, tag];
-    }
-    updateFilters({ ...filters, tags: updatedTags });
-    setSelectedTags(updatedTags);
-  };
-
-  return (
-    <div>
-      {tags.map((tag) => (
-        <button
-          key={tag}
-          onClick={() => handleTagClick(tag)}
-          style={{
-            backgroundColor: selectedTags.includes(tag)
-              ? ("blue" as StyleHack)
-              : ("grey" as StyleHack),
-            color: Skin.White,
-            padding: "5px 10px" as StyleHack,
-            margin: "5px" as StyleHack,
-            borderRadius: "20px",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "10px",
-          }}
-        >
-          {tag}
-        </button>
-      ))}
-    </div>
-  );
-};
 
 export interface FilterParams {
   address?: string | null;
@@ -138,7 +69,13 @@ export const ForYou = ({
             { label: "National", value: RepLevel.National },
           ]}
         />
-        <Tagging tags={tags} filters={filters} updateFilters={updateFilters} />
+        <Tagging
+          tags={tags}
+          selected={filters.tags || []}
+          handleClick={(updatedTags) => {
+            updateFilters({ ...filters, tags: updatedTags });
+          }}
+        />
         {legislation.map(
           ({
             bill: { id, title, statusDate, link, description },

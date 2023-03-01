@@ -7,3 +7,4 @@ export * from "./Loading/Loading";
 export * from "./RadioPicker/RadioPicker";
 export * from "./ResultCard/ResultCard";
 export * from "./styles";
+export * from "./Tags/Tags";
