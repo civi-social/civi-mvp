@@ -51,9 +51,10 @@ export const Tagging = ({
           onClick={() => handleTagClick(tag)}
           style={{
             ...styles.tagMain,
-            backgroundColor: selectedTags.includes(tag)
-              ? ("blue" as StyleHack)
-              : ("grey" as StyleHack),
+            opacity:
+              selectedTags.includes(tag) || selectedTags.length === 0
+                ? "1.0"
+                : "0.3",
             color: Skin.White,
           }}
         >
