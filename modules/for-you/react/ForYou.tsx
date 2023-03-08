@@ -163,7 +163,7 @@ export const ForYou = ({
                     <div
                       style={{
                         background: "#f6f6f6" as StyleHack,
-                        padding: Spacing.FOUR,
+                        padding: "20px 20px 10px 20px" as StyleHack,
                         borderRadius: "16px",
                         position: "relative",
                       }}
