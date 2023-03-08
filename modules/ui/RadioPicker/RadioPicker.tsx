@@ -1,4 +1,6 @@
 import { useState } from "react";
+import type { StyleHack } from "../styles";
+import { Skin } from "../styles";
 import { Spacing } from "../styles";
 
 interface Option {
@@ -24,13 +26,32 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "row" }}>
       {options.map((option) => (
-        <label key={option.value} style={{ margin: Spacing.ONE }}>
+        <label
+          key={option.value}
+          style={{
+            marginTop: Spacing.ONE,
+            marginBottom: Spacing.ONE,
+            marginLeft: Spacing.ZERO,
+            marginRight: Spacing.ZERO,
+            paddingTop: Spacing.TWO,
+            paddingRight: Spacing.FOUR,
+            paddingBottom: Spacing.TWO,
+            paddingLeft: Spacing.FOUR,
+            display: "inline-flex",
+            color: Skin.White,
+            fontWeight: 700,
+            backgroundColor:
+              selectedOption === option.value
+                ? ("rgba(0,0,0,0.7)" as StyleHack)
+                : undefined,
+          }}
+        >
           <input
+            style={{ display: "none" }}
             type="radio"
             value={option.value}
-            checked={selectedOption === option.value}
             onChange={handleOptionChange}
           />
           {option.label}

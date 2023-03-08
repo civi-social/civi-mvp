@@ -49,7 +49,7 @@ export const ForYou = ({
               <div style={styles.addressContainer}>
                 <AddressLookup env={env} />
               </div>
-              <RadioPicker<RepLevel | null | undefined>
+              <RadioPicker<RepLevel | null | undefined | "">
                 handleChange={(next) => {
                   if (!next) {
                     updateFilters({
@@ -63,7 +63,7 @@ export const ForYou = ({
                     });
                   }
                 }}
-                defaultValue={filters.level}
+                defaultValue={filters.level || ""}
                 options={[
                   { label: "All", value: "" },
                   { label: "City", value: RepLevel.City },
@@ -71,13 +71,15 @@ export const ForYou = ({
                   { label: "National", value: RepLevel.National },
                 ]}
               />
-              <Tagging
-                tags={tags}
-                selected={filters.tags || []}
-                handleClick={(updatedTags) => {
-                  updateFilters({ ...filters, tags: updatedTags });
-                }}
-              />
+              <div style={{ backgroundColor: "rgba(0,0,0,0.7)" as StyleHack }}>
+                <Tagging
+                  tags={tags}
+                  selected={filters.tags || []}
+                  handleClick={(updatedTags) => {
+                    updateFilters({ ...filters, tags: updatedTags });
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -178,7 +180,7 @@ const styles: Style.StyleSheet<
     marginBottom: Spacing.FOUR,
   },
   addressContainer: {
-    // background: "#99cc99" as StyleHack,
+    background: "rgba(0,0,0,0.7)" as StyleHack,
   },
   filterContainer: {
     padding: Spacing.FOUR,

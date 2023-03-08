@@ -71,6 +71,7 @@ const styles: Style.StyleSheet<"tagMain"> = {
     margin: "5px 5px 5px 0" as StyleHack,
     borderRadius: "20px",
     border: "none",
-    fontSize: "12px",
+    fontSize: "16px",
+    fontWeight: 'bold'
   },
 };
