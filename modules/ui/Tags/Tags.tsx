@@ -10,9 +10,11 @@ export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
     <span
       style={{
         ...styles.tagMain,
+        fontSize: "14px",
+        fontWeight: "400",
         backgroundColor: backgroundColor
           ? backgroundColor
-          : ("grey" as StyleHack),
+          : ("#b1b1b1" as StyleHack),
         color: Skin.White,
       }}
     >
@@ -72,6 +74,6 @@ const styles: Style.StyleSheet<"tagMain"> = {
     borderRadius: "20px",
     border: "none",
     fontSize: "16px",
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
 };
