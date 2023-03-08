@@ -101,7 +101,9 @@ export const ForYou = ({
                   key={id + title}
                   className="flex flex-col gap-y-2 px-4 py-2"
                 >
-                  <span>{id}</span>
+                  <span>
+                    {id} <DataField type="URL" id={link} />
+                  </span>
                   {sponsoredByRep && (
                     <Tag
                       backgroundColor="red"
@@ -124,7 +126,6 @@ export const ForYou = ({
                   <div style={{ fontFamily: "monospace" }}>{description}</div>
                   <ul className="flex list-none flex-wrap items-center gap-x-2">
                     <DataField type="Text" id={statusDate} />
-                    <DataField type="URL" id={link} />
                   </ul>
                 </div>
               )
