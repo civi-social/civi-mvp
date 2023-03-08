@@ -157,21 +157,6 @@ export const ForYou = ({
                       text={`Sponsored By Your Rep: ${sponsoredByRep}`}
                     ></Tag>
                   )}
-                  {gpt?.gpt_tags && (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      {gpt.gpt_tags.map((v) => (
-                        <div style={{ display: "inline-flex" }} key={v}>
-                          <Tag text={v} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
 
                   <div className="text-xl font-semibold">{title}</div>
                   {gpt?.gpt_summary && (
@@ -195,6 +180,21 @@ export const ForYou = ({
                         dangerouslySetInnerHTML={{ __html: RobotSvg }}
                       ></div>
                       <h4 className="text-lg">{gpt.gpt_summary}</h4>
+                      {gpt?.gpt_tags && (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {gpt.gpt_tags.map((v) => (
+                            <div style={{ display: "inline-flex" }} key={v}>
+                              <Tag text={v} />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                   <div
