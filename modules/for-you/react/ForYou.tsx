@@ -70,7 +70,7 @@ export const AppShell = ({
             flexDirection: "column",
             textAlign: "left",
             background:
-              "linear-gradient(to bottom, rgba(255,29,135,1) 0%, rgba(255,82,37,1) 20%, rgb(245 245 245 / 30%) 60%)" as StyleHack,
+              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, rgb(245 245 245 / 30%) 125vh)" as StyleHack,
           }}
         >
           <IntroContent />

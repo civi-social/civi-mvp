@@ -1,4 +1,4 @@
-<img src="./app/modules/app-shell/assets/civi-temp-logo.png" style="width:200px" />
+<img src="./modules/app-shell/assets/civi-temp-logo.png" style="width:200px" />
 
 [civi.social](https://civi.social)
 
