@@ -26,8 +26,14 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      {options.map((option) => (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+      }}
+    >
+      {options.map((option, i) => (
         <label
           key={option.value}
           style={{
@@ -42,6 +48,17 @@ export const RadioPicker = <T extends string | null | undefined>({
             display: "inline-flex",
             color: Skin.White,
             fontWeight: 700,
+            cursor: "pointer",
+            borderRadius:
+              i === 0
+                ? "5px 0 0 5px"
+                : i === options.length - 1
+                ? "0 5px 5px 0"
+                : undefined,
+            borderLeft: i === 0 ? "2px solid rgba(0,0,0,0.7)" : undefined,
+            borderTop: "2px solid rgba(0,0,0,0.7)",
+            borderRight: "2px solid rgba(0,0,0,0.7)",
+            borderBottom: "2px solid rgba(0,0,0,0.7)",
             backgroundColor:
               selectedOption === option.value
                 ? ("rgba(0,0,0,0.7)" as StyleHack)

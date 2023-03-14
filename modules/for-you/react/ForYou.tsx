@@ -77,7 +77,7 @@ export const ForYou = ({
                   { label: "National", value: RepLevel.National },
                 ]}
               />
-              <div style={{ backgroundColor: "rgba(0,0,0,0.7)" as StyleHack }}>
+              <div>
                 <Tagging
                   tags={tags}
                   selected={filters.tags || []}
@@ -91,7 +91,10 @@ export const ForYou = ({
         </div>
       </OverlapSection>
       <OverlapSection
-        style={{ backgroundColor: "rgba(255,255,255,1.0)" as StyleHack }}
+        style={{
+          backgroundColor: "rgba(255,255,255,1.0)" as StyleHack,
+          padding: "30px 30px 30px 30px" as StyleHack,
+        }}
       >
         <div style={styles.flexCenter}>
           <div style={{ ...styles.mainContainer }}>
@@ -224,7 +227,6 @@ const OverlapSection: React.FC<{ style?: Style.Properties }> = ({
       style={{
         position: "sticky",
         top: "0",
-        padding: "30px 30px 30px 30px" as StyleHack,
         minHeight: "20vh",
         ...style,
       }}
@@ -256,10 +258,11 @@ const styles: Style.StyleSheet<
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
-    marginBottom: Spacing.FOUR,
   },
   addressContainer: {
     background: "rgba(0,0,0,0.7)" as StyleHack,
+    borderRadius: "5px",
+    border: "2px solid rgba(0,0,0,0.7)",
   },
   filterContainer: {
     padding: Spacing.FOUR,

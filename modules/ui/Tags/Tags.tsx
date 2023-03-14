@@ -46,7 +46,7 @@ export const Tagging = ({
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "center" }}>
       {tags.map((tag) => (
         <button
           key={tag}
@@ -57,6 +57,7 @@ export const Tagging = ({
               selectedTags.includes(tag) || selectedTags.length === 0
                 ? "1.0"
                 : "0.3",
+            backgroundColor: "rgba(0,0,0,0.7)" as StyleHack,
             color: Skin.White,
           }}
         >
