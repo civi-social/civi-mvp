@@ -33,7 +33,7 @@ const layoutStyles = createStyleSheet({
   },
   gridCol: {
     padding: Spacing.FOUR,
-    textAlign: "center",
-    fontSize: "1.2rem",
+    // textAlign: "center",
+    // fontSize: "1.2rem",
   },
 });

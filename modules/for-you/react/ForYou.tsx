@@ -1,6 +1,9 @@
 import type { Env } from "~/config";
 import { RepLevel } from "~/levels";
 import type { Style, StyleHack } from "~/ui";
+import { Col } from "~/ui";
+import { Grid } from "~/ui";
+import { Container } from "~/ui";
 import { AddressLookup, RadioPicker, Skin, Spacing, Tag, Tagging } from "~/ui";
 import type { ForYouBill } from "../selector";
 
@@ -9,7 +12,7 @@ import { FaGlobe } from "react-icons/fa";
 import type { OfficialOffice } from "~/representatives";
 import { OfficialOfficeList } from "~/representatives";
 import Modal from "~/ui/Modal/Modal";
-import { CiviUpdates, GithubBanner, Intro, IntroContent } from "~/intro/Intro";
+import { CiviUpdates, GithubBanner, IntroContent } from "~/intro/Intro";
 
 const RobotSvg = `<?xml version='1.0' encoding='iso-8859-1'?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 462 462" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 462 462">
@@ -41,6 +44,66 @@ interface ForYouProps {
   filters: FilterParams;
   env: Env;
 }
+
+export const AppShell = ({
+  left,
+  right,
+}: {
+  left: React.ReactNode;
+  right: React.ReactNode;
+}) => {
+  return (
+    <Container>
+      <GithubBanner url="https://github.com/civi-social/civi-mvp" />
+      <Grid
+        style={{
+          minHeight: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgb(226 226 226 / 50%)" as StyleHack,
+        }}
+      >
+        <Col
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "left",
+            background:
+              "linear-gradient(to bottom, rgba(255,29,135,1) 0%, rgba(255,82,37,1) 20%, rgb(245 245 245 / 30%) 60%)" as StyleHack,
+          }}
+        >
+          <IntroContent />
+          <div
+            style={{
+              borderRadius: "9px",
+              marginTop: "20px" as StyleHack,
+              marginBottom: "20px" as StyleHack,
+              // background: "#f198d170" as StyleHack,
+              textAlign: "left",
+              opacity: 0.95,
+            }}
+          >
+            {left}
+          </div>
+          <div
+            style={{
+              borderRadius: "9px",
+              marginTop: "20px" as StyleHack,
+              marginBottom: "20px" as StyleHack,
+              background: "#f198d170" as StyleHack,
+              textAlign: "left",
+              opacity: 0.95,
+            }}
+          >
+            <CiviUpdates />
+          </div>
+        </Col>
+        <Col>{right}</Col>
+      </Grid>
+    </Container>
+  );
+};
 
 export const ForYou = (props: ForYouProps) => {
   const [showOfficeModal, setShowOfficeModal] = React.useState(false);
@@ -74,10 +137,6 @@ export const ForYou = (props: ForYouProps) => {
 
   return (
     <>
-      {/* <div style={{ zIndex: 2 }}>
-        <GithubBanner url="https://github.com/civi-social/civi-mvp" />
-      </div> */}
-      <Intro />
       {props.offices && showOfficeModal ? (
         <Modal
           isOpen={showOfficeModal}
@@ -97,30 +156,27 @@ export const ForYou = (props: ForYouProps) => {
           </div>
         </Modal>
       ) : (
-        <>
-          <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
-        </>
+        <AppShell
+          left={<ForYouBillFilters {...props} />}
+          right={
+            <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
+          }
+        />
       )}
     </>
   );
 };
 
-export const ForYouBills = ({
+export const ForYouBillFilters = ({
   legislation,
   tags,
   updateFilters,
-  showOfficeComponent,
   filters,
   env,
-}: ForYouProps & { showOfficeComponent: React.ReactNode }) => {
+}: ForYouProps) => {
   return (
     <div>
-      <OverlapSection
-        style={{
-          background:
-            "linear-gradient(45deg, rgba(255,82,37,1) 0%, rgba(255,29,135,1) 100%)" as StyleHack,
-        }}
-      >
+      <OverlapSection>
         <div style={styles.flexCenter}>
           <div style={styles.mainContainer}>
             <div style={styles.filterContainer}>
@@ -162,12 +218,21 @@ export const ForYouBills = ({
           </div>
         </div>
       </OverlapSection>
-      <OverlapSection
-        style={{
-          backgroundColor: "rgba(255,255,255,1.0)" as StyleHack,
-          padding: "30px 10px 30px 10px" as StyleHack,
-        }}
-      >
+    </div>
+  );
+};
+
+export const ForYouBills = ({
+  legislation,
+  tags,
+  updateFilters,
+  showOfficeComponent,
+  filters,
+  env,
+}: ForYouProps & { showOfficeComponent: React.ReactNode }) => {
+  return (
+    <div>
+      <OverlapSection>
         <div style={styles.flexCenter}>
           <div style={{ ...styles.mainContainer }}>
             <div>

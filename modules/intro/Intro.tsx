@@ -1,8 +1,6 @@
-import { useNavigate } from "@remix-run/react";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
 import type { StyleHack } from "~/ui";
 import {
-  Card,
   CardSection,
   CardTitle,
   Col,
@@ -15,7 +13,7 @@ import {
 
 export const IntroContent = () => {
   return (
-    <Col style={styles.hero}>
+    <div>
       <div style={styles.logoContainer}>
         <img src={civiLogo} alt="Civi Logo" style={styles.logo} />
       </div>
@@ -23,14 +21,7 @@ export const IntroContent = () => {
       <div style={styles.heroTitle}>
         We Want To Help You Engage With The Legislation That Impacts You
       </div>
-      <div style={styles.heroDescription}>
-        <br />
-        We are a non-profit, open source community looking to build a way for
-        you connect to your representative. <br />
-        <br /> Vote on legislation they will vote on, and let them know what you
-        think.
-      </div>
-    </Col>
+    </div>
   );
 };
 
@@ -40,7 +31,7 @@ export const Progress = () => {
       <CardTitle>
         Progress{" "}
         <span style={{ fontSize: "0.9rem", fontWeight: 300 }}>
-          [last updated february 2022]
+          [last updated march 14 2022]
         </span>
       </CardTitle>
       <ul
@@ -81,38 +72,41 @@ export const HelpUs = () => {
 
 export const CiviUpdates = () => {
   return (
-    <Card>
+    <>
+      <CardSection>
+        <div style={styles.heroDescription}>
+          We are a non-profit, open source community looking to build a way for
+          you connect to your representative. <br />
+          <br /> Vote on legislation they will vote on, and let them know what
+          you think.
+        </div>
+      </CardSection>
       <Progress />
       <HelpUs />
-    </Card>
+      <CardSection>
+        <CardTitle>Follow Us On Social Media</CardTitle>
+        <div>
+          ...LOL 😬 We currently don't have any social media accounts.{" "}
+          <a
+            style={styles.link}
+            href="https://chihacknight.slack.com/archives/C047500M5RS/p1675148248890889"
+          >
+            But we could love your help to start one!
+          </a>
+        </div>
+      </CardSection>
+    </>
   );
 };
 
-export const Intro = () => {
+export const AppShell = () => {
   return (
     <Container>
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
       <Grid style={styles.mainContainer}>
         <IntroContent />
         <Col>
-          <Card>
-            <Progress />
-            <HelpUs />
-          </Card>
-          <Card>
-            <CardSection>
-              <CardTitle>Follow Us On Social Media</CardTitle>
-              <div>
-                ...LOL 😬 We currently don't have any social media accounts.{" "}
-                <a
-                  style={styles.link}
-                  href="https://chihacknight.slack.com/archives/C047500M5RS/p1675148248890889"
-                >
-                  But we could love your help to start one!
-                </a>
-              </div>
-            </CardSection>
-          </Card>
+          <CiviUpdates />
         </Col>
       </Grid>
     </Container>
@@ -169,85 +163,6 @@ export const GithubBanner = ({ url }: { url: string }) => (
     }}
   ></div>
 );
-const MailChimpForm = () => {
-  return (
-    <div>
-      <div id="mc_embed_signup">
-        <form
-          action="https://social.us11.list-manage.com/subscribe/post?u=5d27cdfc23603091d05858a9b&amp;id=e52325cbc0&amp;f_id=00f5a6e0f0"
-          method="post"
-          id="mc-embedded-subscribe-form"
-          name="mc-embedded-subscribe-form"
-          className="validate"
-          target="_self"
-        >
-          <div id="mc_embed_signup_scroll">
-            <CardTitle>Subscribe To Our Waitlist</CardTitle>
-            <p style={{ marginBottom: Spacing.ONE }}>
-              Join our newsletter to get updates on our progress, and be get
-              early access to vote when we launch!
-            </p>
-            <div className="mc-field-group">
-              <input
-                type="email"
-                defaultValue=""
-                name="EMAIL"
-                className="required email"
-                id="mce-EMAIL"
-                required={true}
-                placeholder="Email Address"
-                style={{
-                  border: "1px solid rgba(0,0,0,0.2)",
-                  paddingLeft: Spacing.TWO,
-                  marginBottom: Spacing.FOUR,
-                  fontSize: "1.2rem",
-                }}
-              />
-              {/* cspell:disable-next-line */}
-              <span id="mce-EMAIL-HELPERTEXT" className="helper_text"></span>
-            </div>
-            <div id="mce-responses" className="clear foot">
-              <div
-                className="response"
-                id="mce-error-response"
-                style={{ display: "none" }}
-              ></div>
-              <div
-                className="response"
-                id="mce-success-response"
-                style={{ display: "none" }}
-              ></div>
-            </div>
-            <div
-              style={{ position: "absolute", left: "-5000px" }}
-              aria-hidden="true"
-            >
-              <input
-                type="text"
-                /* cspell:disable-next-line */
-                name="b_5d27cdfc23603091d05858a9b_e52325cbc0"
-                tabIndex={-1}
-                defaultValue=""
-              />
-            </div>
-            <div className="optionalParent">
-              <div className="clear foot">
-                <input
-                  type="submit"
-                  value="Subscribe"
-                  name="subscribe"
-                  id="mc-embedded-subscribe"
-                  className="button"
-                  style={styles.ctaButton}
-                />
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
 
 const textColor = "#000000b3" as StyleHack;
 const makeImageWhite = { filter: "brightness(0) invert(1)" };
