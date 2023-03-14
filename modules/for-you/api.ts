@@ -1,27 +1,91 @@
 import type { Env } from "~/config";
-import type { CiviLegislationData } from "civi-legislation-data";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
+import type { OfficialOffice, RepresentativesResult } from "~/representatives";
+import { getRepresentatives } from "~/representatives/api";
+import type { FilterParams } from "./react/ForYou";
+import type { ForYouBill } from "./selector";
+import { selectData } from "./selector";
+import { hasOverlap } from "./utils";
 
-export const forYouData = async (env: Env): Promise<CiviLegislationData[]> => {
-  const city: CiviLegislationData[] = await getLegislations(
-    env,
+export const forYouData = async ({
+  env,
+  filters,
+}: {
+  env: Env;
+  filters: FilterParams;
+}): Promise<{
+  legislation: ForYouBill[];
+  tags: string[];
+  offices: OfficialOffice[] | null;
+  address: string | null;
+}> => {
+  const representatives = filters.address
+    ? await getRepresentatives(filters.address, env)
+    : null;
+
+  const city = selectData(
+    await getLegislations(env, RepLevel.City, "Chicago"),
     RepLevel.City,
-    "Chicago"
+    representatives,
+    "il"
   );
-  const state: CiviLegislationData[] = await getLegislations(
-    env,
+
+  const state = selectData(
+    await getLegislations(env, RepLevel.State, "Chicago"),
     RepLevel.State,
-    "Chicago"
+    representatives,
+    "il"
   );
 
-  const national: CiviLegislationData[] = await getLegislations(
-    env,
+  const national = selectData(
+    await getLegislations(env, RepLevel.National, "Chicago"),
     RepLevel.National,
-    "Chicago"
+    representatives,
+    "il"
   );
 
-  const legislation = [...city, ...state, ...national];
+  const fullLegislation = [...city, ...state, ...national];
 
-  return legislation;
+  let levelsFiltered: typeof fullLegislation = fullLegislation;
+
+  if (filters.level) {
+    levelsFiltered = fullLegislation.filter(
+      (bill) => bill.level === filters.level
+    );
+  }
+
+  let legislation: typeof levelsFiltered = levelsFiltered;
+
+  if (filters.tags && Array.isArray(filters.tags)) {
+    const filterTags = filters.tags;
+    legislation = fullLegislation.filter((bill) =>
+      hasOverlap(bill.gpt?.gpt_tags || [], filterTags)
+    );
+  }
+
+  const tags = new Set<string>();
+  levelsFiltered.forEach((bill) => {
+    bill.gpt?.gpt_tags?.forEach((tag) => {
+      tags.add(tag);
+    });
+  });
+
+  const offices = representatives
+    ? [
+        ...representatives.offices.city,
+        ...representatives.offices.county,
+        ...representatives.offices.state,
+        ...representatives.offices.national,
+      ]
+    : null;
+
+  const address = filters.address || null;
+
+  return {
+    legislation,
+    tags: Array.from(tags),
+    offices,
+    address,
+  };
 };

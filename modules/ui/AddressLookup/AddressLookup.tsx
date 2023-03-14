@@ -17,9 +17,9 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
       autoFocus
       options={{ types: ["address"] }}
       apiKey={config.apiKey}
-      placeholder="Type In Your Address Here..."
+      placeholder="Find Your Reps By Address..."
       defaultValue={searchParams.get(addressKey) ?? ""}
-      className="w-80 rounded-md bg-transparent px-2 py-1 text-white outline-none"
+      className="w-full rounded-md bg-transparent px-2 py-1 text-white outline-none"
       onPlaceSelected={({ formatted_address }) => {
         const newSearchParams = new URLSearchParams(searchParams.toString());
         if (formatted_address) {
@@ -34,8 +34,8 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
   ) : (
     <input
       disabled
-      placeholder="Google API Key is not provided"
-      className="rounded-md bg-transparent px-2 py-1"
+      placeholder="Loading..."
+      className="w-full rounded-md bg-transparent px-2 py-1"
     />
   );
 };
