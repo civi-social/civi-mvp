@@ -1,6 +1,7 @@
 import type { Env } from "~/config";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
+import type { OfficialOffice, RepresentativesResult } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
 import type { FilterParams } from "./react/ForYou";
 import type { ForYouBill } from "./selector";
@@ -13,7 +14,12 @@ export const forYouData = async ({
 }: {
   env: Env;
   filters: FilterParams;
-}): Promise<{ legislation: ForYouBill[]; tags: string[] }> => {
+}): Promise<{
+  legislation: ForYouBill[];
+  tags: string[];
+  offices: OfficialOffice[] | null;
+  address: string | null;
+}> => {
   const representatives = filters.address
     ? await getRepresentatives(filters.address, env)
     : null;
@@ -65,5 +71,21 @@ export const forYouData = async ({
     });
   });
 
-  return { legislation, tags: Array.from(tags) };
+  const offices = representatives
+    ? [
+        ...representatives.offices.city,
+        ...representatives.offices.county,
+        ...representatives.offices.state,
+        ...representatives.offices.national,
+      ]
+    : null;
+
+  const address = filters.address || null;
+
+  return {
+    legislation,
+    tags: Array.from(tags),
+    offices,
+    address,
+  };
 };

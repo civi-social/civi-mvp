@@ -35,7 +35,7 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
     <input
       disabled
       placeholder="Google API Key is not provided"
-      className="rounded-md bg-transparent px-2 py-1"
+      className="w-full rounded-md bg-transparent px-2 py-1"
     />
   );
 };

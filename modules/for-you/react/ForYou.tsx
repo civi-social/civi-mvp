@@ -6,6 +6,9 @@ import type { ForYouBill } from "../selector";
 
 import React from "react";
 import { FaGlobe } from "react-icons/fa";
+import type { OfficialOffice } from "~/representatives";
+import { OfficialOfficeList } from "~/representatives";
+import Modal from "~/ui/Modal/Modal";
 
 const RobotSvg = `<?xml version='1.0' encoding='iso-8859-1'?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 462 462" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 462 462">
@@ -28,19 +31,83 @@ export interface FilterParams {
 
 export type UpdateFiltersFn = (p: FilterParams) => void;
 
-export const ForYou = ({
+interface ForYouProps {
+  legislation: ForYouBill[];
+  tags: string[];
+  address: string | null;
+  updateFilters: UpdateFiltersFn;
+  offices: OfficialOffice[] | null;
+  filters: FilterParams;
+  env: Env;
+}
+
+export const ForYou = (props: ForYouProps) => {
+  const [showOfficeModal, setShowOfficeModal] = React.useState(false);
+
+  const showOfficeComponent = (
+    <>
+      {props.offices && (
+        <div
+          style={{
+            background: "#5528b817" as StyleHack,
+            fontWeight: "bold",
+            color: "#d22cff" as StyleHack,
+            cursor: "pointer",
+            padding: Spacing.FOUR,
+            borderRadius: "25px",
+            display: "flex",
+            alignItems: "center",
+            marginBottom: Spacing.TWO,
+            textAlign: "center",
+            textDecoration: "underline",
+          }}
+          onClick={() => {
+            setShowOfficeModal(true);
+          }}
+        >
+          <span>See Representatives For This Address.</span>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {props.offices && showOfficeModal ? (
+        <Modal
+          isOpen={showOfficeModal}
+          onClose={() => setShowOfficeModal(false)}
+        >
+          <div className="flex w-full max-w-2xl flex-col gap-y-5 justify-self-center">
+            <div
+              style={{
+                fontWeight: 300,
+                fontSize: "18px",
+                textAlign: "center",
+              }}
+            >
+              Representatives for {props.address}.
+            </div>
+            <OfficialOfficeList officialOffice={props.offices} />
+          </div>
+        </Modal>
+      ) : (
+        <>
+          <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
+        </>
+      )}
+    </>
+  );
+};
+
+export const ForYouBills = ({
   legislation,
   tags,
   updateFilters,
+  showOfficeComponent,
   filters,
   env,
-}: {
-  legislation: ForYouBill[];
-  tags: string[];
-  updateFilters: UpdateFiltersFn;
-  filters: FilterParams;
-  env: Env;
-}) => {
+}: ForYouProps & { showOfficeComponent: React.ReactNode }) => {
   return (
     <div>
       <OverlapSection
@@ -99,6 +166,7 @@ export const ForYou = ({
         <div style={styles.flexCenter}>
           <div style={{ ...styles.mainContainer }}>
             <div>
+              {showOfficeComponent}
               <div
                 style={{
                   background: "#f6f6f6" as StyleHack,

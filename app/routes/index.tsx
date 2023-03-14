@@ -10,9 +10,12 @@ import { getEnv } from "~/config";
 import type { FilterParams, ForYouBill, UpdateFiltersFn } from "~/for-you";
 import { ForYou, forYouData } from "~/for-you";
 import type { RepLevel } from "~/levels";
+import type { OfficialOffice } from "~/representatives";
 
 interface LoaderData {
   legislation: ForYouBill[];
+  offices: OfficialOffice[] | null;
+  address: string | null;
   tags: string[];
   env: Env;
   filters: FilterParams;
@@ -27,9 +30,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const env = getEnv(process.env);
 
-  const { legislation, tags } = await forYouData({ env, filters });
+  const { legislation, tags, offices, address } = await forYouData({
+    env,
+    filters,
+  });
 
-  return json<LoaderData>({ legislation, env, tags, filters });
+  return json<LoaderData>({
+    legislation,
+    env,
+    tags,
+    filters,
+    offices,
+    address,
+  });
 };
 
 interface ActionData {
@@ -47,7 +60,8 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function ForYouPage() {
-  const { legislation, tags, filters, env } = useLoaderData<LoaderData>();
+  const { legislation, tags, filters, offices, env, address } =
+    useLoaderData<LoaderData>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateFilters: UpdateFiltersFn = ({ address, tags, level }) => {
@@ -70,6 +84,8 @@ export default function ForYouPage() {
       env={env}
       tags={tags}
       legislation={legislation}
+      offices={offices}
+      address={address}
       filters={filters}
       updateFilters={updateFilters}
     />
