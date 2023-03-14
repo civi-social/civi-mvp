@@ -13,7 +13,10 @@ export const Container: React.FC<StyleComponent> = ({ children, style }) => (
 );
 
 export const Grid: React.FC<StyleComponent> = ({ children, style }) => (
-  <section style={{ ...layoutStyles.autoGrid, ...(style || {}) }}>
+  <section
+    className="grid-cols-1 lg:grid-cols-[minmax(300px,_500px)_1fr]"
+    style={{ ...layoutStyles.autoGrid, ...(style || {}) }}
+  >
     {children}
   </section>
 );
@@ -28,7 +31,6 @@ const layoutStyles = createStyleSheet({
   },
   autoGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
     gridGap: "1rem",
   },
   gridCol: {
