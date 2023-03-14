@@ -13,79 +13,93 @@ import {
   Spacing,
 } from "~/ui";
 
+export const IntroContent = () => {
+  return (
+    <Col style={styles.hero}>
+      <div style={styles.logoContainer}>
+        <img src={civiLogo} alt="Civi Logo" style={styles.logo} />
+      </div>
+      <div style={styles.heroTitleCity}>Chicago!</div>
+      <div style={styles.heroTitle}>
+        We Want To Help You Engage With The Legislation That Impacts You
+      </div>
+      <div style={styles.heroDescription}>
+        <br />
+        We are a non-profit, open source community looking to build a way for
+        you connect to your representative. <br />
+        <br /> Vote on legislation they will vote on, and let them know what you
+        think.
+      </div>
+    </Col>
+  );
+};
+
+export const Progress = () => {
+  return (
+    <CardSection>
+      <CardTitle>
+        Progress{" "}
+        <span style={{ fontSize: "0.9rem", fontWeight: 300 }}>
+          [last updated february 2022]
+        </span>
+      </CardTitle>
+      <ul
+        style={{
+          margin: Spacing.ONE,
+          padding: Spacing.ONE,
+        }}
+      >
+        <li>✅ Find your local, state, and national representative</li>
+        <li>✅ Find active Chicago legislation</li>
+        <li>✅ Find active Illinois legislation</li>
+        <li>✅ Find active National legislation</li>
+        <li>✅ Get legislation summarized by AI</li>
+        <li>✅ New feed experience</li>
+        <li>⏺ Get Chicago resident summary of active legislation</li>
+        <li>⏺ Vote on active legislation</li>
+      </ul>
+    </CardSection>
+  );
+};
+
+export const HelpUs = () => {
+  return (
+    <CardSection>
+      <CardTitle>Help Us Build It!</CardTitle>
+      <div>
+        We work within the Chi Hack Night community.{" "}
+        <a
+          style={styles.link}
+          href="https://chihacknight.slack.com/archives/C047500M5RS"
+        >
+          Come join the Slack to see how you can contribute.
+        </a>
+      </div>
+    </CardSection>
+  );
+};
+
+export const CiviUpdates = () => {
+  return (
+    <Card>
+      <Progress />
+      <HelpUs />
+    </Card>
+  );
+};
+
 export const Intro = () => {
-  const navigate = useNavigate();
   return (
     <Container>
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
       <Grid style={styles.mainContainer}>
-        <Col style={styles.hero}>
-          <div style={styles.logoContainer}>
-            <img src={civiLogo} alt="Civi Logo" style={styles.logo} />
-          </div>
-
-          <div style={styles.heroTitleCity}>Chicago!</div>
-          <div style={styles.heroTitle}>
-            We Want To Let You Vote With Your Representative
-          </div>
-          <div style={styles.heroDescription}>
-            <br />
-            We are a non-profit, open source community looking to build a way
-            for you connect to your representative. <br />
-            <br /> Vote on legislation they will vote on, and let them know what
-            you think.
-          </div>
-        </Col>
+        <IntroContent />
         <Col>
           <Card>
-            <CardSection>
-              <CardTitle>
-                Progress{" "}
-                <span style={{ fontSize: "0.9rem", fontWeight: 300 }}>
-                  [last updated february 2022]
-                </span>
-              </CardTitle>
-              <ul
-                style={{
-                  margin: Spacing.ONE,
-                  padding: Spacing.ONE,
-                }}
-              >
-                <li>✅ Find your local, state, and national representative</li>
-                <li>✅ Find active Chicago legislation</li>
-                <li>✅ Find active Illinois legislation</li>
-                <li>✅ Find active National legislation</li>
-                <li>⏺ Get Chicago resident summary of active legislation</li>
-                <li>⏺ Vote on active legislation</li>
-              </ul>
-            </CardSection>
-            <CardSection>
-              <CardTitle>Help Us Build It!</CardTitle>
-              <div>
-                We work within the Chi Hack Night community.{" "}
-                <a
-                  style={styles.link}
-                  href="https://chihacknight.slack.com/archives/C047500M5RS"
-                >
-                  Come join the Slack to see how you can contribute.
-                </a>
-              </div>
-            </CardSection>
-            <CardSection>
-              <button
-                style={styles.ctaButton}
-                onClick={() => {
-                  navigate("/search");
-                }}
-              >
-                Check Out Our In Progress Demo
-              </button>
-            </CardSection>
+            <Progress />
+            <HelpUs />
           </Card>
           <Card>
-            <CardSection>
-              <MailChimpForm />
-            </CardSection>
             <CardSection>
               <CardTitle>Follow Us On Social Media</CardTitle>
               <div>
@@ -108,7 +122,7 @@ export const Intro = () => {
 /**
  * src: https://tholman.com/github-corners/
  */
-const GithubBanner = ({ url }: { url: string }) => (
+export const GithubBanner = ({ url }: { url: string }) => (
   <div
     dangerouslySetInnerHTML={{
       __html: `
