@@ -19,8 +19,7 @@ export const RadioPicker = <T extends string | null | undefined>({
 }) => {
   const [selectedOption, setSelectedOption] = useState<T>(defaultValue);
 
-  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = event.target.value as T;
+  const handleOptionChange = (newVal: T) => {
     handleChange(newVal);
     setSelectedOption(newVal);
   };
@@ -34,8 +33,11 @@ export const RadioPicker = <T extends string | null | undefined>({
       }}
     >
       {options.map((option, i) => (
-        <label
+        <div
           key={option.value}
+          role="radio"
+          aria-checked={defaultValue === option.value}
+          onClick={() => handleOptionChange(option.value as T)}
           style={{
             marginTop: Spacing.ONE,
             marginBottom: Spacing.ONE,
@@ -65,14 +67,8 @@ export const RadioPicker = <T extends string | null | undefined>({
                 : undefined,
           }}
         >
-          <input
-            style={{ display: "none" }}
-            type="radio"
-            value={option.value}
-            onChange={handleOptionChange}
-          />
           {option.label}
-        </label>
+        </div>
       ))}
     </div>
   );
