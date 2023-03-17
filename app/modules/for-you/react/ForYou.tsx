@@ -15,10 +15,10 @@ import type { ForYouBill } from "../selector";
 
 import React from "react";
 import { FaGlobe } from "react-icons/fa";
-import { CiviUpdates, GithubBanner, IntroContent } from "~/intro/Intro";
+import { CiviUpdates, IntroContent } from "~/intro/Intro";
 import type { OfficialOffice } from "~/representatives";
 import { OfficialOfficeList } from "~/representatives";
-import { SVG } from "~/svg-icons/RobotSvg";
+import { RobotSvg, GithubBanner } from "~/svg-icons";
 import Modal from "~/ui/Modal/Modal";
 
 export interface FilterParams {
@@ -107,7 +107,7 @@ export const ForYouBills = ({
             <div>
               {showOfficeComponent}
               <div className="flex items-center rounded-xl bg-gray-100 p-4">
-                <SVG.Robot
+                <RobotSvg
                   style={{
                     width: "25px",
                     opacity: "0.5",
@@ -150,7 +150,7 @@ export const ForYouBills = ({
                   <div className="text-xl font-semibold">{title}</div>
                   {gpt?.gpt_summary && (
                     <div className="relative rounded-2xl bg-gray-100 px-6 pt-5 pb-2">
-                      <SVG.Robot
+                      <RobotSvg
                         style={{
                           width: "33px",
                           position: "absolute",

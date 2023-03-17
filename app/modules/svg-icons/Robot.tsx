@@ -6,7 +6,7 @@ const makeSvg = (name: string, svgString: string) => {
   return Fn;
 };
 
-export const RobotSvg = `<?xml version='1.0' encoding='iso-8859-1'?>
+export const RobotSvgStr = `<?xml version='1.0' encoding='iso-8859-1'?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 462 462" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 462 462">
   <g>
     <path d="m167,142c4.142,0 7.5-3.358 7.5-7.5v-8c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v8c0,4.142 3.357,7.5 7.5,7.5z"/>
@@ -19,6 +19,4 @@ export const RobotSvg = `<?xml version='1.0' encoding='iso-8859-1'?>
 </svg>
 `;
 
-export const SVG = {
-  Robot: makeSvg("RobotSvg", RobotSvg),
-};
+export const RobotSvg = makeSvg("RobotSvg", RobotSvgStr);
