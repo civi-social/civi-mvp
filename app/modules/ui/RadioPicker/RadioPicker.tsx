@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { StyleHack } from "../styles";
+import { classNames, StyleHack } from "../styles";
 import { Skin } from "../styles";
 import { Spacing } from "../styles";
 
@@ -25,47 +25,23 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-      }}
-    >
+    <div className="flex flex-row justify-center">
       {options.map((option, i) => (
         <div
           key={option.value}
           role="radio"
           aria-checked={defaultValue === option.value}
           onClick={() => handleOptionChange(option.value as T)}
-          style={{
-            marginTop: Spacing.ONE,
-            marginBottom: Spacing.ONE,
-            marginLeft: Spacing.ZERO,
-            marginRight: Spacing.ZERO,
-            paddingTop: Spacing.TWO,
-            paddingRight: Spacing.FOUR,
-            paddingBottom: Spacing.TWO,
-            paddingLeft: Spacing.FOUR,
-            display: "inline-flex",
-            color: Skin.White,
-            fontWeight: 700,
-            cursor: "pointer",
-            borderRadius:
-              i === 0
-                ? "5px 0 0 5px"
-                : i === options.length - 1
-                ? "0 5px 5px 0"
-                : undefined,
-            borderLeft: i === 0 ? "2px solid rgba(0,0,0,0.7)" : undefined,
-            borderTop: "2px solid rgba(0,0,0,0.7)",
-            borderRight: "2px solid rgba(0,0,0,0.7)",
-            borderBottom: "2px solid rgba(0,0,0,0.7)",
-            backgroundColor:
-              selectedOption === option.value
-                ? ("rgba(0,0,0,0.7)" as StyleHack)
-                : undefined,
-          }}
+          className={classNames(
+            i === 0 && "border-l-2",
+            "my-1 mx-0 inline-flex cursor-pointer border-t-2 border-b-2 border-r-2 border-black border-opacity-70 py-3 px-4 font-bold text-white",
+            i === 0
+              ? "rounded-l-lg"
+              : i === options.length - 1
+              ? "rounded-r-lg"
+              : "",
+            `bg-opacity-70 ${selectedOption === option.value ? "bg-black" : ""}`
+          )}
         >
           {option.label}
         </div>

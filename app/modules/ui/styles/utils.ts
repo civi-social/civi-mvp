@@ -37,5 +37,5 @@ const styles = createStyleSheet({
   },
 });
 
-export const classNames = (...classnames: (string | undefined)[]) =>
+export const classNames = (...classnames: (string | undefined | false)[]) =>
   classnames.filter(Boolean).join(" ");
