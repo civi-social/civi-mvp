@@ -27,7 +27,7 @@ const Progress = () => {
     <CardSection>
       <CardTitle>
         Progress{" "}
-        <span className="text-sm font-light">[last updated march 14 2022]</span>
+        <span className="text-sm font-light">[last updated march 17 2022]</span>
       </CardTitle>
       <ul
         style={{

@@ -109,6 +109,7 @@ export const ForYouBills = ({
                   style={{
                     width: "25px",
                     opacity: "0.5",
+                    marginRight: "5px" as StyleHack,
                   }}
                 />
                 <span>
@@ -203,26 +204,30 @@ const ForYouShell = ({
   return (
     <Container>
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
-      <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
-        <Col
-          className="via-opacity-30 flex h-full flex-col text-left"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
-          }}
-        >
-          <IntroContent />
-          <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
-            {left}
+      <Grid
+        className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
+        }}
+      >
+        <div className="via-opacity-30 flex h-full flex-col text-left">
+          <div className="p-5">
+            <IntroContent />
+            <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
+              {left}
+            </div>
+            <div
+              className="mt-5 mb-5 rounded-md bg-opacity-60 p-1 text-left"
+              style={{ background: "#f198d170" as StyleHack }}
+            >
+              <CiviUpdates />
+            </div>
           </div>
-          <div
-            className="mt-5 mb-5 rounded-md bg-opacity-60 text-left"
-            style={{ background: "#f198d170" as StyleHack }}
-          >
-            <CiviUpdates />
-          </div>
-        </Col>
-        <Col className="min-h-full">{right}</Col>
+        </div>
+        <div className="min-h-full">
+          <div className="mx-3 my-5 ">{right}</div>
+        </div>
       </Grid>
     </Container>
   );
