@@ -34,7 +34,8 @@ export const RadioPicker = <T extends string | null | undefined>({
           onClick={() => handleOptionChange(option.value as T)}
           className={classNames(
             i === 0 && "border-l-2",
-            "my-1 mx-0 inline-flex cursor-pointer border-t-2 border-b-2 border-r-2 border-black border-opacity-70 py-3 px-4 font-bold text-white",
+            "border-t-2 border-b-2 border-r-2 border-black border-opacity-50",
+            "my-1 mx-0 inline-flex cursor-pointer py-3 px-4 font-bold text-white",
             i === 0
               ? "rounded-l-lg"
               : i === options.length - 1
