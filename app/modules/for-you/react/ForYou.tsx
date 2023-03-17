@@ -3,7 +3,6 @@ import { RepLevel } from "~/levels";
 import type { StyleHack } from "~/ui";
 import {
   AddressLookup,
-  Col,
   Container,
   Grid,
   RadioPicker,
@@ -204,14 +203,14 @@ const ForYouShell = ({
   return (
     <Container>
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
-      <Grid
-        className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
-        }}
-      >
-        <div className="via-opacity-30 flex h-full flex-col text-left">
+      <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
+        <div
+          className="via-opacity-30 flex h-full flex-col text-left"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
+          }}
+        >
           <div className="p-5">
             <IntroContent />
             <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
