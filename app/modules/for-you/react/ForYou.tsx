@@ -50,42 +50,40 @@ export const ForYouBillFilters = ({
       <section>
         <div className="flex justify-center">
           <div className="flex w-full max-w-screen-md flex-col justify-center">
-            <div className="p-4">
-              <div className="rounded-lg p-4">
-                <div className="border-1 mb-4 rounded-md border-black bg-black bg-opacity-70 px-2 py-1">
-                  <AddressLookup env={env} />
-                </div>
-                <RadioPicker<RepLevel | null | undefined | "">
-                  handleChange={(next) => {
-                    if (!next) {
-                      updateFilters({
-                        ...filters,
-                        level: null,
-                      });
-                    } else {
-                      updateFilters({
-                        ...filters,
-                        level: next,
-                      });
-                    }
+            <div className="rounded-lg pt-4">
+              <div className="border-1 mb-4 rounded-md border-black bg-black bg-opacity-70 px-2 py-1">
+                <AddressLookup env={env} />
+              </div>
+              <RadioPicker<RepLevel | null | undefined | "">
+                handleChange={(next) => {
+                  if (!next) {
+                    updateFilters({
+                      ...filters,
+                      level: null,
+                    });
+                  } else {
+                    updateFilters({
+                      ...filters,
+                      level: next,
+                    });
+                  }
+                }}
+                defaultValue={filters.level || ""}
+                options={[
+                  { label: "All", value: "" },
+                  { label: "City", value: RepLevel.City },
+                  { label: "State", value: RepLevel.State },
+                  { label: "National", value: RepLevel.National },
+                ]}
+              />
+              <div className="mt-4">
+                <Tagging
+                  tags={tags}
+                  selected={filters.tags || []}
+                  handleClick={(updatedTags) => {
+                    updateFilters({ ...filters, tags: updatedTags });
                   }}
-                  defaultValue={filters.level || ""}
-                  options={[
-                    { label: "All", value: "" },
-                    { label: "City", value: RepLevel.City },
-                    { label: "State", value: RepLevel.State },
-                    { label: "National", value: RepLevel.National },
-                  ]}
                 />
-                <div className="mt-4">
-                  <Tagging
-                    tags={tags}
-                    selected={filters.tags || []}
-                    handleClick={(updatedTags) => {
-                      updateFilters({ ...filters, tags: updatedTags });
-                    }}
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -146,7 +144,7 @@ const Bill = ({
   id = RepLevel.City ? id.replace("Resolution", "").trim() : id;
   // End Chicago MVP Hacks
   return (
-    <div className="mt-4 flex flex-col gap-y-2 border border-gray-200 bg-white px-4 py-2">
+    <div className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white px-4 py-2">
       <div className="flex flex-wrap items-center justify-between text-sm font-light uppercase text-slate-600">
         <a
           target="_blank"
@@ -210,7 +208,7 @@ const ForYouShell = ({
           className="via-opacity-30 flex h-full flex-col text-left"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, rgb(245 245 245 / 30%) 125vh)" as StyleHack,
+              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
           }}
         >
           <IntroContent />
@@ -224,7 +222,7 @@ const ForYouShell = ({
             <CiviUpdates />
           </div>
         </Col>
-        <Col>{right}</Col>
+        <Col className="min-h-full">{right}</Col>
       </Grid>
     </Container>
   );
