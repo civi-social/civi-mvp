@@ -118,67 +118,79 @@ export const ForYouBills = ({
                 </span>
               </div>
             </div>
-            {legislation.map(
-              ({
-                bill: { id, title, statusDate, link, description },
-                gpt,
-                level,
-                sponsoredByRep,
-              }) => (
-                <div
-                  className="mt-4 flex flex-col gap-y-2 border border-gray-200 bg-white px-4 py-2"
-                  key={id + title}
-                >
-                  <div className="flex items-center justify-between">
-                    <a
-                      target="_blank"
-                      href={link}
-                      rel="noreferrer"
-                      className="flex items-center"
-                    >
-                      {id} <FaGlobe className="pl-1" />
-                    </a>
-                    <div>{statusDate}</div>
-                  </div>
-                  {sponsoredByRep && (
-                    <Tag
-                      backgroundColor="red"
-                      text={`Sponsored By Your Rep: ${sponsoredByRep}`}
-                    ></Tag>
-                  )}
-
-                  <div className="text-xl font-semibold">{title}</div>
-                  {gpt?.gpt_summary && (
-                    <div className="relative rounded-2xl bg-gray-100 px-6 pt-5 pb-2">
-                      <RobotSvg
-                        style={{
-                          width: "33px",
-                          position: "absolute",
-                          right: "-15px",
-                          top: "-15px",
-                          transform: "rotate(9deg)",
-                          opacity: "0.5",
-                        }}
-                      />
-                      <h4 className="font-serif text-lg">{gpt.gpt_summary}</h4>
-                      {gpt?.gpt_tags && (
-                        <div className="flex flex-row flex-wrap">
-                          {gpt.gpt_tags.map((v) => (
-                            <div className="inline-flex" key={v}>
-                              <Tag text={v} />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <div className="py-4 px-10 font-mono">{description}</div>
-                </div>
-              )
-            )}
+            {legislation.map((l) => (
+              <Bill key={l.bill.id + l.bill.title} {...l} />
+            ))}
           </div>
         </div>
       </section>
+    </div>
+  );
+};
+
+const Bill = ({
+  bill: { id, title, statusDate, link, description },
+  gpt,
+  level,
+  sponsoredByRep,
+}: ForYouBill) => {
+  // Chicago MVP Hacks
+  const levelsMap: Record<RepLevel, string> = {
+    [RepLevel.City]: "Chicago",
+    [RepLevel.State]: "IL",
+    [RepLevel.County]: "Cook County",
+    [RepLevel.National]: "USA",
+  };
+  const date =
+    level === RepLevel.City ? statusDate.split("-")[0].trim() : statusDate;
+  id = RepLevel.City ? id.replace("Resolution", "").trim() : id;
+  // End Chicago MVP Hacks
+  return (
+    <div className="mt-4 flex flex-col gap-y-2 border border-gray-200 bg-white px-4 py-2">
+      <div className="flex flex-wrap items-center justify-between text-sm font-light uppercase text-slate-600">
+        <a
+          target="_blank"
+          href={link}
+          rel="noreferrer"
+          className="flex items-center "
+        >
+          {levelsMap[level]} {id} <FaGlobe className="pl-1" />
+        </a>
+        <div>{date}</div>
+      </div>
+      {sponsoredByRep && (
+        <Tag
+          backgroundColor="red"
+          text={`Sponsored By Your Rep: ${sponsoredByRep}`}
+        ></Tag>
+      )}
+
+      <div className="text-xl font-semibold">{title}</div>
+      {gpt?.gpt_summary && (
+        <div className="relative rounded-2xl bg-gray-100 px-6 pt-5 pb-2">
+          <RobotSvg
+            style={{
+              width: "33px",
+              position: "absolute",
+              right: "-15px",
+              top: "-15px",
+              transform: "rotate(9deg)",
+              opacity: "0.5",
+            }}
+          />
+          <h4 className="font-serif text-lg">{gpt.gpt_summary}</h4>
+          {gpt?.gpt_tags && (
+            <div className="flex flex-row flex-wrap">
+              {gpt.gpt_tags.map((v) => (
+                <div className="inline-flex" key={v}>
+                  <Tag text={v} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      <div className="py-4 px-10 font-mono">{description}</div>
     </div>
   );
 };

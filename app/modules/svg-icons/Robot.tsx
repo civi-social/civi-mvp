@@ -1,10 +1,4 @@
-const makeSvg = (name: string, svgString: string) => {
-  const Fn = ({ style }: { style?: React.CSSProperties }) => (
-    <div style={style} dangerouslySetInnerHTML={{ __html: svgString }}></div>
-  );
-  Fn.displayName = name;
-  return Fn;
-};
+import { makeSvg } from "./utils";
 
 export const RobotSvgStr = `<?xml version='1.0' encoding='iso-8859-1'?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 462 462" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 462 462">
