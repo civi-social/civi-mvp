@@ -39,97 +39,6 @@ interface ForYouProps {
   env: Env;
 }
 
-export const AppShell = ({
-  left,
-  right,
-}: {
-  left: React.ReactNode;
-  right: React.ReactNode;
-}) => {
-  return (
-    <Container>
-      <GithubBanner url="https://github.com/civi-social/civi-mvp" />
-      <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
-        <Col
-          className="via-opacity-30 flex h-full flex-col text-left"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, rgb(245 245 245 / 30%) 125vh)" as StyleHack,
-          }}
-        >
-          <IntroContent />
-          <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
-            {left}
-          </div>
-          <div
-            className="mt-5 mb-5 rounded-md bg-opacity-60 text-left"
-            style={{ background: "#f198d170" as StyleHack }}
-          >
-            <CiviUpdates />
-          </div>
-        </Col>
-        <Col>{right}</Col>
-      </Grid>
-    </Container>
-  );
-};
-
-export const ForYou = (props: ForYouProps) => {
-  const [showOfficeModal, setShowOfficeModal] = React.useState(false);
-
-  const showOfficeComponent = (
-    <>
-      {props.offices && (
-        <div
-          style={{
-            background: "#5528b817" as StyleHack,
-            fontWeight: "bold",
-            color: "#d22cff" as StyleHack,
-            cursor: "pointer",
-            padding: Spacing.FOUR,
-            borderRadius: "25px",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: Spacing.TWO,
-            textAlign: "center",
-            textDecoration: "underline",
-          }}
-          onClick={() => {
-            setShowOfficeModal(true);
-          }}
-        >
-          <span>See Representatives For This Address.</span>
-        </div>
-      )}
-    </>
-  );
-
-  return (
-    <>
-      {props.offices && showOfficeModal ? (
-        <Modal
-          isOpen={showOfficeModal}
-          onClose={() => setShowOfficeModal(false)}
-        >
-          <div className="flex w-full max-w-2xl flex-col gap-y-5 justify-self-center">
-            <div className="text-center text-lg font-light">
-              Representatives for {props.address}.
-            </div>
-            <OfficialOfficeList officialOffice={props.offices} />
-          </div>
-        </Modal>
-      ) : (
-        <AppShell
-          left={<ForYouBillFilters {...props} />}
-          right={
-            <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
-          }
-        />
-      )}
-    </>
-  );
-};
-
 export const ForYouBillFilters = ({
   tags,
   updateFilters,
@@ -271,5 +180,96 @@ export const ForYouBills = ({
         </div>
       </section>
     </div>
+  );
+};
+
+const ForYouShell = ({
+  left,
+  right,
+}: {
+  left: React.ReactNode;
+  right: React.ReactNode;
+}) => {
+  return (
+    <Container>
+      <GithubBanner url="https://github.com/civi-social/civi-mvp" />
+      <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
+        <Col
+          className="via-opacity-30 flex h-full flex-col text-left"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, rgb(245 245 245 / 30%) 125vh)" as StyleHack,
+          }}
+        >
+          <IntroContent />
+          <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
+            {left}
+          </div>
+          <div
+            className="mt-5 mb-5 rounded-md bg-opacity-60 text-left"
+            style={{ background: "#f198d170" as StyleHack }}
+          >
+            <CiviUpdates />
+          </div>
+        </Col>
+        <Col>{right}</Col>
+      </Grid>
+    </Container>
+  );
+};
+
+export const ForYou = (props: ForYouProps) => {
+  const [showOfficeModal, setShowOfficeModal] = React.useState(false);
+
+  const showOfficeComponent = (
+    <>
+      {props.offices && (
+        <div
+          style={{
+            background: "#5528b817" as StyleHack,
+            fontWeight: "bold",
+            color: "#d22cff" as StyleHack,
+            cursor: "pointer",
+            padding: Spacing.FOUR,
+            borderRadius: "25px",
+            display: "flex",
+            alignItems: "center",
+            marginBottom: Spacing.TWO,
+            textAlign: "center",
+            textDecoration: "underline",
+          }}
+          onClick={() => {
+            setShowOfficeModal(true);
+          }}
+        >
+          <span>See Representatives For This Address.</span>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {props.offices && showOfficeModal ? (
+        <Modal
+          isOpen={showOfficeModal}
+          onClose={() => setShowOfficeModal(false)}
+        >
+          <div className="flex w-full max-w-2xl flex-col gap-y-5 justify-self-center">
+            <div className="text-center text-lg font-light">
+              Representatives for {props.address}.
+            </div>
+            <OfficialOfficeList officialOffice={props.offices} />
+          </div>
+        </Modal>
+      ) : (
+        <ForYouShell
+          left={<ForYouBillFilters {...props} />}
+          right={
+            <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
+          }
+        />
+      )}
+    </>
   );
 };
