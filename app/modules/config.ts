@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import ENVIRONMENT_VARIABLES from "../setup-scripts/env";
+import ENVIRONMENT_VARIABLES from "../../setup-scripts/env";
 
 export type Env = {
   [K in typeof ENVIRONMENT_VARIABLES[number]]: string;

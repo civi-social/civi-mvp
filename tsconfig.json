@@ -2,7 +2,7 @@
   "exclude": ["./cypress"],
   "include": [
     "remix.env.d.ts",
-    "modules/app-shell/style.d.ts",
+    "app/modules/app-shell/style.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],
@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "~app/*": ["./app/*"],
-      "~/*": ["./modules/*"]
+      "~/*": ["./app/modules/*"]
     },
     "skipLibCheck": true,
     "noEmit": true,
