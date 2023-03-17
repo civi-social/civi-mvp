@@ -52,7 +52,7 @@ export const ForYouBillFilters = ({
           <div className="flex w-full max-w-screen-md flex-col justify-center">
             <div className="p-4">
               <div className="rounded-lg p-4">
-                <div className=" mb-4 rounded-md border-2 border-black bg-black bg-opacity-70">
+                <div className="border-1 mb-4 rounded-md border-black bg-black bg-opacity-70 px-2 py-1">
                   <AddressLookup env={env} />
                 </div>
                 <RadioPicker<RepLevel | null | undefined | "">
@@ -160,7 +160,7 @@ export const ForYouBills = ({
                           opacity: "0.5",
                         }}
                       />
-                      <h4 className="text-lg">{gpt.gpt_summary}</h4>
+                      <h4 className="font-serif text-lg">{gpt.gpt_summary}</h4>
                       {gpt?.gpt_tags && (
                         <div className="flex flex-row flex-wrap">
                           {gpt.gpt_tags.map((v) => (

@@ -1,19 +1,12 @@
 import { useState } from "react";
-import type { StyleHack } from "../styles";
 import { classNames } from "../styles";
 
 export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
-  backgroundColor,
   text,
 }) => {
   return (
     <span
-      className={classNames(baseTag, "text-sm font-normal text-white")}
-      style={{
-        backgroundColor: backgroundColor
-          ? backgroundColor
-          : ("#b1b1b1" as StyleHack),
-      }}
+      className={classNames(baseTag, "bg-opacity-40 text-sm text-opacity-90")}
     >
       {text}
     </span>
@@ -48,7 +41,10 @@ export const Tagging = ({
         <button
           key={tag}
           onClick={() => handleTagClick(tag)}
-          className={classNames(baseTag, "bg-black bg-opacity-70 text-white")}
+          className={classNames(
+            baseTag,
+            "bg-opacity-60 text-base text-opacity-90"
+          )}
           style={{
             opacity:
               selectedTags.includes(tag) || selectedTags.length === 0
@@ -63,4 +59,5 @@ export const Tagging = ({
   );
 };
 
-const baseTag = "px-2 py-1 m-1 mr-0 rounded-full border-none text-base";
+const baseTag =
+  "px-3 py-1 m-1 mr-0 rounded-full border-none font-light bg-black text-white";
