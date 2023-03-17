@@ -13,3 +13,4 @@ vscode:
     - ms-azuretools.vscode-docker
     - streetsidesoftware.code-spell-checker
     - tyriar.sort-lines
+    - bradlc.vscode-tailwindcss

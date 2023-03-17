@@ -1,22 +1,12 @@
 import { useState } from "react";
-import type { Style, StyleHack } from "../styles";
-import { Skin } from "../styles";
+import { classNames } from "../styles";
 
 export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
-  backgroundColor,
   text,
 }) => {
   return (
     <span
-      style={{
-        ...styles.tagMain,
-        fontSize: "14px",
-        fontWeight: "400",
-        backgroundColor: backgroundColor
-          ? backgroundColor
-          : ("#b1b1b1" as StyleHack),
-        color: Skin.White,
-      }}
+      className={classNames(baseTag, "bg-opacity-40 text-sm text-opacity-90")}
     >
       {text}
     </span>
@@ -46,19 +36,20 @@ export const Tagging = ({
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div className="text-center">
       {tags.map((tag) => (
         <button
           key={tag}
           onClick={() => handleTagClick(tag)}
+          className={classNames(
+            baseTag,
+            "bg-opacity-60 text-base text-opacity-90"
+          )}
           style={{
-            ...styles.tagMain,
             opacity:
               selectedTags.includes(tag) || selectedTags.length === 0
                 ? "1.0"
                 : "0.3",
-            backgroundColor: "rgba(0,0,0,0.7)" as StyleHack,
-            color: Skin.White,
           }}
         >
           {tag}
@@ -68,13 +59,5 @@ export const Tagging = ({
   );
 };
 
-const styles: Style.StyleSheet<"tagMain"> = {
-  tagMain: {
-    padding: "5px 10px" as StyleHack,
-    margin: "5px 5px 5px 0" as StyleHack,
-    borderRadius: "20px",
-    border: "none",
-    fontSize: "16px",
-    fontWeight: "bold",
-  },
-};
+const baseTag =
+  "px-3 py-1 m-1 mr-0 rounded-full border-none font-light bg-black text-white";

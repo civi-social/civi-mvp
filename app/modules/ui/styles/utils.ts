@@ -36,3 +36,6 @@ const styles = createStyleSheet({
     flexDirection: "row",
   },
 });
+
+export const classNames = (...classnames: (string | undefined | false)[]) =>
+  classnames.filter(Boolean).join(" ");
