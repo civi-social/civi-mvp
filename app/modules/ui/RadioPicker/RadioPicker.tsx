@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { classNames, StyleHack } from "../styles";
-import { Skin } from "../styles";
-import { Spacing } from "../styles";
+import { classNames } from "../styles";
 
 interface Option {
   label: string;
@@ -25,7 +23,7 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div className="flex flex-row justify-center">
+    <div className="flex flex-row justify-center lg:justify-end">
       {options.map((option, i) => (
         <div
           key={option.value}

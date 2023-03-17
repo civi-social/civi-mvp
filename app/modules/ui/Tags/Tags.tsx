@@ -36,7 +36,7 @@ export const Tagging = ({
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center lg:text-right">
       {tags.map((tag) => (
         <button
           key={tag}
