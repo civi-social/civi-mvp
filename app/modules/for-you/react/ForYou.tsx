@@ -50,7 +50,7 @@ export const ForYouBillFilters = ({
         <div className="flex justify-center">
           <div className="flex w-full max-w-screen-md flex-col justify-center">
             <div className="rounded-lg pt-4">
-              <div className="border-1 mb-4 rounded-md border-black bg-black bg-opacity-70 px-2 py-1">
+              <div className="mb-4 rounded-md bg-black bg-opacity-60 px-2 py-1">
                 <AddressLookup env={env} />
               </div>
               <RadioPicker<RepLevel | null | undefined | "">
@@ -203,14 +203,14 @@ const ForYouShell = ({
   return (
     <Container>
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
-      <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
-        <div
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
-          }}
-          className="via-opacity-30 flex h-full flex-col text-left"
-        >
+      <Grid
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 45vh, transparent 70vh)" as StyleHack,
+        }}
+        className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
+      >
+        <div className="via-opacity-30 flex h-full flex-col text-left">
           <div className="p-5">
             <IntroContent />
             <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
