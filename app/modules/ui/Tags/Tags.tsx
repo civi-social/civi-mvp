@@ -43,7 +43,7 @@ export const Tagging = ({
           onClick={() => handleTagClick(tag)}
           className={classNames(
             baseTag,
-            "bg-opacity-60 text-base text-opacity-90"
+            "bg-opacity-50 text-base text-opacity-90"
           )}
           style={{
             opacity:

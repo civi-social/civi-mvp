@@ -23,11 +23,16 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div className="flex flex-row justify-center lg:justify-end">
+    <div
+      role="radiogroup"
+      aria-label="Filter By City, State, or National Bills"
+      className="flex flex-row justify-center lg:justify-end"
+    >
       {options.map((option, i) => (
         <div
           key={option.value}
           role="radio"
+          tabIndex={0}
           aria-checked={defaultValue === option.value}
           onClick={() => handleOptionChange(option.value as T)}
           className={classNames(
