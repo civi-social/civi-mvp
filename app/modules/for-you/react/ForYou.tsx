@@ -205,11 +205,11 @@ const ForYouShell = ({
       <GithubBanner url="https://github.com/civi-social/civi-mvp" />
       <Grid className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50">
         <div
-          className="via-opacity-30 flex h-full flex-col text-left"
           style={{
             background:
               "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 75vh, transparent 125vh)" as StyleHack,
           }}
+          className="via-opacity-30 flex h-full flex-col text-left"
         >
           <div className="p-5">
             <IntroContent />
@@ -224,7 +224,7 @@ const ForYouShell = ({
             </div>
           </div>
         </div>
-        <div className="min-h-full">
+        <div className="h-full">
           <div className="mx-3 my-5 ">{right}</div>
         </div>
       </Grid>
