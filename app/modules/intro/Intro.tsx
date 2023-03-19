@@ -53,7 +53,14 @@ const HelpUs = () => {
     <CardSection>
       <CardTitle>Help Us Build It!</CardTitle>
       <div>
-        We work within the Chi Hack Night community.{" "}
+        We work within the{" "}
+        <a
+          className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
+          href="https://chihacknight.org"
+        >
+          Chi Hack Night
+        </a>{" "}
+        community.{" "}
         <a
           className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
           href="https://chihacknight.slack.com/archives/C047500M5RS"
