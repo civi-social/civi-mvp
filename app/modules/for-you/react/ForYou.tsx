@@ -217,15 +217,12 @@ const ForYouShell = ({
         className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
       >
         <aside className="via-opacity-30 flex h-full flex-col text-left">
-          <div className="p-5">
+          <div className="px-5 pt-5">
             <IntroContent />
             <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
               {left}
             </div>
-            <div
-              className="mt-5 mb-5 rounded-md bg-opacity-60 p-1 text-left"
-              style={{ background: "#f198d170" as StyleHack }}
-            >
+            <div className="mt-5 rounded-md bg-pink-200 bg-opacity-60 p-1 text-left">
               <CiviUpdates />
             </div>
           </div>
