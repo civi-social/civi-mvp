@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { classNames } from "../styles";
 
-export const Tag: React.FC<{ backgroundColor?: string; text: string }> = ({
+export const Tag: React.FC<{ className?: string; text: string }> = ({
   text,
+  className,
 }) => {
   return (
     <span
-      className={classNames(baseTag, "bg-opacity-40 text-sm text-opacity-90")}
+      className={classNames(
+        baseTag,
+        "text-sm text-opacity-90",
+        className || "bg-black bg-opacity-40 text-white"
+      )}
     >
       {text}
     </span>
@@ -43,7 +48,7 @@ export const Tagging = ({
           onClick={() => handleTagClick(tag)}
           className={classNames(
             baseTag,
-            "bg-opacity-50 text-base text-opacity-90"
+            "bg-black bg-opacity-50 text-base text-white text-opacity-90"
           )}
           style={{
             opacity:
@@ -59,5 +64,4 @@ export const Tagging = ({
   );
 };
 
-const baseTag =
-  "px-3 py-1 m-1 mr-0 rounded-full border-none font-light bg-black text-white";
+const baseTag = "px-3 py-1 m-1 mr-0 rounded-full border-none font-light";

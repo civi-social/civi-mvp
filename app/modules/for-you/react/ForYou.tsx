@@ -6,10 +6,8 @@ import {
   Container,
   Grid,
   RadioPicker,
-  Spacing,
   Tag,
   Tagging,
-  classNames,
 } from "~/ui";
 import type { ForYouBill } from "../selector";
 
@@ -18,9 +16,8 @@ import { FaGlobe } from "react-icons/fa";
 import { CiviUpdates, IntroContent } from "~/intro/Intro";
 import type { OfficialOffice } from "~/representatives";
 import { OfficialOfficeList } from "~/representatives";
-import { RobotSvg, GithubBanner } from "~/svg-icons";
+import { GithubBanner, RobotSvg } from "~/svg-icons";
 import Modal from "~/ui/Modal/Modal";
-import { useParams, useSearchParams } from "@remix-run/react";
 import { useDemoContent, VotingDemo } from "~app/modules/demos/Demos";
 
 export interface FilterParams {
@@ -159,7 +156,7 @@ const Bill = ({
       </div>
       {sponsoredByRep && (
         <Tag
-          backgroundColor="red"
+          className="bg-primary text-white"
           text={`Sponsored By Your Rep: ${sponsoredByRep}`}
         ></Tag>
       )}
@@ -248,19 +245,7 @@ export const ForYou = (props: ForYouProps) => {
     <>
       {props.offices && (
         <div
-          style={{
-            background: "#5528b817" as StyleHack,
-            fontWeight: "bold",
-            color: "#d22cff" as StyleHack,
-            cursor: "pointer",
-            padding: Spacing.FOUR,
-            borderRadius: "25px",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: Spacing.TWO,
-            textAlign: "center",
-            textDecoration: "underline",
-          }}
+          className="mb-4 cursor-pointer rounded bg-primary py-3 px-4 font-bold text-white underline shadow-md"
           onClick={() => {
             setShowOfficeModal(true);
           }}
