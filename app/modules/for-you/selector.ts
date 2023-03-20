@@ -6,6 +6,22 @@ import type { RepLevel } from "~/levels";
 import type { RepresentativesResult } from "~/representatives";
 import { findOverlap } from "./utils";
 
+const ALLOWED_TAGS = [
+  "Economy",
+  "Education",
+  "Democracy",
+  "Health Care",
+  "Public Safety",
+  "Transit",
+  "Abortion",
+  "Immigration",
+  "Foreign Policy",
+  "States Rights",
+  "Civil Rights",
+  "Climate Change",
+  "Other",
+];
+
 // todo: put this type directly in civi-legislation-data
 type CiviGptData = CiviGptLegislationData[keyof CiviGptLegislationData];
 
@@ -29,9 +45,27 @@ export const selectData = (
   stateAbbreviation: "il"
 ): ForYouBill[] => {
   return legislation.map((bill) => {
+    const gptSummaries = gpt[bill.id];
+    // todo: move to civi-legislation-data
+    let gptTags = gptSummaries.gpt_tags;
+    let overlapped = findStringOverlap(gptTags || [], ALLOWED_TAGS);
+
+    // remove any extra others if it has other categories
+    if (overlapped.length > 1) {
+      overlapped = overlapped.filter((str) => str !== "Other");
+    }
+
+    // if it has no categories, add other
+    if (overlapped.length === 0) {
+      overlapped.push("Other");
+    }
+    const cleanedGpt = {
+      gpt_summary: gptSummaries.gpt_summary,
+      gpt_tags: overlapped,
+    };
     return {
       bill,
-      gpt: gpt[bill.id],
+      gpt: cleanedGpt,
       level,
       sponsoredByRep: findBillsSponsoredByRep(
         representatives,
@@ -61,4 +95,18 @@ const findBillsSponsoredByRep = (
     }
   });
   return sponsoredByRep;
+};
+
+const findStringOverlap = (arr1: string[], arr2: string[]) => {
+  let overlap = [];
+
+  for (let i = 0; i < arr1.length; i++) {
+    for (let j = 0; j < arr2.length; j++) {
+      if (arr1[i] === arr2[j]) {
+        overlap.push(arr1[i]);
+      }
+    }
+  }
+
+  return overlap;
 };
