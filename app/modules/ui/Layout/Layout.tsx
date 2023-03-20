@@ -2,7 +2,7 @@
  * Layout related components
  */
 
-import { classNames, createStyleSheet, Spacing } from "~/ui/styles";
+import { classNames } from "~/ui/styles";
 
 interface StyleComponent {
   style?: React.CSSProperties;
@@ -14,10 +14,7 @@ export const Container: React.FC<StyleComponent> = ({
   style,
   className,
 }) => (
-  <div
-    className={className}
-    style={{ ...layoutStyles.container, ...(style || {}) }}
-  >
+  <div className={className} style={{ ...(style || {}) }}>
     {children}
   </div>
 );
@@ -37,9 +34,3 @@ export const Grid: React.FC<StyleComponent> = ({
     {children}
   </section>
 );
-
-const layoutStyles = createStyleSheet({
-  container: {
-    minHeight: "100vh",
-  },
-});

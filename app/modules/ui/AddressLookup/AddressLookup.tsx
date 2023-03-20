@@ -13,8 +13,6 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
 
   return config?.apiKey ? (
     <Autocomplete
-      // @ts-ignore
-      autoFocus
       options={{ types: ["address"] }}
       apiKey={config.apiKey}
       placeholder="Find Your Reps By Address..."

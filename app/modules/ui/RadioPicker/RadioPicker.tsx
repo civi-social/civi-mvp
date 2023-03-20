@@ -23,23 +23,30 @@ export const RadioPicker = <T extends string | null | undefined>({
   };
 
   return (
-    <div className="flex flex-row justify-center lg:justify-end">
+    <div
+      role="radiogroup"
+      aria-label="Filter By City, State, or National Bills"
+      className="flex flex-row justify-center lg:justify-end"
+    >
       {options.map((option, i) => (
         <div
           key={option.value}
           role="radio"
+          tabIndex={0}
           aria-checked={defaultValue === option.value}
           onClick={() => handleOptionChange(option.value as T)}
           className={classNames(
-            i === 0 && "border-l-2",
-            "border-t-2 border-b-2 border-r-2 border-black border-opacity-50",
-            "my-1 mx-0 inline-flex cursor-pointer py-3 px-4 font-bold text-white",
+            "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white",
             i === 0
               ? "rounded-l-lg"
               : i === options.length - 1
               ? "rounded-r-lg"
               : "",
-            `bg-opacity-70 ${selectedOption === option.value ? "bg-black" : ""}`
+            `${
+              selectedOption === option.value
+                ? "bg-black bg-opacity-50"
+                : "bg-black bg-opacity-20"
+            }`
           )}
         >
           {option.label}

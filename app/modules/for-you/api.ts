@@ -1,7 +1,7 @@
 import type { Env } from "~/config";
 import { getLegislations } from "~/legislation/api";
 import { RepLevel } from "~/levels";
-import type { OfficialOffice, RepresentativesResult } from "~/representatives";
+import type { OfficialOffice } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
 import type { FilterParams } from "./react/ForYou";
 import type { ForYouBill } from "./selector";

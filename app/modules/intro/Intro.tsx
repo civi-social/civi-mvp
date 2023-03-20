@@ -1,9 +1,10 @@
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
 import { CardSection, CardTitle, Spacing } from "~/ui";
+import { useDemoContent } from "../demos/Demos";
 
 export const IntroContent = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rounded text-white">
       <div className="flex justify-start pb-2">
         <img
           src={civiLogo}
@@ -14,8 +15,8 @@ export const IntroContent = () => {
           }}
         />
       </div>
-      <div className="pt-2 font-serif text-3xl text-black">Chicago!</div>
-      <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-black text-gray-900">
+      <div className="pt-2 font-serif text-3xl">Chicago!</div>
+      <div className="mt-4 font-serif text-2xl font-semibold leading-tight ">
         We Want To Help You Engage With The Legislation That Impacts You
       </div>
     </div>
@@ -23,6 +24,7 @@ export const IntroContent = () => {
 };
 
 const Progress = () => {
+  const { enableDemo } = useDemoContent();
   return (
     <CardSection>
       <CardTitle>
@@ -42,7 +44,7 @@ const Progress = () => {
         <li>✅ Get legislation summarized by AI</li>
         <li>✅ New feed experience</li>
         <li>⏺ Get Chicago resident summary of active legislation</li>
-        <li>⏺ Vote on active legislation</li>
+        <li onClick={() => enableDemo()}>⏺ Vote on active legislation</li>
       </ul>
     </CardSection>
   );
@@ -53,7 +55,14 @@ const HelpUs = () => {
     <CardSection>
       <CardTitle>Help Us Build It!</CardTitle>
       <div>
-        We work within the Chi Hack Night community.{" "}
+        We work within the{" "}
+        <a
+          className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
+          href="https://chihacknight.org"
+        >
+          Chi Hack Night
+        </a>{" "}
+        community.{" "}
         <a
           className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
           href="https://chihacknight.slack.com/archives/C047500M5RS"
