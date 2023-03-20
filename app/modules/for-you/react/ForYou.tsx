@@ -6,10 +6,8 @@ import {
   Container,
   Grid,
   RadioPicker,
-  Spacing,
   Tag,
   Tagging,
-  classNames,
 } from "~/ui";
 import type { ForYouBill } from "../selector";
 
@@ -18,9 +16,8 @@ import { FaGlobe } from "react-icons/fa";
 import { CiviUpdates, IntroContent } from "~/intro/Intro";
 import type { OfficialOffice } from "~/representatives";
 import { OfficialOfficeList } from "~/representatives";
-import { RobotSvg, GithubBanner } from "~/svg-icons";
+import { GithubBanner, RobotSvg } from "~/svg-icons";
 import Modal from "~/ui/Modal/Modal";
-import { useParams, useSearchParams } from "@remix-run/react";
 import { useDemoContent, VotingDemo } from "~app/modules/demos/Demos";
 
 export interface FilterParams {
@@ -159,7 +156,7 @@ const Bill = ({
       </div>
       {sponsoredByRep && (
         <Tag
-          backgroundColor="red"
+          className="bg-primary text-white"
           text={`Sponsored By Your Rep: ${sponsoredByRep}`}
         ></Tag>
       )}
@@ -220,15 +217,12 @@ const ForYouShell = ({
         className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
       >
         <aside className="via-opacity-30 flex h-full flex-col text-left">
-          <div className="p-5">
+          <div className="px-5 pt-5">
             <IntroContent />
             <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
               {left}
             </div>
-            <div
-              className="mt-5 mb-5 rounded-md bg-opacity-60 p-1 text-left"
-              style={{ background: "#f198d170" as StyleHack }}
-            >
+            <div className="mt-5 rounded-md bg-pink-200 bg-opacity-60 p-1 text-left">
               <CiviUpdates />
             </div>
           </div>
@@ -248,19 +242,7 @@ export const ForYou = (props: ForYouProps) => {
     <>
       {props.offices && (
         <div
-          style={{
-            background: "#5528b817" as StyleHack,
-            fontWeight: "bold",
-            color: "#d22cff" as StyleHack,
-            cursor: "pointer",
-            padding: Spacing.FOUR,
-            borderRadius: "25px",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: Spacing.TWO,
-            textAlign: "center",
-            textDecoration: "underline",
-          }}
+          className="mb-4 cursor-pointer rounded bg-primary py-3 px-4 font-bold text-white underline shadow-md"
           onClick={() => {
             setShowOfficeModal(true);
           }}
