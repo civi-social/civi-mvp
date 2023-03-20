@@ -1,6 +1,6 @@
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
-import type { StyleHack } from "~/ui";
 import { CardSection, CardTitle, Spacing } from "~/ui";
+import { useDemoContent } from "../demos/Demos";
 
 export const IntroContent = () => {
   return (
@@ -24,6 +24,7 @@ export const IntroContent = () => {
 };
 
 const Progress = () => {
+  const { enableDemo } = useDemoContent();
   return (
     <CardSection>
       <CardTitle>
@@ -43,7 +44,7 @@ const Progress = () => {
         <li>✅ Get legislation summarized by AI</li>
         <li>✅ New feed experience</li>
         <li>⏺ Get Chicago resident summary of active legislation</li>
-        <li>⏺ Vote on active legislation</li>
+        <li onClick={() => enableDemo()}>⏺ Vote on active legislation</li>
       </ul>
     </CardSection>
   );
