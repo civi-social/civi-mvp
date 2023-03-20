@@ -50,7 +50,7 @@ export const ForYouBillFilters = ({
         <div className="flex justify-center">
           <div className="flex w-full max-w-screen-md flex-col justify-center">
             <div className="rounded-lg pt-4">
-              <div className="mb-4 rounded-md bg-black bg-opacity-60 px-2 py-1">
+              <div className="mb-4 rounded-md bg-black bg-opacity-50 px-2 py-1">
                 <AddressLookup env={env} />
               </div>
               <RadioPicker<RepLevel | null | undefined | "">
@@ -97,7 +97,7 @@ export const ForYouBills = ({
   showOfficeComponent,
 }: ForYouProps & { showOfficeComponent: React.ReactNode }) => {
   return (
-    <article>
+    <section>
       <div className="flex justify-center">
         <div className="flex max-w-lg flex-col justify-center">
           <div>
@@ -118,7 +118,7 @@ export const ForYouBills = ({
           ))}
         </div>
       </div>
-    </article>
+    </section>
   );
 };
 
@@ -140,7 +140,7 @@ const Bill = ({
   id = RepLevel.City ? id.replace("Resolution", "").trim() : id;
   // End Chicago MVP Hacks
   return (
-    <div className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white px-4 py-2">
+    <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white px-4 py-2">
       <div className="flex flex-wrap items-center justify-between text-sm font-light uppercase text-slate-600">
         <a
           target="_blank"
@@ -185,7 +185,7 @@ const Bill = ({
         </div>
       )}
       <div className="py-4 px-10 font-mono">{description}</div>
-    </div>
+    </article>
   );
 };
 

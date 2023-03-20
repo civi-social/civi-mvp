@@ -1,9 +1,10 @@
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
+import type { StyleHack } from "~/ui";
 import { CardSection, CardTitle, Spacing } from "~/ui";
 
 export const IntroContent = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rounded p-4 text-white">
       <div className="flex justify-start pb-2">
         <img
           src={civiLogo}
@@ -14,8 +15,8 @@ export const IntroContent = () => {
           }}
         />
       </div>
-      <div className="pt-2 font-serif text-3xl text-black">Chicago!</div>
-      <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-black text-gray-900">
+      <div className="pt-2 font-serif text-3xl">Chicago!</div>
+      <div className="mt-4 font-serif text-2xl font-semibold leading-tight ">
         We Want To Help You Engage With The Legislation That Impacts You
       </div>
     </div>

@@ -44,7 +44,7 @@ export const RadioPicker = <T extends string | null | undefined>({
               : "",
             `${
               selectedOption === option.value
-                ? "bg-black bg-opacity-60"
+                ? "bg-black bg-opacity-50"
                 : "bg-black bg-opacity-20"
             }`
           )}
