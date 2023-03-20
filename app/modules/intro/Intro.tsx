@@ -4,7 +4,7 @@ import { CardSection, CardTitle, Spacing } from "~/ui";
 
 export const IntroContent = () => {
   return (
-    <div className="flex flex-col rounded p-4 text-white">
+    <div className="flex flex-col rounded text-white">
       <div className="flex justify-start pb-2">
         <img
           src={civiLogo}
