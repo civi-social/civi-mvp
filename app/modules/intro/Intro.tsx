@@ -23,12 +23,12 @@ export const IntroContent = () => {
   );
 };
 
-const Progress = () => {
+export const Progress = () => {
   const { enableDemo } = useDemoContent();
   return (
     <CardSection>
       <CardTitle>
-        Progress{" "}
+        Progress Log{" "}
         <span className="text-sm font-light">[last updated march 17 2022]</span>
       </CardTitle>
       <ul
