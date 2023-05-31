@@ -122,7 +122,7 @@ enum WizardStep {
 
 const App: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<WizardStep>(
-    WizardStep.BillIntro
+    WizardStep.BillIntroNotification
   );
 
   const handleNextStep = () => {
