@@ -192,7 +192,7 @@ export const Bill = ({
   );
 };
 
-const ForYouShell = ({
+export const ForYouShell = ({
   left,
   right,
 }: {
