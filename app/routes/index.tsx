@@ -58,43 +58,12 @@ const App = () => {
           <p>Explore our initial demo and share any feedback you have.</p>
           <Link
             to="/demos/wizard"
-            className="m-6 w-fit rounded-lg bg-secondary-200 p-4 pl-6 pr-6 shadow-lg hover:bg-secondary-400 active:bg-zinc-50"
+            className="m-6 w-fit rounded-lg bg-secondary-200 p-4 pl-6 pr-6 shadow-lg hover:bg-secondary-400 hover:text-zinc-50 active:bg-zinc-50"
           >
             View our demo.
           </Link>
         </section>
         <NewsletterForm />
-        <section
-          id="SignUp"
-          className=" flex flex-col items-center 
-                    justify-center p-4"
-        >
-          <h2 className="mb-2 text-center text-xl font-bold">
-            Like what you see?
-          </h2>
-          <p className="text-center italic">
-            Embrace the power of your political voice.
-          </p>
-          <p className="text-center italic">
-            Sign up for our mailing list to receive the latest updates.
-          </p>
-          <form className="w-full max-w-sm justify-center">
-            <div className="flex items-center border-b border-secondary-400 py-2 ">
-              <input
-                className="mr-3 w-full appearance-none bg-transparent py-1 px-2 leading-tight text-gray-800 focus:outline-none"
-                type="text"
-                placeholder="email address"
-                aria-label="E-mail Address"
-              />
-              <button
-                className="flex-shrink-0 rounded border-4 border-secondary-400 bg-secondary-400 py-1 px-2 text-sm text-zinc-50 hover:border-secondary-200 hover:bg-secondary-200 hover:text-gray-800"
-                type="button"
-              >
-                Sign Up
-              </button>
-            </div>
-          </form>
-        </section>
         <section
           id="InProgress"
           className="mb-4 rounded-lg bg-zinc-50 p-4 shadow-lg"

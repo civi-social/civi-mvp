@@ -139,30 +139,31 @@ export const NewsletterForm = () => {
         action="https://social.us11.list-manage.com/subscribe/post?u=5d27cdfc23603091d05858a9b&amp;id=e52325cbc0&amp;f_id=00f5a6e0f0"
         method="post"
       >
-        <div className="flex flex-col items-center border-b border-secondary-400 py-2">
+        <div className="flex flex-row flex-wrap items-center border-b border-secondary-400 py-2">
           <input
-            className="mr-3 w-full appearance-none border-none bg-transparent py-1 px-2 leading-tight text-gray-700 focus:outline-none"
-            type="email"
-            name="EMAIL"
-            placeholder="email address"
-            aria-label="E-mail Address"
-          />
-          <input
-            className="mr-3 w-full appearance-none border-none bg-transparent py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
             name="FNAME"
             placeholder="First Name"
             aria-label="First Name"
           />
           <input
-            className="mr-3 w-full appearance-none border-none bg-transparent py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
             name="LNAME"
             placeholder="Last Name"
             aria-label="Last Name"
           />
-          <label htmlFor="neighborhood">Select a neighborhood:</label>
+          <input
+            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            type="email"
+            name="EMAIL"
+            placeholder="E-mail Address"
+            aria-label="E-mail Address"
+          />
+          <label className="block w-full" htmlFor="neighborhood">Select a neighborhood:</label>
           <select
+            className="mb-6 w-full bg-gray-200 leading-tight p-1"
             id="neighborhood"
             name="HOOD"
             onChange={(e) => {
@@ -176,7 +177,7 @@ export const NewsletterForm = () => {
               </option>
             ))}
           </select>
-          <input type="hidden" name="ELIGIBLE" value={isEligible} />
+          <input type="hidden" name="ELIGIBLE" value={isEligible} readOnly/>
 
           <div
             style={{ position: "absolute", left: "-5000px" }}
@@ -187,10 +188,11 @@ export const NewsletterForm = () => {
               name="b_5d27cdfc23603091d05858a9b_e52325cbc0"
               tabIndex={-1}
               value=""
+              readOnly
             />
           </div>
           <button
-            className="flex-shrink-0 rounded border-4 border-secondary-400 bg-secondary-400 py-1 px-2 text-sm text-zinc-50 hover:border-secondary-200 hover:bg-secondary-200 hover:text-gray-800"
+            className="flex-shrink-0 mb-2 w-full rounded border-4 border-secondary-400 bg-secondary-400 py-1 px-2 text-sm text-zinc-50 hover:border-secondary-200 hover:bg-secondary-200 hover:text-gray-800"
             type="submit"
             name="submit"
           >
