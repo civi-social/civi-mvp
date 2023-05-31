@@ -14,17 +14,12 @@ const BillIntro: React.FC<ScreenProps> = ({ onNextStep }) => {
       <ScreenContainer>
         <Card>
           <h1 className="text-2xl font-bold">
-            Alder Vasquez wants your opinion on this bill?
+            Your Representative is requesting you to vote on this bill.
           </h1>
-          <p className="text-xl text-slate-600">
-            Establishes the Illinois Psilocybin Advisory Board{" "}
+          <p className="text-xl italic text-slate-600">
+            Establish the Illinois Psilocybin Advisory Board{" "}
           </p>
-          <button
-            onClick={onNextStep}
-            className="mt-4 rounded bg-blue-500 py-2 px-4 font-bold uppercase text-white hover:bg-blue-700"
-          >
-            Learn More
-          </button>
+          <AppCTA onClick={onNextStep}>Learn More</AppCTA>
           {/* <button
           onClick={onNextStep}
           className="mt-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
@@ -64,40 +59,24 @@ const FakeBill = () => {
 const BillInformation: React.FC<ScreenProps> = ({ onNextStep }) => {
   const [showVote, setShowVote] = React.useState(false);
   return (
-    <div className="flex h-screen flex-col items-center justify-center overflow-y-auto bg-gray-100">
-      <div>
-        <FakeBill />
-      </div>
-      {showVote ? (
-        <div className="flex">
-          <button
-            onClick={onNextStep}
-            className="m-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
-          >
-            Yay
-          </button>
-          <button
-            onClick={onNextStep}
-            className="m-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
-          >
-            Nay
-          </button>
-          <button
-            onClick={onNextStep}
-            className="m-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
-          >
-            Present
-          </button>
+    <PhoneContainer onNextStep={onNextStep}>
+      <ScreenContainer>
+        <div className="flex flex-col items-center justify-center">
+          <div>
+            <FakeBill />
+          </div>
+          {showVote ? (
+            <div className="flex gap-1">
+              <AppCTA onClick={onNextStep}>Yay</AppCTA>
+              <AppCTA onClick={onNextStep}>Nay</AppCTA>
+              <AppCTA onClick={onNextStep}>Present</AppCTA>
+            </div>
+          ) : (
+            <AppCTA onClick={() => setShowVote(true)}>Vote</AppCTA>
+          )}
         </div>
-      ) : (
-        <button
-          onClick={() => setShowVote(true)}
-          className="mt-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
-        >
-          Vote
-        </button>
-      )}
-    </div>
+      </ScreenContainer>
+    </PhoneContainer>
   );
 };
 
@@ -106,17 +85,12 @@ const VoteOnBill: React.FC<ScreenProps> = ({ onNextStep }) => {
     <PhoneContainer onNextStep={onNextStep}>
       <ScreenContainer>
         <Card>
-          <div className="text-4xl font-bold">
-            We will send Alder Vasquez your vote!
+          <div className="text-xl font-bold">
+            We will send the legislator your vote!
           </div>
-          <div>We will send a notification once Alder Vasquez votes</div>
-          <div>Want to see a template of what we send?</div>
-          <button
-            onClick={onNextStep}
-            className="mt-4 rounded bg-blue-500 py-2 px-4 text-3xl font-bold text-white hover:bg-blue-700"
-          >
-            One week later
-          </button>
+          <div>
+            We will send a notification once your legislator votes in 1 week.
+          </div>
         </Card>
       </ScreenContainer>
     </PhoneContainer>
@@ -126,6 +100,7 @@ const VoteOnBill: React.FC<ScreenProps> = ({ onNextStep }) => {
 const SignUp: React.FC<ScreenProps> = ({ onNextStep }) => {
   return (
     <div className="flex h-screen flex-col items-center justify-center overflow-y-auto bg-gray-100 text-center">
+      Demo Over! Are you Interested In Making This App A Reality?
       <div className="text-4xl font-bold">Sign Up For Our Waitlist</div>
       <div>
         Alder Vasquez and Rep Hoan have committed to joining the site if we get
@@ -176,21 +151,11 @@ const App: React.FC = () => {
         return <VoteOnBill onNextStep={handleNextStep} num={3} />;
       case WizardStep.BillSummaryNotification:
         return (
-          <>
-            <Notification
-              onNextStep={handleNextStep}
-              title="Alder Vasquez voted in line with your vote!"
-              message="Yay."
-            />
-            <div className="flex h-screen flex-col items-center justify-center overflow-y-auto bg-gray-100 text-center">
-              <button
-                onClick={handleNextStep}
-                className="mt-4 rounded py-2 px-4 text-3xl font-bold text-black hover:bg-blue-700"
-              >
-                Demo Over! Are you Interested In Making This App A Reality?
-              </button>
-            </div>
-          </>
+          <Notification
+            onNextStep={handleNextStep}
+            title="Alder Vasquez voted in line with your vote!"
+            message="Yay."
+          />
         );
       case WizardStep.SignUp:
         return <SignUp onNextStep={handleNextStep} />;
@@ -309,5 +274,18 @@ const Card: React.FC = ({ children }) => {
 const ScreenContainer: React.FC = ({ children }) => {
   return (
     <div className="mt-4 flex items-center justify-center">{children}</div>
+  );
+};
+
+const AppCTA: React.FC<{
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}> = ({ children, onClick }) => {
+  return (
+    <button
+      onClick={onClick}
+      className="mt-4 rounded bg-blue-500 py-2 px-4 font-bold uppercase text-white hover:bg-blue-700"
+    >
+      {children}
+    </button>
   );
 };
