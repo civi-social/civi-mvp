@@ -171,6 +171,14 @@ const App: React.FC = () => {
           <div className="text-center font-serif text-sm uppercase">
             The 40th Ward Experiment Demo
           </div>
+          <div className="p-2 text-center">
+            <button
+              className="rounded bg-slate-600 px-2 py-1 uppercase text-white"
+              onClick={handleNextStep}
+            >
+              Next
+            </button>
+          </div>
           <div>{renderCurrentStep()}</div>
         </div>
       </div>
@@ -187,9 +195,9 @@ const Notification: React.FC<{
 }> = ({ title, message, onNextStep }) => {
   return (
     <div>
-      <div className="p-2 text-center">
+      {/* <div className="p-2 text-center">
         You receive the following notification on your phone.
-      </div>
+      </div> */}
       <HomeLockScreen>
         <div className="flex items-center justify-center rounded-md bg-white p-4 shadow-md">
           <div className="mr-3 flex-shrink-0">
@@ -214,7 +222,6 @@ const Notification: React.FC<{
           </div>
         </div>
       </HomeLockScreen>
-      <button onClick={onNextStep}>Next</button>
     </div>
   );
 };
@@ -237,14 +244,12 @@ const HomeLockScreen: React.FC = ({ children }) => {
 const PhoneContainer: React.FC<ScreenProps> = ({ onNextStep, children }) => {
   return (
     <div>
-      <div
-        className="m-2 rounded-lg bg-slate-900"
-        style={{ height: "500px", overflowY: "auto" }}
-      >
+      <div className="m-2 rounded-lg bg-slate-900">
         <StatusBar />
-        <div className="p-4">{children}</div>
+        <div className="p-4" style={{ height: "500px", overflowY: "auto" }}>
+          {children}
+        </div>
       </div>
-      <button onClick={onNextStep}>Next</button>
     </div>
   );
 };
