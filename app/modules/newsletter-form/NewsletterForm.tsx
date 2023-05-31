@@ -129,10 +129,7 @@ export const NewsletterForm = () => {
     }
   };
   return (
-    <section
-      className=" flex flex-col items-center 
-justify-center p-4"
-    >
+    <section className="flex flex-col items-center justify-center p-4">
       <h2 className="mb-2 text-center text-xl font-bold">Like what you see?</h2>
       <h3 className="text-center italic">
         Sign up! We need 500 people from the 40th Ward on our waiting list
