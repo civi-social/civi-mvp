@@ -130,7 +130,9 @@ export const NewsletterForm = () => {
   };
   return (
     <section className="flex flex-col items-center justify-center p-4">
-      <h2 className="mb-2 text-center text-xl font-bold">Like what you see?</h2>
+      <h2 className="mb-2 text-center font-serif text-xl font-bold">
+        Like what you see?
+      </h2>
       <h3 className="text-center italic">
         Sign up! We need 500 people from the 40th Ward on our waiting list
       </h3>
@@ -141,29 +143,31 @@ export const NewsletterForm = () => {
       >
         <div className="flex flex-row flex-wrap items-center border-b border-secondary-400 py-2">
           <input
-            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            className="mb-2 w-full appearance-none rounded-md border-none bg-gray-200 py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
             name="FNAME"
             placeholder="First Name"
             aria-label="First Name"
           />
           <input
-            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            className="mb-2 w-full appearance-none rounded-md border-none bg-gray-200 py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
             name="LNAME"
             placeholder="Last Name"
             aria-label="Last Name"
           />
           <input
-            className="mr-3 mb-2 w-full appearance-none border-none bg-gray-200 rounded-md py-1 px-2 leading-tight text-gray-700 focus:outline-none"
+            className="mb-2 w-full appearance-none rounded-md border-none bg-gray-200 py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="email"
             name="EMAIL"
             placeholder="E-mail Address"
             aria-label="E-mail Address"
           />
-          <label className="block w-full" htmlFor="neighborhood">Select a neighborhood:</label>
+          <label className="block w-full" htmlFor="neighborhood">
+            Select a neighborhood:
+          </label>
           <select
-            className="mb-6 w-full bg-gray-200 leading-tight p-1"
+            className="mb-6 w-full bg-gray-200 p-1 leading-tight"
             id="neighborhood"
             name="HOOD"
             onChange={(e) => {
@@ -177,7 +181,7 @@ export const NewsletterForm = () => {
               </option>
             ))}
           </select>
-          <input type="hidden" name="ELIGIBLE" value={isEligible} readOnly/>
+          <input type="hidden" name="ELIGIBLE" value={isEligible} readOnly />
 
           <div
             style={{ position: "absolute", left: "-5000px" }}
@@ -192,7 +196,7 @@ export const NewsletterForm = () => {
             />
           </div>
           <button
-            className="flex-shrink-0 mb-2 w-full rounded border-4 border-secondary-400 bg-secondary-400 py-1 px-2 text-sm text-zinc-50 hover:border-secondary-200 hover:bg-secondary-200 hover:text-gray-800"
+            className="mb-2 w-full flex-shrink-0 rounded border-4 border-secondary-400 bg-secondary-400 py-1 px-2 text-sm text-zinc-50 hover:border-secondary-200 hover:bg-secondary-200 hover:text-gray-800"
             type="submit"
             name="submit"
           >

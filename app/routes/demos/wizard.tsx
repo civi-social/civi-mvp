@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Bill } from "~app/modules/for-you";
 import { RepLevel } from "~app/modules/levels";
 import { NewsletterForm } from "~app/modules/newsletter-form/NewsletterForm";
+import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
+import { Link } from "@remix-run/react";
 
 const Card: React.FC = ({ children }) => {
   return <div className="bg-white p-4 text-center shadow">{children}</div>;
@@ -252,8 +254,17 @@ const App: React.FC = () => {
     <div className="flex min-h-screen justify-center bg-gray-100">
       <div className="w-full max-w-sm">
         <div className="container mx-auto p-2">
+          <div className="mb-2 flex justify-center text-center">
+            <Link to="/">
+              <img
+                src={civiLogo}
+                alt="Civi's Logo"
+                style={{ height: "30px" }}
+              />
+            </Link>
+          </div>
           <div className="text-center font-serif text-sm uppercase">
-            The 40th Ward Experiment Demo
+            <div>The 40th Ward Experiment Demo</div>
           </div>
           <div className="p-2 text-center">
             {currentStep !== WizardStep.SignUp && (

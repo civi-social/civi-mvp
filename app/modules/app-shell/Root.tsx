@@ -39,7 +39,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="flex h-full flex-col">
+      <body>
         <AppProvider value={data}>
           <Outlet />
         </AppProvider>
