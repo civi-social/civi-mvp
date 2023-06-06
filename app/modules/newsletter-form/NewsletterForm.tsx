@@ -121,7 +121,7 @@ const ELIGIBLE_NEIGHBORHOODS = [
 
 export const NewsletterForm = () => {
   const [isEligible, setIsEligible] = React.useState<"YES" | "NO">("NO");
-  const setEligiblity = (value: string) => {
+  const setEligibility = (value: string) => {
     if (ELIGIBLE_NEIGHBORHOODS.some((v) => v === value)) {
       setIsEligible("YES");
     } else {
@@ -172,7 +172,7 @@ export const NewsletterForm = () => {
             name="HOOD"
             onChange={(e) => {
               console.log(e.target.value);
-              setEligiblity(e.target.value);
+              setEligibility(e.target.value);
             }}
           >
             {chicago_neighborhoods.map((neighborhood) => (

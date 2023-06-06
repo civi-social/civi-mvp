@@ -22,7 +22,7 @@ const App = () => {
             <img src={civiLogo} alt="Civi's Logo" style={{ height: "30px" }} />{" "}
           </div>
           <p className="text-center italic">
-            Fostering inclusive, community-based virtual-direct democracy.
+            Fostering inclusive, community-based, virtual-direct democracy.
           </p>
         </CenteredContent>
       </header>
