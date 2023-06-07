@@ -147,6 +147,7 @@ export const NewsletterForm = () => {
           <input
             className="mb-2 w-full appearance-none rounded-md border-none bg-gray-200 py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
+            // spell-checker:disable-next-line
             name="FNAME"
             placeholder="First Name"
             aria-label="First Name"
@@ -154,6 +155,7 @@ export const NewsletterForm = () => {
           <input
             className="mb-2 w-full appearance-none rounded-md border-none bg-gray-200 py-1 px-2 leading-tight text-gray-700 focus:outline-none"
             type="text"
+            // spell-checker:disable-next-line
             name="LNAME"
             placeholder="Last Name"
             aria-label="Last Name"
@@ -191,6 +193,7 @@ export const NewsletterForm = () => {
           >
             <input
               type="text"
+              // spell-checker:disable-next-line
               name="b_5d27cdfc23603091d05858a9b_e52325cbc0"
               tabIndex={-1}
               value=""
