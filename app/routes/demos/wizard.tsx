@@ -146,6 +146,7 @@ const FakeBill = () => {
       bill={
         {
           id: "23423",
+          // spell-checker:disable-next-line
           title: "Compassionate Use and Research of Entheogens Act",
           statusDate: "2023-03-02",
           link: "https://www.ilga.gov/legislation/BillStatus.asp?DocNum=1&GAID=17&DocTypeID=HB&SessionID=112&GA=103",

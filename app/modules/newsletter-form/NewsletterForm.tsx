@@ -1,5 +1,6 @@
 import React from "react";
 
+// spell-checker:disable
 const chicago_neighborhoods = [
   "Albany Park",
   "Andersonville",
@@ -118,6 +119,7 @@ const ELIGIBLE_NEIGHBORHOODS = [
   "Arcadia Terrace",
   "Bowmanville",
 ];
+// spell-checker:enable
 
 export const NewsletterForm = () => {
   const [isEligible, setIsEligible] = React.useState<"YES" | "NO">("NO");

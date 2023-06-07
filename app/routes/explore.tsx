@@ -1,3 +1,5 @@
+/* spell-checker: disable */
+
 export {
   loader,
   action,
