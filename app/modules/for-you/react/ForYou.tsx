@@ -124,7 +124,7 @@ export const ForYouBills = ({
   );
 };
 
-const Bill = ({
+export const Bill = ({
   bill: { id, title, statusDate, link, description },
   gpt,
   level,
@@ -192,7 +192,7 @@ const Bill = ({
   );
 };
 
-const ForYouShell = ({
+export const ForYouShell = ({
   left,
   right,
 }: {

@@ -23,13 +23,13 @@ export const IntroContent = () => {
   );
 };
 
-const Progress = () => {
+export const Progress = () => {
   const { enableDemo } = useDemoContent();
   return (
     <CardSection>
       <CardTitle>
-        Progress{" "}
-        <span className="text-sm font-light">[last updated march 17 2022]</span>
+        Progress Log{" "}
+        <span className="text-sm font-light">[last updated May 30, 2023]</span>
       </CardTitle>
       <ul
         style={{
@@ -38,13 +38,13 @@ const Progress = () => {
         }}
       >
         <li>✅ Find your local, state, and national representative</li>
-        <li>✅ Find active Chicago legislation</li>
-        <li>✅ Find active Illinois legislation</li>
-        <li>✅ Find active National legislation</li>
-        <li>✅ Get legislation summarized by AI</li>
-        <li>✅ New feed experience</li>
-        <li>⏺ Get Chicago resident summary of active legislation</li>
+        <li>✅ Browse active Chicago legislation</li>
+        <li>✅ Browse active Illinois legislation</li>
+        <li>✅ Browse active National legislation</li>
+        <li>✅ Explore AI-generated summaries of active legislation</li>
         <li onClick={() => enableDemo()}>⏺ Vote on active legislation</li>
+        <li>⏺ Bring a piece of legislation to a community-wide vote</li>
+        <li>⏺ Get Chicago resident summary of active legislation</li>
       </ul>
     </CardSection>
   );
