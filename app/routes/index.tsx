@@ -4,6 +4,7 @@ import { Link } from "@remix-run/react";
 import { Progress } from "~app/modules/intro/Intro";
 import { NewsletterForm } from "~app/modules/newsletter-form/NewsletterForm";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
+import { useEffect } from "react";
 
 export const meta: MetaFunction = () => {
   return {
@@ -14,6 +15,7 @@ export const meta: MetaFunction = () => {
 };
 
 const App = () => {
+  useWebPush();
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-primary-200 p-4">
@@ -28,6 +30,16 @@ const App = () => {
       </header>
       <main className="p-4">
         <CenteredContent>
+          <Card>
+            <button
+              className="m-3 w-fit rounded-md bg-secondary-200 py-2 px-6  font-bold uppercase text-black/60  hover:bg-secondary-400 hover:text-zinc-50 active:bg-zinc-50"
+              onClick={() => {
+                window.Notification.requestPermission();
+              }}
+            >
+              Subscribe to Notifications
+            </button>
+          </Card>
           <Card>
             <section id="AboutUs">
               <h2 className="mb-2 font-serif text-xl font-bold">About Us</h2>
@@ -116,3 +128,18 @@ const Card: React.FC = ({ children }) => (
 );
 
 export default App;
+
+const useWebPush = () => {
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (window.Notification.permission === "granted") {
+        console.log(window.Notification.permission);
+        setTimeout(() => {
+          new window.Notification("There's new legislation that impacts you.");
+        }, 1000);
+      } else {
+        // window.Notification.requestPermission();
+      }
+    }
+  }, []);
+};
