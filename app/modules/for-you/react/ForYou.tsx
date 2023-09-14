@@ -177,7 +177,7 @@ export const Bill = ({
           <h4 className="font-serif text-lg">{gpt.gpt_summary}</h4>
           {gpt?.gpt_tags && (
             <div className="flex flex-row flex-wrap">
-              {gpt.gpt_tags.map((v) => (
+              {[...new Set(gpt.gpt_tags)].map((v) => (
                 <div className="inline-flex" key={v}>
                   <Tag text={v} />
                 </div>
