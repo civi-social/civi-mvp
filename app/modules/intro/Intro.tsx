@@ -23,82 +23,12 @@ export const IntroContent = () => {
   );
 };
 
-export const Progress = () => {
-  const { enableDemo } = useDemoContent();
-  return (
-    <CardSection>
-      <CardTitle>
-        Progress Log{" "}
-        <span className="text-sm font-light">[last updated May 30, 2023]</span>
-      </CardTitle>
-      <ul
-        style={{
-          margin: Spacing.ONE,
-          padding: Spacing.ONE,
-        }}
-      >
-        <li>✅ Find your local, state, and national representative</li>
-        <li>✅ Browse active Chicago legislation</li>
-        <li>✅ Browse active Illinois legislation</li>
-        <li>✅ Browse active National legislation</li>
-        <li>✅ Explore AI-generated summaries of active legislation</li>
-        <li onClick={() => enableDemo()}>⏺ Vote on active legislation</li>
-        <li>⏺ Bring a piece of legislation to a community-wide vote</li>
-        <li>⏺ Get Chicago resident summary of active legislation</li>
-      </ul>
-    </CardSection>
-  );
-};
-
-const HelpUs = () => {
-  return (
-    <CardSection>
-      <CardTitle>Help Us Build It!</CardTitle>
-      <div>
-        We work within the{" "}
-        <a
-          className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
-          href="https://chihacknight.org"
-        >
-          Chi Hack Night
-        </a>{" "}
-        community.{" "}
-        <a
-          className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
-          href="https://chihacknight.slack.com/archives/C047500M5RS"
-        >
-          Come join the Slack to see how you can contribute.
-        </a>
-      </div>
-    </CardSection>
-  );
-};
-
+// Keeping this for future updates
 export const CiviUpdates = () => {
   return (
     <>
-      <CardSection>
-        <div className="text-base font-normal text-gray-700">
-          We are a non-profit, open source community looking to build a way for
-          you connect to your representative. <br />
-          <br /> Vote on legislation they will vote on, and let them know what
-          you think.
-        </div>
-      </CardSection>
-      <Progress />
-      <HelpUs />
-      <CardSection>
-        <CardTitle>Follow Us On Social Media</CardTitle>
-        <div>
-          ...LOL 😬 We currently don't have any social media accounts.{" "}
-          <a
-            className="text-blue-500 underline visited:text-purple-600 hover:text-blue-600"
-            href="https://chihacknight.slack.com/archives/C047500M5RS/p1675148248890889"
-          >
-            But we could love your help to start one!
-          </a>
-        </div>
-      </CardSection>
+      {/* <CardSection>
+      </CardSection> */}
     </>
   );
 };

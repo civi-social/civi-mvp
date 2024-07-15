@@ -1,8 +1,4 @@
-/* spell-checker: disable */
+import { redirect } from "@remix-run/server-runtime";
 
-export {
-  loader,
-  action,
-  meta,
-  default,
-} from "~app/modules/for-you/foryou.remix";
+// previously this was /explore
+export const loader = () => redirect("/");
