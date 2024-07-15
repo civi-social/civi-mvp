@@ -36,12 +36,12 @@ export function getCookieFromString(cookieString: string, cname: string) {
 // https://www.w3schools.com/js/js_cookies.asp
 export function setCookieInDom(
   doc: typeof document,
-  cname: string,
-  cvalue: string,
-  exdays: number
+  cookieName: string,
+  cookieValue: string,
+  expirationDays: number
 ) {
   const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
-  doc.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  doc.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
 }

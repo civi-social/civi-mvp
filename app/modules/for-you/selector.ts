@@ -131,7 +131,7 @@ const findBillsSponsoredByRep = (
     return false;
   }
   // We need to a hack for city level because we don't have the office id data
-  // todo: work with datamade to get the office id data within the person data
+  // todo: work with DataMade to get the office id data within the person data
   if (level === RepLevel.City) {
     const cityReps = representatives?.offices.city
       .filter((o) => o.office.divisionId.includes("place:chicago"))
