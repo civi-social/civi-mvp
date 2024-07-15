@@ -31,6 +31,9 @@ export type UpdateFiltersFn = (p: FilterParams) => void;
 
 interface ForYouProps {
   legislation: ForYouBill[];
+  savedPreferences: {
+    address: string;
+  };
   tags: string[];
   address: string | null;
   updateFilters: UpdateFiltersFn;
@@ -45,6 +48,7 @@ export const ForYouBillFilters = ({
   filters,
   env,
   officeComponent,
+  savedPreferences,
 }: ForYouProps & { officeComponent?: React.ReactNode }) => {
   return (
     <div>
@@ -53,7 +57,10 @@ export const ForYouBillFilters = ({
           <div className="flex w-full max-w-screen-md flex-col justify-center">
             <div className="rounded-lg pt-4">
               <div className="mb-4 rounded-md bg-black bg-opacity-50">
-                <AddressLookup env={env} />
+                <AddressLookup
+                  env={env}
+                  defaultAddress={savedPreferences.address}
+                />
                 {officeComponent}
               </div>
               <div className="uppercase lg:text-right">More Filters</div>

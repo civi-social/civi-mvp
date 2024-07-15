@@ -4,14 +4,21 @@ import { useState, type FC, useEffect } from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useAppContext } from "~/app-shell/AppContext";
 import type { Env } from "~/config";
+import {
+  getCookieFromString,
+  setCookieInDom,
+} from "~app/modules/for-you/utils";
 
-export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
+export const AddressLookup: FC<{ env: Env; defaultAddress?: string }> = ({
+  env,
+  defaultAddress,
+}) => {
   const config = useAppContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
   const levelKey = env.REP_LEVEL_SEARCH_KEY;
 
-  const addressValue = searchParams.get(addressKey) ?? "";
+  const addressValue = searchParams.get(addressKey) || defaultAddress || "";
 
   return config?.apiKey ? (
     <div className="lg:text-right">
@@ -24,6 +31,11 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
         defaultValue={addressValue}
         className="w-full rounded-md bg-transparent px-2 py-1 text-white placeholder-white outline-none lg:text-right"
         onPlaceSelected={({ formatted_address }) => {
+          // Save in cookie for later
+          if (formatted_address) {
+            setCookieInDom(document, "address", formatted_address, 1565);
+          }
+
           const newSearchParams = new URLSearchParams(searchParams.toString());
           if (formatted_address) {
             newSearchParams.set(addressKey, formatted_address);
@@ -34,7 +46,7 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
           setSearchParams(newSearchParams);
         }}
       />
-      {searchParams.get(addressKey) && (
+      {addressValue && (
         <button
           className="mx-1 rounded bg-black bg-opacity-30 px-2 text-xs uppercase text-white"
           onClick={() => {
@@ -44,6 +56,7 @@ export const AddressLookup: FC<{ env: Env }> = ({ env }) => {
             newSearchParams.delete(addressKey);
             newSearchParams.delete(levelKey);
             setSearchParams(newSearchParams);
+            setCookieInDom(document, "address", "", -1);
           }}
         >
           Clear Address

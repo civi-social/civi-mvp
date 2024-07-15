@@ -11,6 +11,7 @@ import type { FilterParams, ForYouBill, UpdateFiltersFn } from "~/for-you";
 import { ForYou, forYouData } from "~/for-you";
 import type { RepLevel } from "~/levels";
 import type { OfficialOffice } from "~/representatives";
+import { getCookieFromString } from "./utils";
 
 interface LoaderData {
   legislation: ForYouBill[];
@@ -19,12 +20,22 @@ interface LoaderData {
   tags: string[];
   env: Env;
   filters: FilterParams;
+  savedPreferences: {
+    address: string;
+  };
 }
+
 export const loader: LoaderFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookieAddress = getCookieFromString(cookieHeader || "", "address");
+  const savedPreferences = {
+    address: cookieAddress,
+  };
+
   const url = new URL(request.url);
   const filters: FilterParams = {
     tags: url.searchParams.get("tags")?.split(","),
-    address: url.searchParams.get("address"),
+    address: url.searchParams.get("address") || cookieAddress,
     level: url.searchParams.get("level") as RepLevel,
   };
 
@@ -42,6 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     filters,
     offices,
     address,
+    savedPreferences,
   });
 };
 
@@ -62,8 +74,15 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function ForYouPage() {
-  const { legislation, tags, filters, offices, env, address } =
-    useLoaderData<LoaderData>();
+  const {
+    legislation,
+    tags,
+    filters,
+    offices,
+    env,
+    address,
+    savedPreferences,
+  } = useLoaderData<LoaderData>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateFilters: UpdateFiltersFn = ({ address, tags, level }) => {
@@ -89,6 +108,7 @@ export default function ForYouPage() {
       offices={offices}
       address={address}
       filters={filters}
+      savedPreferences={savedPreferences}
       updateFilters={updateFilters}
     />
   );
