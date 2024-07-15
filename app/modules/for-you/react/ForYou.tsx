@@ -52,10 +52,11 @@ export const ForYouBillFilters = ({
         <div className="flex justify-center">
           <div className="flex w-full max-w-screen-md flex-col justify-center">
             <div className="rounded-lg pt-4">
-              <div className="mb-4 rounded-md bg-black bg-opacity-50 px-2 py-1">
+              <div className="mb-4 rounded-md bg-black bg-opacity-50">
                 <AddressLookup env={env} />
+                {officeComponent}
               </div>
-              {officeComponent}
+              <div className="uppercase lg:text-right">More Filters</div>
               <RadioPicker<RepLevel | null | undefined | "">
                 handleChange={(next) => {
                   if (!next) {
@@ -238,10 +239,8 @@ export const ForYou = (props: ForYouProps) => {
     <>
       {props.offices && (
         <>
-          <div className=" bg-primary mb-4 rounded bg-black bg-opacity-40 py-3 px-4 text-center text-white shadow-md lg:text-right">
-            <div className="text-xs font-bold uppercase">
-              Legislators For This Address{" "}
-            </div>
+          <div className=" bg-primary mb-4 bg-black bg-opacity-40 py-3 px-4 text-center text-white shadow-md lg:text-right">
+            <div className="text-xs font-bold uppercase">Legislators </div>
             <div className="text-sm opacity-80">
               <Legislators offices={props.offices} />
             </div>
@@ -304,7 +303,7 @@ const Legislators = ({ offices }: { offices: OfficialOffice[] }) => {
           return `${officialOffice.office.name} ${officialOffice.official.name}`;
         })
         .map((str) => (
-          <div>{str}</div>
+          <div key={str}>{str}</div>
         ))}
     </>
   );
