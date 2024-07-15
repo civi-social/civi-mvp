@@ -8,6 +8,7 @@ import {
   RadioPicker,
   Tag,
   Tagging,
+  classNames,
 } from "~/ui";
 import type { ForYouBill } from "../selector";
 
@@ -131,44 +132,58 @@ export const ForYouBills = ({ legislation }: ForYouProps) => {
   );
 };
 
-export const Bill = ({
-  bill: { id, title, statusDate, link, description },
-  gpt,
-  level,
-  sponsoredByRep,
-}: ForYouBill) => {
-  // Chicago MVP Hacks
+export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
   const levelsMap: Record<RepLevel, string> = {
     [RepLevel.City]: "Chicago",
     [RepLevel.State]: "IL",
     [RepLevel.County]: "Cook County",
     [RepLevel.National]: "USA",
   };
-  const date =
-    level === RepLevel.City ? statusDate.split("-")[0].trim() : statusDate;
-  id = RepLevel.City ? id.replace("Resolution", "").trim() : id;
-  // End Chicago MVP Hacks
+  const {
+    classification,
+    identifier,
+    id,
+    title,
+    status,
+    link,
+    description,
+    updated_at,
+    statusDate,
+  } = bill;
+  const date = updated_at || statusDate;
+
+  const lastStatus = getLastStatus(status);
+  const readableStatus = mapToReadableStatus(level, lastStatus);
+  const linkTitle =
+    level === RepLevel.City ? `${classification} ${identifier}` : id;
+
   return (
     <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
-      <div className="flex flex-wrap items-center justify-between text-sm font-light uppercase text-slate-600">
+      <div className="flex flex-wrap items-center justify-end text-sm font-light uppercase text-slate-600">
         <a
           target="_blank"
           href={link}
           rel="noreferrer"
           className="flex items-center "
         >
-          {levelsMap[level]} {id} <FaGlobe className="pl-1" />
+          {levelsMap[level]} {linkTitle} <FaGlobe className="pl-1" />
         </a>
-        <div>{date}</div>
       </div>
-      {sponsoredByRep && (
-        <Tag
-          className="bg-primary bg-black bg-opacity-50 text-white"
-          text={`Sponsored By Your Rep: ${sponsoredByRep}`}
-        ></Tag>
-      )}
-
-      <div className="text-xl font-semibold">{title}</div>
+      <div className="text-center">
+        <a
+          target="_blank"
+          href={link}
+          className={classNames(
+            "inline-block rounded px-2 text-sm uppercase",
+            readableStatus.type === "pass" && "bg-green-200",
+            readableStatus.type === "in-progress" && "bg-blue-200",
+            readableStatus.type === "fail" && "bg-red-200"
+          )}
+        >
+          {readableStatus.name} {date}
+        </a>
+      </div>
+      <div className="font-serif text-lg">{title}</div>
       {gpt?.gpt_summary && (
         <div className="relative rounded-2xl bg-gray-100 px-6 pt-5 pb-2">
           <RobotSvg
@@ -181,7 +196,7 @@ export const Bill = ({
               opacity: "0.5",
             }}
           />
-          <h4 className="font-serif text-lg">{gpt.gpt_summary}</h4>
+          <h4 className="font-mono text-sm">{gpt.gpt_summary}</h4>
           {gpt?.gpt_tags && (
             <div className="flex flex-row flex-wrap">
               {[...new Set(gpt.gpt_tags)].map((v) => (
@@ -194,9 +209,77 @@ export const Bill = ({
         </div>
       )}
       {description && <div className="mx-10 mt-2 font-mono">{description}</div>}
-      <VotingDemo />
+      {sponsoredByRep && (
+        <div className="text-center text-xs uppercase">
+          {" "}
+          Sponsored By Your Rep: {sponsoredByRep}
+        </div>
+      )}
     </article>
   );
+};
+
+// TODO: Move to backend
+const mapToReadableStatus = (
+  level: RepLevel,
+  status: string
+): { name: string; type: "in-progress" | "pass" | "fail" } => {
+  switch (level) {
+    case RepLevel.City:
+      switch (status) {
+        case "introduction":
+          return { name: "Introduced", type: "in-progress" };
+        case "referral-committee":
+          return { name: "In Committee", type: "in-progress" };
+        case "passage":
+          return { name: "Passed", type: "pass" };
+        case "substitution":
+          return { name: "Substituted", type: "in-progress" };
+        case "committee-passage-favorable":
+          return { name: "Recommended By Committee", type: "in-progress" };
+        default:
+          return {
+            name: toTitleCase(status.split("-").join(" ")),
+            type: "in-progress",
+          };
+      }
+    case RepLevel.State:
+      switch (status) {
+        case "Pass":
+          return { name: "Became Law", type: "pass" };
+      }
+    case RepLevel.National:
+      switch (status) {
+        case "Engross":
+          return { name: "Passed House", type: "in-progress" };
+        case "Pass":
+          return { name: "Became Law", type: "pass" };
+      }
+  }
+  return { name: status, type: "in-progress" };
+};
+
+function toTitleCase(str: string) {
+  return str.replace(
+    /\w\S*/g,
+    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
+
+// TODO: We need to clean up the status data on the backend
+const getLastStatus = (status: unknown): string => {
+  if (typeof status === "string") {
+    try {
+      const parsed = JSON.parse(status);
+      return parsed[parsed.length - 1];
+    } catch (e) {
+      return status;
+    }
+  }
+  if (Array.isArray(status)) {
+    return status[status.length - 1];
+  }
+  return "";
 };
 
 export const ForYouShell = ({
@@ -247,7 +330,6 @@ export const ForYou = (props: ForYouProps) => {
       {props.offices && (
         <>
           <div className=" bg-primary mb-4 bg-black bg-opacity-40 py-3 px-4 text-center text-white shadow-md lg:text-right">
-            <div className="text-xs font-bold uppercase">Legislators </div>
             <div className="text-sm opacity-80">
               <Legislators offices={props.offices} />
             </div>
@@ -257,7 +339,7 @@ export const ForYou = (props: ForYouProps) => {
                 setShowOfficeModal(true);
               }}
             >
-              See All Representatives
+              See All Representatives For This Address
             </span>
           </div>
         </>

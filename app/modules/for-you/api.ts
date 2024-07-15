@@ -68,6 +68,13 @@ export const forYouData = async ({
     });
   });
 
+  // Sort by updated_at
+  legislation = legislation.sort((a, b) => {
+    const aUpdated = a.bill.updated_at || a.bill.statusDate;
+    const bUpdated = b.bill.updated_at || b.bill.statusDate;
+    return Date.parse(bUpdated) - Date.parse(aUpdated);
+  });
+
   const offices = representatives
     ? [
         ...representatives.offices.city,

@@ -59,6 +59,14 @@ export const selectData = (
         }
         return true;
       })
+      // Filter by bills updated in the last 6 months
+      .filter((bill) => {
+        const updated = (bill.updated_at = bill.updated_at || bill.statusDate);
+        if (!updated) {
+          return false;
+        }
+        return !isDateOlderThanSixMonths(updated);
+      })
       .map((bill) => {
         const gptSummaries = gpt[bill.id];
         // todo: move to civi-legislation-data
@@ -92,6 +100,27 @@ export const selectData = (
       })
   );
 };
+
+// Generated from GPT
+function isDateOlderThanSixMonths(dateString: string) {
+  // Parse the input date string into a Date object
+  const dateParts = dateString.split("-");
+  const year = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1; // Month is zero-based
+  const day = parseInt(dateParts[2], 10);
+  const inputDate = new Date(year, month, day);
+
+  // Calculate date 6 months ago from now
+  const currentDate = new Date();
+  const sixMonthsAgo = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() - 6,
+    currentDate.getDate()
+  );
+
+  // Compare input date with 6 months ago date
+  return inputDate < sixMonthsAgo;
+}
 
 const findBillsSponsoredByRep = (
   representatives: RepresentativesResult | null,

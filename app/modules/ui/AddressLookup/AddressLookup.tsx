@@ -22,6 +22,11 @@ export const AddressLookup: FC<{ env: Env; defaultAddress?: string }> = ({
 
   return config?.apiKey ? (
     <div className="lg:text-right">
+      {addressValue && (
+        <div className="px-2 py-1 text-xs font-bold uppercase text-white opacity-80">
+          Filtering Bills Sponsored By Legislators Of{" "}
+        </div>
+      )}
       <Autocomplete
         // Hack to force remount
         key={addressValue}
