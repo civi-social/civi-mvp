@@ -14,11 +14,12 @@ import type { ForYouBill } from "../selector";
 import React from "react";
 import { FaGlobe } from "react-icons/fa";
 import { CiviUpdates, IntroContent } from "~/intro/Intro";
-import type { OfficialOffice } from "~/representatives";
+import type { OfficialOffice, RepresentativesResult } from "~/representatives";
 import { OfficialOfficeList } from "~/representatives";
 import { GithubBanner, RobotSvg } from "~/svg-icons";
 import Modal from "~/ui/Modal/Modal";
 import { useDemoContent, VotingDemo } from "~app/modules/demos/Demos";
+import { hasOverlap } from "../utils";
 
 export interface FilterParams {
   address?: string | null;
@@ -154,7 +155,7 @@ export const Bill = ({
       </div>
       {sponsoredByRep && (
         <Tag
-          className="bg-primary text-white"
+          className="bg-primary bg-black bg-opacity-50 text-white"
           text={`Sponsored By Your Rep: ${sponsoredByRep}`}
         ></Tag>
       )}
@@ -233,18 +234,27 @@ export const ForYouShell = ({
 
 export const ForYou = (props: ForYouProps) => {
   const [showOfficeModal, setShowOfficeModal] = React.useState(false);
-
   const officeComponent = (
     <>
       {props.offices && (
-        <div
-          className="bg-primary mb-4 cursor-pointer rounded bg-black bg-opacity-20 py-3 px-4 font-bold text-white underline shadow-md lg:text-right"
-          onClick={() => {
-            setShowOfficeModal(true);
-          }}
-        >
-          <span>See Representatives For This Address.</span>
-        </div>
+        <>
+          <div className=" bg-primary mb-4 rounded bg-black bg-opacity-40 py-3 px-4 text-center text-white shadow-md lg:text-right">
+            <div className="text-xs font-bold uppercase">
+              Legislators For This Address{" "}
+            </div>
+            <div className="text-sm opacity-80">
+              <Legislators offices={props.offices} />
+            </div>
+            <span
+              className="cursor-pointer text-xs font-bold uppercase underline"
+              onClick={() => {
+                setShowOfficeModal(true);
+              }}
+            >
+              See All Representatives
+            </span>
+          </div>
+        </>
       )}
     </>
   );
@@ -271,6 +281,31 @@ export const ForYou = (props: ForYouProps) => {
           right={<ForYouBills {...props} />}
         />
       )}
+    </>
+  );
+};
+
+const Legislators = ({ offices }: { offices: OfficialOffice[] }) => {
+  return (
+    <>
+      {offices
+        // We don't support county level
+        .filter(
+          (officialOffice) =>
+            !officialOffice.office.divisionId.includes("county:")
+        )
+        .filter((officialOffice) =>
+          hasOverlap(officialOffice.office.roles, [
+            "legislatorLowerBody",
+            "legislatorUpperBody",
+          ])
+        )
+        .map((officialOffice) => {
+          return `${officialOffice.office.name} ${officialOffice.official.name}`;
+        })
+        .map((str) => (
+          <div>{str}</div>
+        ))}
     </>
   );
 };
