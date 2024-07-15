@@ -2,7 +2,7 @@ import type {
   CiviGptLegislationData,
   CiviLegislationData,
 } from "civi-legislation-data";
-import type { RepLevel } from "~/levels";
+import { RepLevel } from "~/levels";
 import type { RepresentativesResult } from "~/representatives";
 import { findOverlap } from "./utils";
 
@@ -41,39 +41,45 @@ export const selectData = (
     gpt: CiviGptLegislationData;
   },
   level: RepLevel,
-  representatives: RepresentativesResult | null,
-  stateAbbreviation: "il"
+  representatives: RepresentativesResult | null
 ): ForYouBill[] => {
-  return legislation.map((bill) => {
-    const gptSummaries = gpt[bill.id];
-    // todo: move to civi-legislation-data
-    let gptTags = gptSummaries.gpt_tags;
-    let overlapped = findStringOverlap(gptTags || [], ALLOWED_TAGS);
+  return legislation
+    .filter((bill) => {
+      if (level === RepLevel.City) {
+        return filterCityBills(bill);
+      }
+      return true;
+    })
+    .map((bill) => {
+      const gptSummaries = gpt[bill.id];
+      // todo: move to civi-legislation-data
+      let gptTags = gptSummaries.gpt_tags;
+      let overlapped = findStringOverlap(gptTags || [], ALLOWED_TAGS);
 
-    // remove any extra others if it has other categories
-    if (overlapped.length > 1) {
-      overlapped = overlapped.filter((str) => str !== "Other");
-    }
+      // remove any extra others if it has other categories
+      if (overlapped.length > 1) {
+        overlapped = overlapped.filter((str) => str !== "Other");
+      }
 
-    // if it has no categories, add other
-    if (overlapped.length === 0) {
-      overlapped.push("Other");
-    }
-    const cleanedGpt = {
-      gpt_summary: gptSummaries.gpt_summary,
-      gpt_tags: overlapped,
-    };
-    return {
-      bill,
-      gpt: cleanedGpt,
-      level,
-      sponsoredByRep: findBillsSponsoredByRep(
-        representatives,
-        bill.sponsors,
-        level
-      ),
-    } as ForYouBill;
-  });
+      // if it has no categories, add other
+      if (overlapped.length === 0) {
+        overlapped.push("Other");
+      }
+      const cleanedGpt = {
+        gpt_summary: gptSummaries.gpt_summary,
+        gpt_tags: overlapped,
+      };
+      return {
+        bill,
+        gpt: cleanedGpt,
+        level,
+        sponsoredByRep: findBillsSponsoredByRep(
+          representatives,
+          bill.sponsors,
+          level
+        ),
+      } as ForYouBill;
+    });
 };
 
 const findBillsSponsoredByRep = (
@@ -109,4 +115,19 @@ const findStringOverlap = (arr1: string[], arr2: string[]) => {
   }
 
   return overlap;
+};
+
+// todo: move to civi-legislation-data
+const filterCityBills = (bill: CiviLegislationData) => {
+  const isCityResolution = bill.classification === "resolution";
+  if (!isCityResolution) {
+    return false;
+  }
+  if (bill.tags?.includes("City Council Rules")) {
+    return false;
+  }
+  if (bill.title.toLowerCase().includes("birthday")) {
+    return false;
+  }
+  return true;
 };

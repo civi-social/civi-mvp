@@ -27,22 +27,19 @@ export const forYouData = async ({
   const city = selectData(
     await getLegislations(env, RepLevel.City, "Chicago"),
     RepLevel.City,
-    representatives,
-    "il"
+    representatives
   );
 
   const state = selectData(
     await getLegislations(env, RepLevel.State, "Chicago"),
     RepLevel.State,
-    representatives,
-    "il"
+    representatives
   );
 
   const national = selectData(
     await getLegislations(env, RepLevel.National, "Chicago"),
     RepLevel.National,
-    representatives,
-    "il"
+    representatives
   );
 
   const fullLegislation = [...city, ...state, ...national];
