@@ -43,7 +43,8 @@ export const ForYouBillFilters = ({
   updateFilters,
   filters,
   env,
-}: ForYouProps) => {
+  officeComponent,
+}: ForYouProps & { officeComponent?: React.ReactNode }) => {
   return (
     <div>
       <section>
@@ -53,6 +54,7 @@ export const ForYouBillFilters = ({
               <div className="mb-4 rounded-md bg-black bg-opacity-50 px-2 py-1">
                 <AddressLookup env={env} />
               </div>
+              {officeComponent}
               <RadioPicker<RepLevel | null | undefined | "">
                 handleChange={(next) => {
                   if (!next) {
@@ -92,17 +94,13 @@ export const ForYouBillFilters = ({
   );
 };
 
-export const ForYouBills = ({
-  legislation,
-  showOfficeComponent,
-}: ForYouProps & { showOfficeComponent: React.ReactNode }) => {
+export const ForYouBills = ({ legislation }: ForYouProps) => {
   const { demoWarnComponent } = useDemoContent();
   return (
     <section>
       <div className="flex justify-center">
         <div className="flex max-w-lg flex-col justify-center">
           <div>
-            {showOfficeComponent}
             <div className="flex items-center rounded-xl bg-gray-100 p-4">
               <RobotSvg
                 style={{
@@ -203,7 +201,7 @@ export const ForYouShell = ({
   return (
     <Container>
       <a
-        className="absolute left-0 z-10 m-3 -translate-y-16 bg-primary p-3 text-primary-content transition focus:translate-y-0"
+        className="bg-primary absolute left-0 z-10 m-3 -translate-y-16 p-3 text-primary-content transition focus:translate-y-0"
         href={`#${skipToContentId}`}
       >
         Skip To Content
@@ -222,9 +220,7 @@ export const ForYouShell = ({
             <div className="mt-5 mb-5 rounded-md bg-opacity-95 text-left">
               {left}
             </div>
-            <div className="mt-5 rounded-md bg-pink-200 bg-opacity-60 p-1 text-left">
-              <CiviUpdates />
-            </div>
+            <CiviUpdates />
           </div>
         </aside>
         <main id={skipToContentId} className="h-full">
@@ -238,11 +234,11 @@ export const ForYouShell = ({
 export const ForYou = (props: ForYouProps) => {
   const [showOfficeModal, setShowOfficeModal] = React.useState(false);
 
-  const showOfficeComponent = (
+  const officeComponent = (
     <>
       {props.offices && (
         <div
-          className="mb-4 cursor-pointer rounded bg-primary py-3 px-4 font-bold text-white underline shadow-md"
+          className="bg-primary mb-4 cursor-pointer rounded bg-black bg-opacity-20 py-3 px-4 font-bold text-white underline shadow-md lg:text-right"
           onClick={() => {
             setShowOfficeModal(true);
           }}
@@ -269,10 +265,10 @@ export const ForYou = (props: ForYouProps) => {
         </Modal>
       ) : (
         <ForYouShell
-          left={<ForYouBillFilters {...props} />}
-          right={
-            <ForYouBills {...props} showOfficeComponent={showOfficeComponent} />
+          left={
+            <ForYouBillFilters {...props} officeComponent={officeComponent} />
           }
+          right={<ForYouBills {...props} />}
         />
       )}
     </>

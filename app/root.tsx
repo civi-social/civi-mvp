@@ -11,5 +11,6 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: mainStylesheetUrl },
+    { rel: "manifest", href: "manifest.json" },
   ];
 };
