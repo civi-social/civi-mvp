@@ -8,7 +8,7 @@ self.addEventListener("install", (event) => {
 
 //   const options = {
 //     body,
-//     icon: "images/checkmark.png",
+//     icon: "images/image.png",
 //     vibrate: [100, 50, 100],
 //     data: {
 //       dateOfArrival: Date.now(),
@@ -18,12 +18,12 @@ self.addEventListener("install", (event) => {
 //       {
 //         action: "explore",
 //         title: "Explore",
-//         icon: "images/checkmark.png",
+//         icon: "images/image.png",
 //       },
 //       {
 //         action: "close",
 //         title: "I don't want this",
-//         icon: "images/xmark.png",
+//         icon: "images/image.png",
 //       },
 //     ],
 //   };
