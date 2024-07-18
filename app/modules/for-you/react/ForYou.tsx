@@ -43,11 +43,11 @@ const YourFeedSummary = (props: FYBFilterProps) => {
   const location = props.filters.location;
   let levelText =
     props.filters.level === RepLevel.City
-      ? "city, state, & federal"
+      ? "City, State, & Federal"
       : props.filters.level === RepLevel.State
-      ? "state & federal"
+      ? "State & Federal"
       : props.filters.level === RepLevel.National
-      ? "federal"
+      ? "Federal"
       : "";
 
   let locationName = "";
@@ -55,11 +55,11 @@ const YourFeedSummary = (props: FYBFilterProps) => {
   switch (location) {
     case SupportedLocale.Chicago:
       locationName = "Chicago";
-      levelText = levelText || "city, state, & federal";
+      levelText = levelText || "City, State, & Federal";
       break;
     case SupportedLocale.Illinois:
       locationName = "Illinois";
-      levelText = levelText || "state & federal";
+      levelText = levelText || "State & Federal";
       break;
     case SupportedLocale.USA:
       locationName = "America";
@@ -68,7 +68,7 @@ const YourFeedSummary = (props: FYBFilterProps) => {
   }
   if (isAddressFilter(location)) {
     locationName = "Chicago";
-    levelText = levelText || "city, state, & federal";
+    levelText = levelText || "City, State, & Federal";
   }
   if (!levelText) {
     levelText = "All";
@@ -78,66 +78,58 @@ const YourFeedSummary = (props: FYBFilterProps) => {
     legislators && !props.filters.dontShowSponsoredByReps;
 
   return (
-    <div className="flex flex-col lg:mt-5">
-      <div className="rounded bg-black bg-opacity-30 p-3 text-center font-serif leading-tight text-white lg:text-right">
-        {/* Location Info */}
-        <div className="text-xl lg:text-2xl">
-          <span className="opacity-80">Hello</span>
-          {locationName && ` ${locationName}`}!
-        </div>
-        {/* Sponsored Info */}
-        {showSponsoredText && (
-          <>
-            <div className="mt-2 text-lg">
-              <span className="opacity-80">Showing any bills </span>
-              <span className="opacity-100">sponsored by your reps:</span>{" "}
-            </div>
-            <div className="text-sm lg:text-base">
-              <ul>
-                {legislators.map((person, i) => {
-                  const isLast = i === legislators.length - 1;
-                  return (
-                    <li key={person.name} className="inline lg:block">
-                      <span className="opacity-80">{person.title}</span>{" "}
-                      <a
-                        className="cursor-pointer decoration-dotted hover:underline"
-                        href={person.link}
-                        target="_blank"
-                      >
-                        {person.name}
-                        <span className="lg:hidden">{isLast ? "." : ", "}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </>
-        )}
-        {/* Tags Info */}
-        {hasTags(props.filters.tags) && (
-          <>
-            <div className="mt-2 text-lg opacity-80">
-              {showSponsoredText ? "Also showing" : "Showing"} bills tagged with
-            </div>{" "}
-            {props.filters?.tags?.map((v, i, arr) => {
-              const isLast = i === arr.length - 1;
+    <div className="flex flex-col rounded bg-black bg-opacity-30 p-3 text-center font-serif leading-tight text-white lg:mt-5 lg:items-end lg:text-right">
+      {/* Location Info */}
+      <div className="text-xl lg:text-2xl">
+        <span className="opacity-80">Hello</span>
+        {locationName && ` ${locationName}`}!
+      </div>
+      {/* Sponsored Info */}
+      {showSponsoredText && (
+        <>
+          <div className="mt-2 opacity-80 lg:text-lg">
+            Including Bills Sponsored By Your Representatives{" "}
+          </div>
+          <div className="flex-inline hidden w-fit rounded bg-black bg-opacity-20 p-2 text-sm lg:block lg:text-right lg:text-sm">
+            {legislators.map((person, i) => {
+              const isLast = i === legislators.length - 1;
               return (
-                <span>
-                  {isLast ? "& " : ""}
-                  {v}
-                  {!isLast ? ", " : "."}
-                </span>
+                <li key={person.name} className="inline lg:block">
+                  <span className="opacity-80">{person.title}</span>{" "}
+                  <a
+                    className="cursor-pointer decoration-dotted hover:underline"
+                    href={person.link}
+                    target="_blank"
+                  >
+                    {person.name}
+                    <span className="lg:hidden">{isLast ? "." : ", "}</span>
+                  </a>
+                </li>
               );
             })}
-          </>
-        )}
-        {/* Levels Info */}
-        <div className="mt-2 text-lg">
-          <span className="opacity-80">Filtering bills at </span>
-          <span>{levelText}</span>
-          <span className="opacity-80"> level.</span>
-        </div>
+          </div>
+        </>
+      )}
+      {/* Tags Info */}
+      {hasTags(props.filters.tags) && (
+        <>
+          <div className="mt-2 text-lg opacity-80">
+            {showSponsoredText ? "Also including" : "Including"} bills tagged
+            with:
+          </div>{" "}
+          <div className="flex flex-wrap justify-center font-sans lg:justify-end">
+            {props.filters?.tags?.map((v, i, arr) => {
+              const isLast = i === arr.length - 1;
+              return <Tag text={v} className="text-2xs lg:text-xs" />;
+            })}
+          </div>
+        </>
+      )}
+      {/* Levels Info */}
+      <div className="mt-2 text-lg">
+        <span className="opacity-80">Filtering bills at </span>
+        <span>{levelText}</span>
+        <span className="opacity-80"> level.</span>
       </div>
     </div>
   );
@@ -220,19 +212,25 @@ export const BillFilters = (
 
   const [showAddress, setShowAddress] = useState(isProbablyAddress);
 
+  const cityLabel = isCityLevel(props.filters.location) ? "Chicago" : "City";
+  const stateLabel =
+    isCityLevel(props.filters.location) || isStateLevel(props.filters.location)
+      ? "Illinois"
+      : "State";
+  const nationalLabel = "USA";
   const levelOptions: { label: string; value: RepLevel | null }[] | null =
     isCityLevel(props.filters.location)
       ? [
           { label: "All", value: null },
-          { label: "City", value: RepLevel.City },
-          { label: "State", value: RepLevel.State },
-          { label: "National", value: RepLevel.National },
+          { label: cityLabel, value: RepLevel.City },
+          { label: stateLabel, value: RepLevel.State },
+          { label: nationalLabel, value: RepLevel.National },
         ]
       : isStateLevel(props.filters.location)
       ? [
           { label: "All", value: null },
-          { label: "State", value: RepLevel.State },
-          { label: "National", value: RepLevel.National },
+          { label: stateLabel, value: RepLevel.State },
+          { label: nationalLabel, value: RepLevel.National },
         ]
       : null;
 
@@ -245,94 +243,133 @@ export const BillFilters = (
 
         <div className="flex justify-center">
           <div className="flex w-full max-w-screen-md flex-col justify-center">
-            <div className="rounded-lg pt-4">
+            {/* Location Filter */}
+            <div className="pt-4">
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
                   Set Location
                 </span>
               </div>
-              <div className="flex flex-col">
-                <RadioPicker<SupportedLocale>
+              <div className="flex items-end justify-end">
+                <div className="flex flex-col">
+                  <RadioPicker<SupportedLocale>
+                    handleChange={(next) => {
+                      if (!next) {
+                        props.updateFilters({
+                          ...props.filters,
+                          location: null,
+                          level: null,
+                        });
+                      } else if (next === "Custom") {
+                        setShowAddress(true);
+                        props.updateFilters({
+                          ...props.filters,
+                          location: next,
+                          level: null,
+                        });
+                      } else if (next === "Chicago") {
+                        setShowAddress(false);
+                        props.updateFilters({
+                          ...props.filters,
+                          location: SupportedLocale.Chicago,
+                          level: null,
+                        });
+                      } else {
+                        setShowAddress(false);
+                        props.updateFilters({
+                          ...props.filters,
+                          location: next,
+                          level: null,
+                        });
+                      }
+                    }}
+                    defaultValue={
+                      isSupportedLocale(props.filters.location)
+                        ? props.filters.location
+                        : SupportedLocale.Custom
+                    }
+                    optionClassName={classNames(
+                      showAddress && "rounded-bl-none rounded-br-none mb-0",
+                      "w-max"
+                    )}
+                    options={[
+                      {
+                        label: "🏠 Custom",
+                        value: SupportedLocale.Custom,
+                        // className: (isSelected) => (isSelected ? "flex-1" : ""),
+                      },
+                      { label: "Chicago", value: SupportedLocale.Chicago },
+                      { label: "Illinois", value: SupportedLocale.Illinois },
+                      { label: "USA", value: SupportedLocale.USA },
+                    ]}
+                  />
+                  {showAddress && (
+                    <div className="flex-1 rounded-b-md bg-black bg-opacity-50">
+                      <div className="lg:px-1 lg:text-right">
+                        <AddressLookup
+                          onClear={() => {
+                            props.updateFilters({
+                              ...props.filters,
+                              location: SupportedLocale.Custom,
+                            });
+                          }}
+                          onPlaceSelected={(address) => {
+                            if (!address.includes("Chicago, IL")) {
+                              alert(
+                                "Only Chicago custom addresses are supported at the moment."
+                              );
+                              return;
+                            }
+                            props.updateFilters({
+                              ...props.filters,
+                              location: { address },
+                            });
+                          }}
+                          value={
+                            isAddressFilter(props.filters.location)
+                              ? props.filters.location.address
+                              : ""
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Level Filter */}
+            {levelOptions && (
+              <div className="mt-4">
+                <div className="lg:px-1 lg:text-right">
+                  <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
+                    Only Show Bills From
+                  </span>
+                </div>
+                <RadioPicker<RepLevel | null | undefined | "">
                   handleChange={(next) => {
                     if (!next) {
                       props.updateFilters({
                         ...props.filters,
-                        location: null,
-                        level: null,
-                      });
-                    } else if (next === "Custom") {
-                      setShowAddress(true);
-                      props.updateFilters({
-                        ...props.filters,
-                        location: next,
                         level: null,
                       });
                     } else {
-                      setShowAddress(false);
                       props.updateFilters({
                         ...props.filters,
-                        location: next,
-                        level: null,
+                        level: next,
                       });
                     }
                   }}
-                  defaultValue={
-                    isSupportedLocale(props.filters.location)
-                      ? props.filters.location
-                      : SupportedLocale.Custom
-                  }
-                  optionClassName={
-                    showAddress && "rounded-bl-none rounded-br-none mb-0"
-                  }
-                  options={[
-                    {
-                      label: "🏠 Custom",
-                      value: SupportedLocale.Custom,
-                      className: (isSelected) => (isSelected ? "flex-1" : ""),
-                    },
-                    { label: "Chicago", value: SupportedLocale.Chicago },
-                    { label: "Illinois", value: SupportedLocale.Illinois },
-                    { label: "USA", value: SupportedLocale.USA },
-                  ]}
+                  defaultValue={props.filters.level}
+                  options={levelOptions}
                 />
-                {showAddress && (
-                  <div className="mb-4 flex-1 rounded-b-md bg-black bg-opacity-50">
-                    <div className="lg:px-1 lg:text-right">
-                      <AddressLookup
-                        onClear={() => {
-                          props.updateFilters({
-                            ...props.filters,
-                            location: SupportedLocale.Custom,
-                          });
-                        }}
-                        onPlaceSelected={(address) => {
-                          if (!address.includes("Chicago, IL")) {
-                            alert(
-                              "Only Chicago custom addresses are supported at the moment."
-                            );
-                            return;
-                          }
-                          props.updateFilters({
-                            ...props.filters,
-                            location: { address },
-                          });
-                        }}
-                        value={
-                          isAddressFilter(props.filters.location)
-                            ? props.filters.location.address
-                            : ""
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
-            </div>
+            )}
+            {/* Sponsored Filter */}
             {isAddressFilter(props.filters.location) && (
               <div className="my-4 justify-end">
                 <div className="lg:px-1 lg:text-right">
                   <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Follow Sponsored Bills
+                    Include Sponsored Bills
                   </span>
                 </div>
                 <RadioPicker<true | null>
@@ -370,10 +407,11 @@ export const BillFilters = (
                 </div>
               </div>
             )}
-            <div className="my-4">
+            {/* Tags Filter */}
+            <div className="mt-4">
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Follow Bills Tagged With
+                  Include Bills Tagged With
                 </span>
               </div>
               <div className="rounded-lg bg-black bg-opacity-30 p-2">
@@ -389,49 +427,24 @@ export const BillFilters = (
                 />
               </div>
             </div>
-
-            {levelOptions && (
-              <>
-                <div className="lg:px-1 lg:text-right">
-                  <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Only Show Bills From
-                  </span>
-                </div>
-                <RadioPicker<RepLevel | null | undefined | "">
-                  handleChange={(next) => {
-                    if (!next) {
-                      props.updateFilters({
-                        ...props.filters,
-                        level: null,
-                      });
-                    } else {
-                      props.updateFilters({
-                        ...props.filters,
-                        level: next,
-                      });
-                    }
-                  }}
-                  defaultValue={props.filters.level}
-                  options={levelOptions}
-                />
-              </>
-            )}
+            {/* Save Button */}
+            <div className="mt-4 flex w-full justify-center">
+              <div
+                role="button"
+                className="rounded bg-white bg-opacity-50 px-4 py-2 text-base font-semibold text-black opacity-80 backdrop-blur hover:bg-opacity-100 lg:float-right"
+                onClick={() => {
+                  props.saveToFeed();
+                  props.updateGlobalState({
+                    noSavedFeed: false,
+                    showExplore: false,
+                  });
+                  props.onSave();
+                }}
+              >
+                Save Preferences To Your Feed
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="flex w-full justify-center">
-          <button
-            className="mt-5 rounded-full bg-pink-500 px-4 py-2 text-base font-semibold text-white shadow lg:float-right"
-            onClick={() => {
-              props.saveToFeed();
-              props.updateGlobalState({
-                noSavedFeed: false,
-                showExplore: false,
-              });
-              props.onSave();
-            }}
-          >
-            Save Preferences To Your Feed
-          </button>
         </div>
       </section>
     </div>
@@ -445,7 +458,7 @@ export const ForYouBills = ({ filteredLegislation }: ForYouLoaderData) => {
       <div className="flex justify-center">
         <div className="flex max-w-lg flex-col justify-center">
           <div>
-            <div className="flex items-center rounded-xl bg-gray-100 p-4">
+            <div className="flex items-center rounded-lg bg-gray-100 bg-opacity-30 p-4">
               <RobotSvg
                 style={{
                   width: "25px",
@@ -494,8 +507,7 @@ export const Bill = ({
 
   const lastStatus = getLastStatus(status);
   const readableStatus = mapToReadableStatus(level, lastStatus);
-  const linkTitle =
-    level === RepLevel.City ? `${classification} ${identifier}` : id;
+  const linkTitle = level === RepLevel.City ? `${identifier}` : id;
 
   const summaries = [
     {
@@ -521,28 +533,17 @@ export const Bill = ({
       content: description && description,
     },
   ].filter((c) => c.content);
-  sponsoredByRep && console.log(sponsoredByRep);
   return (
     <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
-      <div className="flex flex-wrap items-center justify-between">
-        {allTags && (
-          <div className="flex flex-row flex-wrap">
-            {[...new Set(allTags)].map((v) => (
-              <div className="inline-flex" key={v}>
-                <Tag className="text-xs" text={v} />
-              </div>
-            ))}
-          </div>
-        )}
-        <a
-          target="_blank"
-          href={link}
-          rel="noreferrer"
-          className="flex items-center text-sm font-light uppercase text-slate-600"
-        >
-          {levelsMap[level]} {linkTitle} <FaGlobe className="pl-1" />
-        </a>
-      </div>
+      {allTags && (
+        <div className="flex flex-row flex-wrap justify-center">
+          {[...new Set(allTags)].map((v) => (
+            <div className="inline-flex" key={v}>
+              <Tag className="text-xs" text={v} />
+            </div>
+          ))}
+        </div>
+      )}
       <div className="font-serif text-lg">{title}</div>
       <div className="text-center">
         <a
@@ -565,6 +566,16 @@ export const Bill = ({
           Sponsored By Your Rep: {sponsoredByRep}
         </div>
       )}
+      <div className="flex flex-wrap items-center justify-end">
+        <a
+          target="_blank"
+          href={link}
+          rel="noreferrer"
+          className="flex items-center text-sm font-light uppercase text-slate-600"
+        >
+          {levelsMap[level]} {linkTitle} <FaGlobe className="pl-1" />
+        </a>
+      </div>
     </article>
   );
 };

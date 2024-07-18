@@ -5,6 +5,7 @@ import type {
 import type { RepresentativesResult } from "~/representatives";
 import {
   ALLOWED_GPT_TAGS,
+  CustomTags,
   FilterParams,
   ForYouBill,
   LegislationResult,
@@ -45,7 +46,12 @@ export const createForYouBill =
       bill.sponsors,
       level
     );
-    const coded_tags = bill.classification === "ordinance" ? ["Ordinance"] : [];
+    const coded_tags =
+      bill.classification === "ordinance"
+        ? [CustomTags.Ordinance]
+        : bill.classification === "resolution"
+        ? [CustomTags.Resolution]
+        : [];
 
     const allTags = [...(cleanedGpt?.gpt_tags || []), ...coded_tags];
 
@@ -60,12 +66,13 @@ export const createForYouBill =
   };
 
 export const filterNoisyCityBills =
-  (representatives: RepresentativesResult | null) => (bill: ForYouBill) => {
+  (shouldKeepOrdinances: boolean) => (bill: ForYouBill) => {
     // Filter out city ordinance and noisy bills if we don't have city representatives data
-    if (!representatives) {
-      return filterCityBills(bill.bill);
+    if (shouldKeepOrdinances) {
+      return true;
+    } else {
+      return filterOnlyResolutions(bill.bill);
     }
-    return true;
   };
 
 export const filterBillsOlderThanSixMonths = (bill: ForYouBill) => {
@@ -157,18 +164,17 @@ export const selectBillsFromFilters = (
   filters: FilterParams,
   reps: RepresentativesResult | null
 ) => {
-  const shouldGetSponsoredBills = reps && !filters.dontShowSponsoredByReps;
+  const shouldIncludeSponsored = reps && !filters.dontShowSponsoredByReps;
+  const shouldIncludesTags = hasTags(filters.tags);
 
   let filteredLegislation: typeof bills = [];
 
   // Stuff to add
   bills.forEach((bill) => {
-    const addSponsored = shouldGetSponsoredBills && bill.sponsoredByRep;
-    const addTagged = tagsOverLap(bill.allTags, filters.tags);
     // If no filters are selected, show all bills
-    if (!addSponsored && !addTagged) {
+    if (!shouldIncludeSponsored && !shouldIncludesTags) {
       filteredLegislation.push(bill);
-    } else if (shouldGetSponsoredBills && bill.sponsoredByRep) {
+    } else if (shouldIncludeSponsored && bill.sponsoredByRep) {
       filteredLegislation.push(bill);
     } else if (tagsOverLap(bill.allTags, filters.tags)) {
       filteredLegislation.push(bill);
@@ -241,7 +247,7 @@ export const createForYouBillsFromMultipleSources = (
 // Mainly just filtering by state bills for now.
 const DEFAULT_FILTERS = [filterBillsOlderThanSixMonths];
 
-const filterCityBills = (bill: CiviLegislationData) => {
+const filterOnlyResolutions = (bill: CiviLegislationData) => {
   const isCityResolution = bill.classification === "resolution";
   if (!isCityResolution) {
     return false;

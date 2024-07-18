@@ -67,9 +67,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
 
   globalState.showExplore = url.searchParams.get("showExplore") === "true";
+  const shouldShowExplore = globalState.noSavedFeed || globalState.showExplore;
 
   let searchParams: FilterParams | null = null;
-  if (globalState.showExplore) {
+  if (shouldShowExplore) {
     const tags = url.searchParams.get("tags");
     const location = url.searchParams.get("location");
     const level = url.searchParams.get("level");
@@ -86,7 +87,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // Picking filters based on if feed or explore
   const filters: FilterParams =
-    globalState.showExplore && searchParams
+    shouldShowExplore && searchParams
       ? searchParams
       : savedPreferences
       ? savedPreferences
@@ -138,9 +139,7 @@ export default function ForYouPage() {
 
   const updateFilters: UpdateFiltersFn = (next) => {
     // Decide which storage to use
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    const cookies = useCookies(document);
-    const storage = globalState.showExplore ? newSearchParams : cookies;
+    const storage = new URLSearchParams(searchParams.toString());
 
     // Update Filters
     if ("location" in next) {

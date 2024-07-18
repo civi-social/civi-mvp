@@ -13,6 +13,7 @@ import {
   FilterParams,
   LegislationResult,
   RepLevel,
+  SupportedLocale,
   createForYouBillsFromMultipleSources,
   filterNoisyCityBills,
   getAddress,
@@ -106,9 +107,12 @@ export const getFilteredLegislation = async ({
   // Check which bills to retrieve
   // todo: put this in a generic map to allow for extensibility
   const shouldGetChicago =
-    filters.location === "Chicago" || isAddressFilter(filters.location);
-  const shouldGetIllinois = shouldGetChicago || filters.location === "Illinois";
+    filters.location === SupportedLocale.Chicago ||
+    isAddressFilter(filters.location);
+  const shouldGetIllinois =
+    shouldGetChicago || filters.location === SupportedLocale.Illinois;
 
+  console.log(filters.location, shouldGetChicago, shouldGetIllinois);
   // Get all bills from all the network
   const allChicagoBills =
     shouldGetChicago && (await getLegislations(DataStores.Chicago));
@@ -116,11 +120,19 @@ export const getFilteredLegislation = async ({
     shouldGetIllinois && (await getLegislations(DataStores.Illinois));
   const allUSBills = await getLegislations(DataStores.USA);
 
+  const shouldShowSponsoredOrdinances = Boolean(
+    representatives && !filters.dontShowSponsoredByReps
+  );
+
   // First select all bills that are sponsored, if the user wants sponsored bills
   const fullLegislation = createForYouBillsFromMultipleSources(
     representatives,
     [
-      [allChicagoBills, RepLevel.City, [filterNoisyCityBills(representatives)]],
+      [
+        allChicagoBills,
+        RepLevel.City,
+        [filterNoisyCityBills(shouldShowSponsoredOrdinances)],
+      ],
       [allILBills, RepLevel.State, null],
       [allUSBills, RepLevel.National, null],
     ]

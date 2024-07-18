@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { classNames } from "../styles";
+import { CustomTags } from "~app/modules/legislation/filters";
 
 export const Tag: React.FC<{
   className?: string;
@@ -57,9 +58,13 @@ export const Tag: React.FC<{
       icon = "🛂";
       background = "bg-cyan-500";
       break;
-    case "Ordinance":
+    case CustomTags.Ordinance:
       icon = "🏙️";
       background = "bg-teal-500";
+      break;
+    case CustomTags.Resolution:
+      icon = "📜";
+      background = "bg-rose-500";
       break;
     case "Other":
     default:
@@ -106,14 +111,14 @@ export const Tagging = ({
   };
 
   return (
-    <div className="flex flex-wrap text-center lg:justify-end">
+    <div className="flex flex-wrap justify-center text-center lg:justify-end">
       {tags.map((tag) => (
         <Tag
           text={tag}
           key={tag}
           onClick={() => handleTagClick(tag)}
           className={classNames(
-            "cursor-pointer text-sm font-bold text-opacity-90",
+            "cursor-pointer text-xs font-bold text-opacity-90 lg:text-sm",
             selectedTags.includes(tag) || selectedTags.length === 0
               ? "bg-opacity-70"
               : "opacity-40"
