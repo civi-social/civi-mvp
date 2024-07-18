@@ -44,25 +44,23 @@ export const forYouData = async ({
 
   const fullLegislation = [...city, ...state, ...national];
 
-  let levelsFiltered: typeof fullLegislation = fullLegislation;
+  let legislation: typeof fullLegislation = fullLegislation;
 
   if (filters.level) {
-    levelsFiltered = fullLegislation.filter(
+    legislation = fullLegislation.filter(
       (bill) => bill.level === filters.level
     );
   }
 
-  let legislation: typeof levelsFiltered = levelsFiltered;
-
   if (filters.tags && Array.isArray(filters.tags)) {
     const filterTags = filters.tags;
-    legislation = fullLegislation.filter((bill) =>
+    legislation = legislation.filter((bill) =>
       hasOverlap(bill.gpt?.gpt_tags || [], filterTags)
     );
   }
 
   const tags = new Set<string>();
-  levelsFiltered.forEach((bill) => {
+  legislation.forEach((bill) => {
     bill.gpt?.gpt_tags?.forEach((tag) => {
       tags.add(tag);
     });

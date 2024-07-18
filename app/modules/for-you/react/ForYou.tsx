@@ -312,6 +312,7 @@ export const ForYouBillFilters = ({
                 </div>
                 <Tagging
                   tags={tags}
+                  availableTags={AVAILABLE_TAGS}
                   selected={filters.tags || []}
                   handleClick={(updatedTags) => {
                     updateFilters({ ...filters, tags: updatedTags });
@@ -613,3 +614,17 @@ const getLegislators = (
       })
   );
 };
+
+const AVAILABLE_TAGS = [
+  "Education",
+  "Democracy",
+  "Health Care",
+  "Public Safety",
+  "Transit",
+  "Abortion",
+  "Immigration",
+  "Foreign Policy",
+  "States Rights",
+  "Civil Rights",
+  "Climate Change",
+];

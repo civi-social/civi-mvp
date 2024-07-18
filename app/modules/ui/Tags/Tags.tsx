@@ -69,10 +69,12 @@ export const Tag: React.FC<{ className?: string; text: string }> = ({
 
 export const Tagging = ({
   tags,
+  availableTags,
   selected,
   handleClick,
 }: {
   tags: string[];
+  availableTags?: string[];
   selected: string[];
   handleClick: (updatedTags: string[]) => void;
 }) => {
@@ -91,7 +93,7 @@ export const Tagging = ({
 
   return (
     <div className="text-center lg:text-right">
-      {tags.map((tag) => (
+      {(availableTags || tags).map((tag) => (
         <button
           key={tag}
           onClick={() => handleTagClick(tag)}
