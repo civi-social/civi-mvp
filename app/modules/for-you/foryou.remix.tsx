@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
   return {
-    title: "Chicago Civi",
+    title: "Bill Updates - Windy Civi",
     viewport: "width=device-width,initial-scale=1",
     charset: "utf-8",
   };
@@ -85,7 +85,12 @@ export default function ForYouPage() {
   } = useLoaderData<LoaderData>();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const updateFilters: UpdateFiltersFn = ({ address, tags, level }) => {
+  const updateFilters: UpdateFiltersFn = ({
+    address,
+    tags,
+    level,
+    showExplore,
+  }) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     address
       ? newSearchParams.set("address", address)
@@ -97,6 +102,9 @@ export default function ForYouPage() {
     level
       ? newSearchParams.set("level", level)
       : newSearchParams.delete("level");
+    showExplore
+      ? newSearchParams.set("showExplore", "true")
+      : newSearchParams.delete("showExplore");
     setSearchParams(newSearchParams);
   };
 

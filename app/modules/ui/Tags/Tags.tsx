@@ -5,15 +5,64 @@ export const Tag: React.FC<{ className?: string; text: string }> = ({
   text,
   className,
 }) => {
+  let icon: string;
+  let background: string;
+  switch (text) {
+    case "Climate Change":
+      icon = "🌍";
+      background = "bg-green-500";
+      break;
+    case "Health Care":
+      icon = "🏥";
+      background = "bg-blue-500";
+      break;
+    case "Education":
+      icon = "🎓";
+      background = "bg-yellow-500";
+      break;
+    case "Economy":
+      icon = "💰";
+      background = "bg-purple-500";
+      break;
+    case "Civil Rights":
+      icon = "👥";
+      background = "bg-red-500";
+      break;
+    case "Public Safety":
+      icon = "🚓";
+      background = "bg-indigo-500";
+      break;
+    case "Foreign Policy":
+      icon = "🌐";
+      background = "bg-pink-500";
+      break;
+    case "Democracy":
+      icon = "🗳";
+      background = "bg-gray-500";
+      break;
+    case "Transit":
+      icon = "🚇";
+      background = "bg-orange-500";
+      break;
+    case "States Rights":
+      icon = "🏛";
+      background = "bg-teal-500";
+      break;
+    case "Other":
+    default:
+      icon = "";
+      background = "bg-black";
+  }
   return (
     <span
       className={classNames(
         baseTag,
         "text-sm text-opacity-90",
-        className || "bg-black bg-opacity-40 text-white"
+        background,
+        className || "bg-opacity-70 text-white"
       )}
     >
-      {text}
+      {text} {icon}
     </span>
   );
 };

@@ -57,6 +57,7 @@
     "textbox",
     "typecheck",
     "Vitest",
-    "Waitlist"
+    "Waitlist",
+    "windycivi"
   ]
 }

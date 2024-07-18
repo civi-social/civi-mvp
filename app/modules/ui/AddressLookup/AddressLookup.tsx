@@ -24,7 +24,7 @@ export const AddressLookup: FC<{ env: Env; defaultAddress?: string }> = ({
     <div className="lg:text-right">
       {addressValue && (
         <div className="px-2 py-1 text-xs font-bold uppercase text-white opacity-80">
-          Filtering Bills Sponsored By Legislators Of{" "}
+          Showing All Bills Sponsored By Legislators Of{" "}
         </div>
       )}
       <Autocomplete
@@ -36,11 +36,6 @@ export const AddressLookup: FC<{ env: Env; defaultAddress?: string }> = ({
         defaultValue={addressValue}
         className="w-full rounded-md bg-transparent px-2 py-1 text-white placeholder-white outline-none lg:text-right"
         onPlaceSelected={({ formatted_address }) => {
-          // Save in cookie for later
-          if (formatted_address) {
-            setCookieInDom(document, "address", formatted_address, 1565);
-          }
-
           const newSearchParams = new URLSearchParams(searchParams.toString());
           if (formatted_address) {
             newSearchParams.set(addressKey, formatted_address);
@@ -61,7 +56,7 @@ export const AddressLookup: FC<{ env: Env; defaultAddress?: string }> = ({
             newSearchParams.delete(addressKey);
             newSearchParams.delete(levelKey);
             setSearchParams(newSearchParams);
-            setCookieInDom(document, "address", "", -1);
+            // setCookieInDom(document, "address", "", -1);
           }}
         >
           Clear Address
