@@ -1,4 +1,9 @@
-import { AVAILABLE_TAGS, RepLevel, SupportedLocale } from "./filters.constants";
+import {
+  AVAILABLE_TAGS,
+  DEFAULT_LOCALE,
+  RepLevel,
+  SupportedLocale,
+} from "./filters.constants";
 import {
   LocationFilter,
   type Locales,
@@ -75,8 +80,6 @@ export const createLocationFilterFromString = (
 export const isNotCustomLocation = (location: LocationFilter): boolean =>
   isSupportedLocale(location) && location !== SupportedLocale.Custom;
 
-export const DEFAULT_LOCALE = SupportedLocale.USA;
-
 export const isCityLevel = (location: LocationFilter): boolean =>
   isAddressFilter(location) || location === SupportedLocale.Chicago;
 
@@ -95,14 +98,6 @@ export const parseTagsString = (
 ): string[] | null => {
   const parsed = tags?.split(",").filter((tag) => tag.length > 0);
   return hasTags(parsed) ? parsed : null;
-};
-
-export const DEFAULT_FILTERS: FilterParams = {
-  location: DEFAULT_LOCALE,
-  level: null,
-  tags: null,
-  availableTags: AVAILABLE_TAGS,
-  dontShowSponsoredByReps: null,
 };
 
 export const parseRepLevel = (level?: string | null): RepLevel | null => {
@@ -136,4 +131,36 @@ export const createFilterParams = (p: {
     ),
     availableTags: AVAILABLE_TAGS,
   };
+};
+
+export const hasOverlap = (arr1: string[], arr2: string[]): boolean => {
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr2.includes(arr1[i])) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const findOverlap = (arr1: string[], arr2: string[]): string | false => {
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr2.includes(arr1[i])) {
+      return arr1[i];
+    }
+  }
+  return false;
+};
+
+export const findStringOverlap = (arr1: string[], arr2: string[]) => {
+  let overlap = [];
+
+  for (let i = 0; i < arr1.length; i++) {
+    for (let j = 0; j < arr2.length; j++) {
+      if (arr1[i] === arr2[j]) {
+        overlap.push(arr1[i]);
+      }
+    }
+  }
+
+  return overlap;
 };

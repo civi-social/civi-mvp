@@ -3,30 +3,18 @@ import type {
   CiviLegislationData,
 } from "civi-legislation-data";
 import type { RepresentativesResult } from "~/representatives";
-import { findOverlap } from "../../for-you/utils";
-import { ALLOWED_GPT_TAGS, ForYouBill, RepLevel } from "..";
-
-export const selectData = (
-  {
-    legislation,
-    gpt,
-  }: {
-    legislation: CiviLegislationData[];
-    gpt: CiviGptLegislationData;
-  },
-  level: RepLevel,
-  representatives: RepresentativesResult | null
-): ForYouBill[] => {
-  return (
-    legislation
-      .filter(filterNoisyCityBills(representatives, level))
-      // Filter by bills updated in the last 6 months
-      .filter(filterBillsOlderThanSixMonths)
-      // only show sponsored bills if filtered by rep
-      .filter(filterBySponsoredBills(representatives, level))
-      .map(createForYouBill(gpt, representatives, level))
-  );
-};
+import {
+  ALLOWED_GPT_TAGS,
+  FilterParams,
+  ForYouBill,
+  LegislationResult,
+  Nullish,
+  RepLevel,
+  findOverlap,
+  findStringOverlap,
+  hasOverlap,
+  hasTags,
+} from "..";
 
 export const createForYouBill =
   (
@@ -58,27 +46,33 @@ export const createForYouBill =
       bill.sponsors,
       level
     );
+    const coded_tags =
+      bill.classification === "ordinance" ? ["City Ordinance"] : [];
+
+    const allTags = [...(cleanedGpt?.gpt_tags || []), ...coded_tags];
+
     return {
       bill,
       gpt: cleanedGpt,
-      coded_tags: bill.classification === "ordinance" ? ["City Ordinance"] : [],
+      coded_tags,
+      allTags,
       level,
       sponsoredByRep,
     } as ForYouBill;
   };
 
 export const filterNoisyCityBills =
-  (representatives: RepresentativesResult | null, level: RepLevel) =>
-  (bill: CiviLegislationData) => {
+  (representatives: RepresentativesResult | null) => (bill: ForYouBill) => {
     // Filter out city ordinance and noisy bills if we don't have city representatives data
-    if (level === RepLevel.City && !representatives) {
-      return filterCityBills(bill);
+    if (!representatives) {
+      return filterCityBills(bill.bill);
     }
     return true;
   };
 
-export const filterBillsOlderThanSixMonths = (bill: CiviLegislationData) => {
-  const updated = (bill.updated_at = bill.updated_at || bill.statusDate);
+export const filterBillsOlderThanSixMonths = (bill: ForYouBill) => {
+  const updated = (bill.bill.updated_at =
+    bill.bill.updated_at || bill.bill.statusDate);
   if (!updated) {
     return false;
   }
@@ -160,21 +154,90 @@ const getUserRepNameIfBillIsSponsored = (
   return sponsoredByRep;
 };
 
-const findStringOverlap = (arr1: string[], arr2: string[]) => {
-  let overlap = [];
+export const selectBillsFromFilters = (
+  bills: ForYouBill[],
+  filters: FilterParams,
+  reps: RepresentativesResult | null
+) => {
+  const shouldGetSponsoredBills = reps && !filters.dontShowSponsoredByReps;
 
-  for (let i = 0; i < arr1.length; i++) {
-    for (let j = 0; j < arr2.length; j++) {
-      if (arr1[i] === arr2[j]) {
-        overlap.push(arr1[i]);
-      }
+  let filteredLegislation: typeof bills = [];
+
+  // Stuff to add
+  bills.forEach((bill) => {
+    if (shouldGetSponsoredBills && bill.sponsoredByRep) {
+      filteredLegislation.push(bill);
+    } else if (tagsOverLap(bill.allTags, filters.tags)) {
+      filteredLegislation.push(bill);
     }
+  });
+
+  // Stuff to take out
+  if (filters.level) {
+    filteredLegislation = filteredLegislation.filter(
+      (bill) => bill.level === filters.level
+    );
   }
 
-  return overlap;
+  return filteredLegislation;
 };
 
-// todo: move to civi-legislation-data
+const tagsOverLap = (tagList1: unknown, tagList2: unknown) => {
+  return (
+    hasTags(tagList1) && hasTags(tagList2) && hasOverlap(tagList1, tagList2)
+  );
+};
+
+export const sortByUpdatedAt = (bills: ForYouBill[]) => {
+  return bills.sort((a, b) => {
+    const aUpdated = a.bill.updated_at || a.bill.statusDate;
+    const bUpdated = b.bill.updated_at || b.bill.statusDate;
+    return Date.parse(bUpdated) - Date.parse(aUpdated);
+  });
+};
+
+type ForYouBillArrayFilter = (bill: ForYouBill) => boolean;
+
+export const createForYouBillsFromMultipleSources = (
+  representatives: RepresentativesResult | null,
+  dataStores: [
+    LegislationResult | null | false,
+    RepLevel,
+    ForYouBillArrayFilter[] | null
+  ][]
+) => {
+  let allBills = [] as ForYouBill[];
+  dataStores.forEach(([legislationResult, repLevel, extraFilters]) => {
+    let localeBills = [] as ForYouBill[];
+    if (!legislationResult) {
+      return [] as ForYouBill[];
+    }
+    // Create the for you bill structure
+    localeBills = legislationResult.legislation.map(
+      createForYouBill(legislationResult.gpt, representatives, repLevel)
+    );
+
+    // Filter by default filters
+    DEFAULT_FILTERS.forEach((filterFunc) => {
+      localeBills = localeBills.filter(filterFunc);
+    });
+
+    // Filter any extra filters if they exist
+    extraFilters?.forEach((filter) => {
+      localeBills = localeBills.filter(filter);
+    });
+
+    // Add them too the bill total
+    allBills.push(...localeBills);
+  });
+
+  // Return all bills
+  return allBills;
+};
+
+// Mainly just filtering by state bills for now.
+const DEFAULT_FILTERS = [filterBillsOlderThanSixMonths];
+
 const filterCityBills = (bill: CiviLegislationData) => {
   const isCityResolution = bill.classification === "resolution";
   if (!isCityResolution) {

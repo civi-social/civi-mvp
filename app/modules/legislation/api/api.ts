@@ -7,17 +7,18 @@ import type {
 } from "civi-legislation-data";
 import { civiLegislationApi } from "civi-legislation-data";
 import { ForYouData } from "~app/modules/for-you/foryou.types";
-import { hasOverlap } from "~app/modules/for-you/utils";
 import { getRepresentatives } from "~app/modules/representatives/api";
 import {
   DataStores,
   FilterParams,
-  ForYouBill,
+  LegislationResult,
   RepLevel,
-  createForYouBill,
-  filterBillsOlderThanSixMonths,
+  createForYouBillsFromMultipleSources,
   filterNoisyCityBills,
   getAddress,
+  isAddressFilter,
+  selectBillsFromFilters,
+  sortByUpdatedAt,
 } from "../filters";
 import { legislationCache } from "./legislation-cache";
 
@@ -65,10 +66,6 @@ const getCachedLegislationGptData = async (
   return legislation;
 };
 
-type LegislationResult = {
-  legislation: CiviLegislationData[];
-  gpt: CiviGptLegislationData;
-};
 export const getLegislations = async (
   locale: DataStores
 ): Promise<LegislationResult> => {
@@ -101,74 +98,62 @@ export const getFilteredLegislation = async ({
   env: Env;
   filters: FilterParams;
 }): Promise<ForYouData> => {
-  const address = getAddress(filters.location);
+  const { representatives, offices } = await getRepsAndOffices(
+    env,
+    filters.location
+  );
+
+  // Check which bills to retrieve
+  // todo: put this in a generic map to allow for extensibility
+  const shouldGetChicago =
+    filters.location === "Chicago" || isAddressFilter(filters.location);
+  const shouldGetIllinois = shouldGetChicago || filters.location === "Illinois";
+
+  // Get all bills from all the network
+  const allChicagoBills =
+    shouldGetChicago && (await getLegislations(DataStores.Chicago));
+  const allILBills =
+    shouldGetIllinois && (await getLegislations(DataStores.Illinois));
+  const allUSBills = await getLegislations(DataStores.USA);
+
+  // First select all bills that are sponsored, if the user wants sponsored bills
+  const fullLegislation = createForYouBillsFromMultipleSources(
+    representatives,
+    [
+      [allChicagoBills, RepLevel.City, [filterNoisyCityBills(representatives)]],
+      [allILBills, RepLevel.State, null],
+      [allUSBills, RepLevel.National, null],
+    ]
+  );
+
+  // Then select and filter bills based on user filters
+  let filteredLegislation = selectBillsFromFilters(
+    fullLegislation,
+    filters,
+    representatives
+  );
+
+  // Sort by updated_at
+  filteredLegislation = sortByUpdatedAt(filteredLegislation);
+
+  return {
+    fullLegislation,
+    filteredLegislation,
+    offices,
+  };
+};
+
+const getRepsAndOffices = async (
+  env: Env,
+  location: FilterParams["location"]
+) => {
+  // Get representatives
+  const address = getAddress(location);
   const representatives = address
     ? await getRepresentatives(address, env)
     : null;
 
-  const shouldGetChicago = filters.location === "Chicago";
-  const shouldGetIllinois = shouldGetChicago || filters.location === "Illinois";
-
-  const allChicagoBills = shouldGetChicago
-    ? await getLegislations(DataStores.Chicago)
-    : null;
-  const allILBills = shouldGetIllinois
-    ? await getLegislations(DataStores.Illinois)
-    : null;
-  const allUSBills = await getLegislations(DataStores.USA);
-
-  // First select all bills that are sponsored, if the user wants sponsored bills
-
-  let city = [] as ForYouBill[];
-  if (allChicagoBills) {
-    city = allChicagoBills.legislation
-      .filter(filterBillsOlderThanSixMonths)
-      .filter(filterNoisyCityBills(representatives, RepLevel.City))
-      .map(
-        createForYouBill(allChicagoBills.gpt, representatives, RepLevel.City)
-      );
-  }
-
-  let state = [] as ForYouBill[];
-  if (allILBills) {
-    state = allILBills.legislation
-      .filter(filterBillsOlderThanSixMonths)
-      .map(createForYouBill(allILBills.gpt, representatives, RepLevel.State));
-  }
-
-  let national = [] as ForYouBill[];
-  if (allUSBills) {
-    national = allUSBills.legislation
-      .filter(filterBillsOlderThanSixMonths)
-      .map(
-        createForYouBill(allUSBills.gpt, representatives, RepLevel.National)
-      );
-  }
-
-  const fullLegislation = [...city, ...state, ...national];
-
-  let filteredLegislation: typeof fullLegislation = fullLegislation;
-
-  if (filters.level) {
-    filteredLegislation = fullLegislation.filter(
-      (bill) => bill.level === filters.level
-    );
-  }
-
-  if (filters.tags && Array.isArray(filters.tags)) {
-    const filterTags = filters.tags;
-    filteredLegislation = filteredLegislation.filter((bill) =>
-      hasOverlap(bill.gpt?.gpt_tags || [], filterTags)
-    );
-  }
-
-  // Sort by updated_at
-  filteredLegislation = filteredLegislation.sort((a, b) => {
-    const aUpdated = a.bill.updated_at || a.bill.statusDate;
-    const bUpdated = b.bill.updated_at || b.bill.statusDate;
-    return Date.parse(bUpdated) - Date.parse(aUpdated);
-  });
-
+  // Get a list of all representative offices
   const offices = representatives
     ? [
         ...representatives.offices.city,
@@ -177,10 +162,5 @@ export const getFilteredLegislation = async ({
         ...representatives.offices.national,
       ]
     : null;
-
-  return {
-    fullLegislation,
-    filteredLegislation,
-    offices,
-  };
+  return { representatives, offices };
 };

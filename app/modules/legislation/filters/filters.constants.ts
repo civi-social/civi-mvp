@@ -1,3 +1,5 @@
+import { FilterParams } from "./filters.utils";
+
 export const ALLOWED_GPT_TAGS = [
   "Education",
   "Democracy",
@@ -34,3 +36,13 @@ export enum DataStores {
   Illinois = "Illinois",
   USA = "USA",
 }
+
+export const DEFAULT_LOCALE = SupportedLocale.USA;
+
+export const DEFAULT_FILTERS: FilterParams = {
+  location: DEFAULT_LOCALE,
+  level: null,
+  tags: null,
+  availableTags: AVAILABLE_TAGS,
+  dontShowSponsoredByReps: null,
+};

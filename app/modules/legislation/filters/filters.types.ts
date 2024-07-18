@@ -20,6 +20,12 @@ export type ForYouBill = {
   bill: CiviLegislationData;
   gpt?: CiviGptData;
   coded_tags: string[];
+  allTags: string[];
   level: RepLevel;
   sponsoredByRep?: string | false;
+};
+
+export type LegislationResult = {
+  legislation: CiviLegislationData[];
+  gpt: CiviGptLegislationData;
 };

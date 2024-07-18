@@ -1,5 +1,3 @@
-import type { Env } from "~/config";
-
 import type { StyleHack } from "~/ui";
 import {
   AddressLookup,
@@ -17,28 +15,27 @@ import React, { useState } from "react";
 import { FaGlobe } from "react-icons/fa";
 import { CiviUpdates, Logo } from "~/intro/Intro";
 import type { OfficialOffice } from "~/representatives";
-import { OfficialOfficeList } from "~/representatives";
+import { OfficialOfficeList, getLegislators } from "~/representatives";
 import { RobotSvg } from "~/svg-icons";
 import Modal from "~/ui/Modal/Modal";
 import { useDemoContent } from "~app/modules/demos/Demos";
+import {
+  RepLevel,
+  SupportedLocale,
+  getLocation,
+  isAddressFilter,
+  isCityLevel,
+  isNotCustomLocation,
+  isNullish,
+  isStateLevel,
+  isSupportedLocale,
+} from "~app/modules/legislation/filters";
 import {
   getLastStatus,
   mapToReadableStatus,
 } from "~app/modules/legislation/format/format.utils";
 import { Carousel } from "~app/modules/ui/Carousel/Carousel";
-import { hasOverlap } from "../utils";
 import { FYBFilterProps, ForYouLoaderData, ForYouProps } from "../foryou.types";
-import {
-  RepLevel,
-  isNotCustomLocation,
-  isNullish,
-  isCityLevel,
-  isStateLevel,
-  SupportedLocale,
-  isSupportedLocale,
-  isAddressFilter,
-  getLocation,
-} from "~app/modules/legislation/filters";
 
 const ForYouPreferences = (props: FYBFilterProps) => {
   const [editing, setIsEditingState] = useState(props.globalState.noSavedFeed);
@@ -255,18 +252,21 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
                       props.updateFilters({
                         ...props.filters,
                         location: null,
+                        level: null,
                       });
                     } else if (next === "Custom") {
                       setShowAddress(true);
                       props.updateFilters({
                         ...props.filters,
                         location: next,
+                        level: null,
                       });
                     } else {
                       setShowAddress(false);
                       props.updateFilters({
                         ...props.filters,
                         location: next,
+                        level: null,
                       });
                     }
                   }}
@@ -489,7 +489,7 @@ export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
       content: description && description,
     },
   ].filter((c) => c.content);
-
+  sponsoredByRep && console.log(sponsoredByRep);
   return (
     <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
       <div className="flex flex-wrap items-center justify-between">
@@ -636,52 +636,5 @@ const Legislators = ({ offices }: { offices: OfficialOffice[] | null }) => {
         </div>
       ))}
     </>
-  );
-};
-
-const getLegislators = (
-  offices?: OfficialOffice[] | null
-): { title: string; name: string; link: string; level: RepLevel }[] => {
-  if (!offices) {
-    return [];
-  }
-  return (
-    offices
-      // We don't support county level
-      .filter(
-        (officialOffice) =>
-          !officialOffice.office.divisionId.includes("county:")
-      )
-      .filter((officialOffice) =>
-        hasOverlap(officialOffice.office.roles, [
-          "legislatorLowerBody",
-          "legislatorUpperBody",
-        ])
-      )
-      .map((officialOffice) => {
-        // last name attempt
-        const name = officialOffice.official.name
-          .replace(",", "")
-          .replace(".", "")
-          .replace("Jr.", "")
-          .split(" ")
-          .filter((name) => name.length > 1)
-          .join(" ");
-        return {
-          title: officialOffice.office.name
-            .replace("Chicago City Alderperson", "Alder")
-            .replace("IL State Representative", "Rep")
-            .replace("IL State Senator", "Senator")
-            .replace("U.S. Representative", "Rep")
-            .replace("U.S. Senator", "Senator"),
-          name: name,
-          link: officialOffice.official.urls[0],
-          level: officialOffice.office.name.includes("Chicago")
-            ? RepLevel.City
-            : officialOffice.office.name.includes("IL")
-            ? RepLevel.State
-            : RepLevel.National,
-        };
-      })
   );
 };
