@@ -112,7 +112,6 @@ export const getFilteredLegislation = async ({
   const shouldGetIllinois =
     shouldGetChicago || filters.location === SupportedLocale.Illinois;
 
-  console.log(filters.location, shouldGetChicago, shouldGetIllinois);
   // Get all bills from all the network
   const allChicagoBills =
     shouldGetChicago && (await getLegislations(DataStores.Chicago));

@@ -105,7 +105,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       ? savedPreferences
       : DEFAULT_FILTERS;
 
-  console.log("FILTERS", filters.level, url.searchParams.get("level"));
   const env = getEnv(process.env);
 
   const forYouDataResult = await getFilteredLegislation({
