@@ -7,64 +7,97 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getEnv } from "~/config";
 
-import { ForYou, forYouData } from "~/for-you";
+import { useEffect, useState } from "react";
+import { ForYou } from "~/for-you";
 import {
-  AddressFilter,
-  LocationFilter,
-  isSupportedLocale,
-  type Locales,
-  type RepLevel,
-  createLocationFilterFromString,
-} from "~/levels";
-import {
-  FilterParams,
   ForYouLoaderData,
   ForYouProps,
+  GlobalState,
   UpdateFiltersFn,
+  UpdateGlobalStateFn,
 } from "./foryou.types";
-import { getCookieFromString } from "./utils";
+import { getCookieFromString, useCookies } from "./utils";
+import {
+  DEFAULT_FILTERS,
+  FilterParams,
+  RepLevel,
+  createLocationFilterFromString,
+  getLocation,
+  hasTags,
+  parseRepLevel,
+  parseTagsString,
+  stringifyTags,
+} from "~app/modules/legislation/filters";
+import { getFilteredLegislation } from "../legislation/api";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookieAddress = getCookieFromString(cookieHeader || "", "address");
-
-  const savedPreferences: FilterParams = {
-    location: { address: cookieAddress },
+  const globalState: GlobalState = {
+    lastVisited: "",
+    noSavedFeed: true,
+    showExplore: false,
   };
 
+  // Feed State is in Cookies
+  const cookieHeader = request.headers.get("Cookie");
+  let savedPreferences: FilterParams | null = null;
+  if (!cookieHeader) {
+    savedPreferences = DEFAULT_FILTERS;
+  } else {
+    const location = getCookieFromString(cookieHeader, "location");
+    const level = getCookieFromString(cookieHeader, "level");
+    const tags = getCookieFromString(cookieHeader, "tags");
+    if (!location) {
+      globalState.noSavedFeed = false;
+    } else {
+      savedPreferences = {
+        location: createLocationFilterFromString(location),
+        level: parseRepLevel(level),
+        tags: parseTagsString(tags),
+      };
+    }
+
+    // Global State
+    const lastVisited = getCookieFromString(cookieHeader, "lastVisited");
+    globalState.lastVisited = lastVisited || "";
+  }
+
+  // Explore State is in the URL Search Params
   const url = new URL(request.url);
-  const showExplore = url.searchParams.get("showExplore") === "true";
 
-  const locationParam = url.searchParams.get("location") as Locales | string;
-  const locationFilter: LocationFilter =
-    createLocationFilterFromString(locationParam);
+  globalState.showExplore = url.searchParams.get("showExplore") === "true";
 
-  const filters: FilterParams = showExplore
-    ? {
-        tags: url.searchParams.get("tags")?.split(","),
-        location: locationFilter,
-        level: url.searchParams.get("level") as RepLevel,
-        showExplore: url.searchParams.get("showExplore") === "true",
-      }
-    : savedPreferences;
+  let searchParams: FilterParams | null = null;
+  if (globalState.showExplore) {
+    const tags = url.searchParams.get("tags");
+    const location = url.searchParams.get("location");
+    const level = url.searchParams.get("level") as RepLevel;
+    searchParams = {
+      location: createLocationFilterFromString(location),
+      tags: parseTagsString(tags),
+      level: parseRepLevel(level),
+    };
+  }
+
+  // Picking filters based on if feed or explore
+  const filters: FilterParams =
+    globalState.showExplore && searchParams
+      ? searchParams
+      : savedPreferences
+      ? savedPreferences
+      : DEFAULT_FILTERS;
 
   const env = getEnv(process.env);
 
-  const { legislation, availableTags, tagsWithResults, offices, location } =
-    await forYouData({
-      env,
-      filters,
-    });
+  const forYouDataResult = await getFilteredLegislation({
+    env,
+    filters,
+  });
 
   return json<ForYouLoaderData>({
-    legislation,
     env,
-    availableTags,
-    tagsWithResults,
     filters,
-    offices,
-    location,
-    savedPreferences,
+    globalState,
+    ...forYouDataResult,
   });
 };
 
@@ -88,29 +121,61 @@ export default function ForYouPage() {
   const result = useLoaderData<ForYouProps>();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const updateFilters: UpdateFiltersFn = ({
-    location,
-    tags,
-    level,
-    showExplore,
-  }) => {
+  const [globalState, setGlobalState] = useState(result.globalState);
+
+  const showExplore = result.globalState.showExplore;
+
+  useEffect(() => {
+    // Delete search params if not on explore
+    if (!result.globalState.showExplore) {
+      setSearchParams(new URLSearchParams());
+    }
+  }, []);
+
+  const updateFilters: UpdateFiltersFn = ({ location, tags, level }) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    location && typeof location === "object"
-      ? newSearchParams.set("location", location.address)
-      : location
-      ? newSearchParams.set("location", location)
-      : newSearchParams.delete("location");
-    tags && Array.isArray(tags) && tags.length > 0
-      ? newSearchParams.set("tags", tags.join(","))
-      : newSearchParams.delete("tags");
-    level
-      ? newSearchParams.set("level", level)
-      : newSearchParams.delete("level");
-    showExplore
-      ? newSearchParams.set("showExplore", "true")
-      : newSearchParams.delete("showExplore");
-    setSearchParams(newSearchParams);
+    const cookies = useCookies(document);
+    const storage = showExplore ? newSearchParams : cookies;
+    location
+      ? storage.set("location", getLocation(location))
+      : storage.delete("location");
+    hasTags(tags)
+      ? storage.set("tags", stringifyTags(tags))
+      : storage.delete("tags");
+    level ? storage.set("level", level) : storage.delete("level");
+    if (storage instanceof URLSearchParams) {
+      setSearchParams(storage);
+    } else {
+      setGlobalState({ ...globalState, noSavedFeed: false });
+    }
   };
 
-  return <ForYou {...result} updateFilters={updateFilters} />;
+  const updateGlobalState: UpdateGlobalStateFn = (next) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    if ("showExplore" in next) {
+      next.showExplore
+        ? newSearchParams.set("showExplore", "true")
+        : newSearchParams.delete("showExplore");
+    }
+    if ("lastVisited" in next) {
+      const cookies = useCookies(document);
+      const date = new Date();
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+      let currentDate = `${year}-${month}-${day}`;
+      cookies.set("lastVisited", currentDate);
+    }
+    setSearchParams(newSearchParams);
+    setGlobalState({ ...globalState, ...next });
+  };
+
+  return (
+    <ForYou
+      {...result}
+      globalState={globalState}
+      updateGlobalState={updateGlobalState}
+      updateFilters={updateFilters}
+    />
+  );
 }

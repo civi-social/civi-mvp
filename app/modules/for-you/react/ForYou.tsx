@@ -1,14 +1,5 @@
 import type { Env } from "~/config";
-import {
-  Locales,
-  RepLevel,
-  SupportedLocale,
-  getLocation,
-  isAddressFilter,
-  isDefaultLocale,
-  isNullish,
-  isSupportedLocale,
-} from "~/levels";
+
 import type { StyleHack } from "~/ui";
 import {
   AddressLookup,
@@ -20,7 +11,7 @@ import {
   classNames,
   getRadioStyle,
 } from "~/ui";
-import type { ForYouBill } from "../selector";
+import type { ForYouBill } from "../../legislation/filters/filters.selectors";
 
 import React, { useState } from "react";
 import { FaGlobe } from "react-icons/fa";
@@ -33,47 +24,46 @@ import { useDemoContent } from "~app/modules/demos/Demos";
 import {
   getLastStatus,
   mapToReadableStatus,
-} from "~app/modules/legislation/utils";
+} from "~app/modules/legislation/format/format.utils";
 import { Carousel } from "~app/modules/ui/Carousel/Carousel";
-import { hasOverlap, setCookieInDom } from "../utils";
+import { hasOverlap } from "../utils";
 import { FYBFilterProps, ForYouLoaderData, ForYouProps } from "../foryou.types";
+import {
+  RepLevel,
+  isNotCustomLocation,
+  isNullish,
+  isCityLevel,
+  isStateLevel,
+  SupportedLocale,
+  isSupportedLocale,
+  isAddressFilter,
+  getLocation,
+} from "~app/modules/legislation/filters";
 
 const ForYouPreferences = (props: FYBFilterProps) => {
-  const [editing, setIsEditingState] = useState(false);
+  const [editing, setIsEditingState] = useState(props.globalState.noSavedFeed);
   return (
     <>
       {editing ? (
-        <>
-          <div className="text-white">
-            We want to help you follow your representatives actions, and also
-            topics you care about.
-          </div>
-          <div className="text-white">
-            Select your location so we can identify your representatives.
-          </div>
-          <AddressLookup env={props.env} onPlaceSelected={() => {}} />
-          <div className="text-white">
-            In addition, you can select topics you care about. We'll show you
-            bills about that.
-          </div>
-          <Tagging
-            tags={props.availableTags}
-            selected={props.filters.tags || []}
-            handleClick={(updatedTags) => {
-              props.updateFilters({ ...props.filters, tags: updatedTags });
-            }}
-          />
-        </>
+        <BillFilters
+          {...props}
+          title={
+            props.globalState.noSavedFeed
+              ? "We Want To Help You Engage With The Legislation That Impacts You"
+              : "Update Preferences"
+          }
+        />
       ) : (
         <ForYouPreferencesRead {...props} />
       )}
       <button
         className="lg:float-right"
         onClick={() => {
-          setIsEditingState(true);
+          props.updateFilters(props.filters);
+          setIsEditingState(!editing);
         }}
       >
-        Update Preferences
+        {editing ? "Finish" : "Update Preferences"}
       </button>
     </>
   );
@@ -170,26 +160,21 @@ const ForYouPreferencesRead = (props: FYBFilterProps) => {
   );
 };
 
-const FilterNavigation = (props: FYBFilterProps) => {
-  const [editing, setIsEditingState] = useState(
-    props.filters.showExplore || false
+const Navigation = (props: FYBFilterProps) => {
+  const [exploring, setIsExploringState] = useState(
+    props.globalState.showExplore
   );
-  const setIsEditing = (next: boolean) => {
-    if (next === false) {
-      props.updateFilters(props.savedPreferences);
-      setIsEditingState(false);
-    } else {
-      props.updateFilters({
-        showExplore: true,
-      });
-      setIsEditingState(true);
-    }
+  const setIsExploring = (next: boolean) => {
+    props.updateGlobalState({
+      showExplore: next,
+    });
+    setIsExploringState(next);
   };
 
   let mode: React.ReactNode;
-  const legislators = getLegislators(props.offices);
-  if (editing) {
-    mode = <ForYouBillFilters {...props} />;
+
+  if (exploring) {
+    mode = <BillFilters {...props} title="Explore Legislation" />;
   } else {
     mode = <ForYouPreferences {...props} />;
   }
@@ -202,9 +187,9 @@ const FilterNavigation = (props: FYBFilterProps) => {
         <RadioPicker
           type="transparent"
           handleChange={(next) => {
-            setIsEditing(next);
+            setIsExploring(next);
           }}
-          defaultValue={editing}
+          defaultValue={exploring}
           options={[
             { label: "Your Feed", value: false },
             { label: "Explore", value: true },
@@ -212,15 +197,6 @@ const FilterNavigation = (props: FYBFilterProps) => {
         />
 
         <div className="flex-1 text-right">
-          {/* <RadioPicker
-            type="transparent"
-            handleChange={(next) => {
-              window.location.href = "https:/w";
-              setIsEditing(next);
-            }}
-            defaultValue={false}
-            options={[{ label: "About", value: true }]}
-          /> */}
           <a
             className={getRadioStyle("transparent", false, "last")}
             href="https://windycivi.com"
@@ -234,18 +210,34 @@ const FilterNavigation = (props: FYBFilterProps) => {
   );
 };
 
-export const ForYouBillFilters = (props: FYBFilterProps) => {
+export const BillFilters = (props: FYBFilterProps & { title: string }) => {
   const isProbablyAddress =
-    !isDefaultLocale(props.filters.location) &&
+    !isNotCustomLocation(props.filters.location) &&
     !isNullish(props.filters.location);
 
   const [showAddress, setShowAddress] = useState(isProbablyAddress);
+
+  const levelOptions: { label: string; value: RepLevel | null }[] | null =
+    isCityLevel(props.filters.location)
+      ? [
+          { label: "All", value: null },
+          { label: "City", value: RepLevel.City },
+          { label: "State", value: RepLevel.State },
+          { label: "National", value: RepLevel.National },
+        ]
+      : isStateLevel(props.filters.location)
+      ? [
+          { label: "All", value: null },
+          { label: "State", value: RepLevel.State },
+          { label: "National", value: RepLevel.National },
+        ]
+      : null;
 
   return (
     <div>
       <section>
         <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-white lg:text-right">
-          Explore
+          {props.title}
         </div>
 
         <div className="flex justify-center">
@@ -332,9 +324,8 @@ export const ForYouBillFilters = (props: FYBFilterProps) => {
                 </span>
               </div>
               <Tagging
-                tags={props.tagsWithResults}
-                availableTags={props.availableTags}
-                selected={props.filters.tags || []}
+                tags={props.availableTags}
+                selected={props.filters.tags}
                 handleClick={(updatedTags) => {
                   props.updateFilters({
                     ...props.filters,
@@ -351,50 +342,32 @@ export const ForYouBillFilters = (props: FYBFilterProps) => {
                 {props.showAllOfficesButton}
               </div>
             )}
-            <div className="lg:px-1 lg:text-right">
-              <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                Filter By Level
-              </span>
-            </div>
-            <RadioPicker<RepLevel | null | undefined | "">
-              handleChange={(next) => {
-                if (!next) {
-                  props.updateFilters({
-                    ...props.filters,
-                    level: null,
-                  });
-                } else {
-                  props.updateFilters({
-                    ...props.filters,
-                    level: next,
-                  });
-                }
-              }}
-              defaultValue={props.filters.level || ""}
-              options={[
-                { label: "All", value: "" },
-                { label: "City", value: RepLevel.City },
-                { label: "State", value: RepLevel.State },
-                { label: "National", value: RepLevel.National },
-              ]}
-            />
-            <div>
-              <button
-                onClick={() => {
-                  // Save in cookie for later
-                  if (isAddressFilter(props.filters.location)) {
-                    setCookieInDom(
-                      document,
-                      "address",
-                      props.filters.location.address,
-                      1565
-                    );
-                  }
-                }}
-              >
-                Save As Your Preferences
-              </button>
-            </div>
+            {levelOptions && (
+              <>
+                <div className="lg:px-1 lg:text-right">
+                  <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
+                    Show Only Bills At Level
+                  </span>
+                </div>
+                <RadioPicker<RepLevel | null | undefined | "">
+                  handleChange={(next) => {
+                    if (!next) {
+                      props.updateFilters({
+                        ...props.filters,
+                        level: null,
+                      });
+                    } else {
+                      props.updateFilters({
+                        ...props.filters,
+                        level: next,
+                      });
+                    }
+                  }}
+                  defaultValue={props.filters.level}
+                  options={levelOptions}
+                />
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -603,7 +576,7 @@ export const ForYou = (props: ForYouProps) => {
       ) : (
         <ForYouShell
           left={
-            <FilterNavigation
+            <Navigation
               {...props}
               showAllOfficesButton={showAllOfficesButton}
             />

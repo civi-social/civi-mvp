@@ -1,10 +1,10 @@
+import { RepLevel, SupportedLocale } from "./filters.constants";
 import {
   LocationFilter,
-  SupportedLocale,
   type Locales,
   Nullish,
   AddressFilter,
-} from "./levels.types";
+} from "./filters.types";
 
 export const getLocale = (
   formattedAddress: string | Nullish
@@ -72,7 +72,43 @@ export const createLocationFilterFromString = (
     ? ({ address: locationParam } as AddressFilter)
     : DEFAULT_LOCALE;
 
-export const isDefaultLocale = (location: LocationFilter): boolean =>
+export const isNotCustomLocation = (location: LocationFilter): boolean =>
   isSupportedLocale(location) && location !== SupportedLocale.Custom;
 
-const DEFAULT_LOCALE = SupportedLocale.USA;
+export const DEFAULT_LOCALE = SupportedLocale.USA;
+
+export const isCityLevel = (location: LocationFilter): boolean =>
+  isAddressFilter(location) || location === SupportedLocale.Chicago;
+
+export const isStateLevel = (location: LocationFilter): boolean =>
+  !isAddressFilter(location) && location === SupportedLocale.Illinois;
+
+export const hasTags = (
+  tags: string[] | null | undefined
+): tags is string[] => {
+  return Boolean(tags && Array.isArray(tags) && tags.length > 0);
+};
+export const stringifyTags = (tags: string[]) => {
+  return tags.join(",");
+};
+
+export const parseTagsString = (tags: string | null) => {
+  const parsed = tags?.split(",").filter((tag) => tag.length > 0);
+  return hasTags(parsed) ? parsed : null;
+};
+
+export const DEFAULT_FILTERS: FilterParams = {
+  location: DEFAULT_LOCALE,
+  level: null,
+  tags: null,
+};
+
+export const parseRepLevel = (level?: string | null): RepLevel | null => {
+  return !level ? null : (level as RepLevel);
+};
+
+export interface FilterParams {
+  location: LocationFilter;
+  level: RepLevel | null;
+  tags: string[] | null;
+}

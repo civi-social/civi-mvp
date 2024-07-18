@@ -1,7 +1,7 @@
 // App.tsx
 import React, { useState } from "react";
 import { Bill } from "~app/modules/for-you";
-import { RepLevel } from "~app/modules/levels";
+import { RepLevel } from "~app/modules/legislation/filters";
 import { NewsletterForm } from "~app/modules/newsletter-form/NewsletterForm";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
 import { Link } from "@remix-run/react";

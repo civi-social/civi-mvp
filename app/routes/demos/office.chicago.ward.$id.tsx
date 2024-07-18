@@ -10,7 +10,7 @@ import React from "react";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import { getLegislations } from "~/legislation/api";
-import { RepLevel } from "~/levels";
+import { RepLevel } from "~/legislation/filters";
 import { DynamicPoll } from "~/poll/Poll";
 import { getChicagoWard } from "~/representatives/api";
 import type { RepresentativesOcIdResult } from "~/representatives/representatives.types";

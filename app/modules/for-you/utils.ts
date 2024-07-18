@@ -38,10 +38,24 @@ export function setCookieInDom(
   doc: typeof document,
   cookieName: string,
   cookieValue: string,
-  expirationDays: number
+  expirationDays: number | "DELETE"
 ) {
-  const d = new Date();
-  d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
+  let expires = "";
+  if (expirationDays === "DELETE") {
+    expires = "expires=Thu, 01 Jan 1970 00:00:01 GMT";
+  } else {
+    const d = new Date();
+    d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+    expires = "expires=" + d.toUTCString();
+  }
   doc.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
 }
+
+export const useCookies = (doc: typeof document) => {
+  return {
+    set: (cookieName: string, cookieValue: string) =>
+      setCookieInDom(doc, cookieName, cookieValue, 10065),
+    delete: (cookieName: string) =>
+      setCookieInDom(doc, cookieName, "", "DELETE"),
+  };
+};

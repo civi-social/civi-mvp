@@ -2,25 +2,9 @@ import type {
   CiviGptLegislationData,
   CiviLegislationData,
 } from "civi-legislation-data";
-import { RepLevel } from "~/levels";
 import type { RepresentativesResult } from "~/representatives";
-import { findOverlap } from "./utils";
-
-const ALLOWED_TAGS = [
-  "Economy",
-  "Education",
-  "Democracy",
-  "Health Care",
-  "Public Safety",
-  "Transit",
-  "Abortion",
-  "Immigration",
-  "Foreign Policy",
-  "States Rights",
-  "Civil Rights",
-  "Climate Change",
-  "Other",
-];
+import { findOverlap } from "../../for-you/utils";
+import { ALLOWED_GPT_TAGS, RepLevel } from "..";
 
 // todo: put this type directly in civi-legislation-data
 type CiviGptData = CiviGptLegislationData[keyof CiviGptLegislationData];
@@ -71,7 +55,7 @@ export const selectData = (
         const gptSummaries = gpt[bill.id];
         // todo: move to civi-legislation-data
         let gptTags = gptSummaries.gpt_tags;
-        let overlapped = findStringOverlap(gptTags || [], ALLOWED_TAGS);
+        let overlapped = findStringOverlap(gptTags || [], ALLOWED_GPT_TAGS);
 
         // remove any extra others if it has other categories
         if (overlapped.length > 1) {
