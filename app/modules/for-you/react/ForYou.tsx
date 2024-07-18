@@ -383,7 +383,7 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
               <>
                 <div className="lg:px-1 lg:text-right">
                   <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Filter Shown Bills By Level
+                    Only Show Bills From
                   </span>
                 </div>
                 <RadioPicker<RepLevel | null | undefined | "">
@@ -492,12 +492,12 @@ export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
 
   return (
     <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
-      <div className="flex flex-wrap items-center justify-between text-sm font-light uppercase text-slate-600">
+      <div className="flex flex-wrap items-center justify-between">
         {gpt?.gpt_tags && (
           <div className="flex flex-row flex-wrap">
             {[...new Set(gpt.gpt_tags)].map((v) => (
               <div className="inline-flex" key={v}>
-                <Tag text={v} />
+                <Tag className="text-xs" text={v} />
               </div>
             ))}
           </div>
@@ -506,11 +506,12 @@ export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
           target="_blank"
           href={link}
           rel="noreferrer"
-          className="flex items-center "
+          className="flex items-center text-sm font-light uppercase text-slate-600"
         >
           {levelsMap[level]} {linkTitle} <FaGlobe className="pl-1" />
         </a>
       </div>
+      <div className="font-serif text-lg">{title}</div>
       <div className="text-center">
         <a
           target="_blank"
@@ -525,7 +526,6 @@ export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
           {readableStatus.name} {date}
         </a>
       </div>
-      <div className="font-serif text-lg">{title}</div>
       {summaries.length > 0 && <Carousel data={summaries} />}
       {sponsoredByRep && (
         <div className="text-center text-xs uppercase">
@@ -557,7 +557,7 @@ export const ForYouShell = ({
       <Grid
         style={{
           background:
-            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 65vh, transparent 90vh)" as StyleHack,
+            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 65vh, rgba(238,145, 126,1) 120vh, rgba(0,0,0,0.1) 220vh)" as StyleHack,
         }}
         className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
       >

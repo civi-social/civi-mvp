@@ -72,9 +72,10 @@ export const Tag: React.FC<{
       onClick={() => onClick?.()}
       className={classNames(
         baseTag,
-        "text-sm text-opacity-90",
+        "font-medium uppercase text-opacity-90",
         background,
-        className || "bg-opacity-70 text-white"
+        "text-white",
+        className
       )}
     >
       {text} {icon}
@@ -112,10 +113,10 @@ export const Tagging = ({
           key={tag}
           onClick={() => handleTagClick(tag)}
           className={classNames(
-            "cursor-pointer text-base text-white text-opacity-90",
+            "cursor-pointer text-sm font-bold text-opacity-90",
             selectedTags.includes(tag) || selectedTags.length === 0
-              ? "bg-opacity-100"
-              : "opacity-30"
+              ? "bg-opacity-70"
+              : "opacity-40"
           )}
         />
       ))}
@@ -123,4 +124,4 @@ export const Tagging = ({
   );
 };
 
-const baseTag = "px-3 py-1 m-1 mr-0 rounded-full border-none font-light";
+const baseTag = "px-3 py-1 m-1 mr-0 rounded-full border-none";
