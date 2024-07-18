@@ -11,7 +11,7 @@ import {
   classNames,
   getRadioStyle,
 } from "~/ui";
-import type { ForYouBill } from "../../legislation/filters/filters.selectors";
+import type { ForYouBill } from "../../legislation/filters";
 
 import React, { useState } from "react";
 import { FaGlobe } from "react-icons/fa";
@@ -245,7 +245,7 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
             <div className="rounded-lg pt-4">
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Location
+                  Set Location
                 </span>
               </div>
               <div className="flex flex-col">
@@ -317,36 +317,69 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
                 )}
               </div>
             </div>
-            <div className="mt-4">
+            {isAddressFilter(props.filters.location) && (
+              <div className="my-4 justify-end">
+                <div className="lg:px-1 lg:text-right">
+                  <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
+                    Show Sponsored Bills
+                  </span>
+                </div>
+                <RadioPicker<true | null>
+                  handleChange={(next) => {
+                    props.updateFilters({
+                      ...props.filters,
+                      dontShowSponsoredByReps: next,
+                    });
+                  }}
+                  defaultValue={props.filters.dontShowSponsoredByReps}
+                  optionClassName="rounded-bl-none rounded-br-none mb-0 flex-1"
+                  options={[
+                    {
+                      label: "Yes",
+                      value: null,
+                    },
+                    {
+                      label: "No",
+                      value: true,
+                    },
+                  ]}
+                />
+                <div className=" bg-primary rounded-lg rounded-t-none bg-black bg-opacity-50 py-2 px-4 text-center text-white shadow-md lg:text-right">
+                  <span className="inline-block text-xs font-semibold uppercase opacity-80">
+                    Showing Bills Sponsored By These Representatives
+                  </span>
+                  <div className="text-sm opacity-80">
+                    <Legislators offices={props.offices} />
+                  </div>
+                  {props.showAllOfficesButton}
+                </div>
+              </div>
+            )}
+            <div className="my-4">
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
                   Show Bills Tagged With
                 </span>
               </div>
-              <Tagging
-                tags={props.availableTags}
-                selected={props.filters.tags}
-                handleClick={(updatedTags) => {
-                  props.updateFilters({
-                    ...props.filters,
-                    tags: updatedTags,
-                  });
-                }}
-              />
-            </div>
-            {isAddressFilter(props.filters.location) && (
-              <div className=" bg-primary mb-4 bg-black bg-opacity-40 py-3 px-4 text-center text-white shadow-md lg:text-right">
-                <div className="text-sm opacity-80">
-                  <Legislators offices={props.offices} />
-                </div>
-                {props.showAllOfficesButton}
+              <div className="rounded-lg bg-black bg-opacity-30 p-2">
+                <Tagging
+                  tags={props.filters.availableTags}
+                  selected={props.filters.tags}
+                  handleClick={(updatedTags) => {
+                    props.updateFilters({
+                      ...props.filters,
+                      tags: updatedTags,
+                    });
+                  }}
+                />
               </div>
-            )}
+            </div>
+
             {levelOptions && (
               <>
                 <div className="lg:px-1 lg:text-right">
                   <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Show Only Bills At Level
+                    Filter Shown Bills By Level
                   </span>
                 </div>
                 <RadioPicker<RepLevel | null | undefined | "">
@@ -568,7 +601,7 @@ export const ForYou = (props: ForYouProps) => {
         >
           <div className="flex w-full max-w-2xl flex-col gap-y-5 justify-self-center">
             <div className="text-center text-lg font-light">
-              Representatives for {getLocation(props.location)}.
+              Representatives for {getLocation(props.filters.location)}.
             </div>
             <OfficialOfficeList officialOffice={props.offices} />
           </div>

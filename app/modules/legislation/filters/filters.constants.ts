@@ -10,11 +10,10 @@ export const ALLOWED_GPT_TAGS = [
   "States Rights",
   "Civil Rights",
   "Climate Change",
-  "City Ordinances",
   "Other",
 ];
 
-export const AVAILABLE_TAGS = [...ALLOWED_GPT_TAGS, "City Ordinances"];
+export const AVAILABLE_TAGS = ["City Ordinances", ...ALLOWED_GPT_TAGS];
 
 export enum RepLevel {
   City = "city",

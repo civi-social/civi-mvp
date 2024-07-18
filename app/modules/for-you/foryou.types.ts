@@ -1,7 +1,7 @@
 import { Env } from "../config";
 import { FilterParams, LocationFilter } from "../legislation";
 import { OfficialOffice } from "../representatives";
-import { ForYouBill } from "../legislation/filters/filters.selectors";
+import { ForYouBill } from "../legislation/filters";
 
 export interface ForYouLoaderData extends ForYouData {
   env: Env;
@@ -22,10 +22,7 @@ export interface GlobalState {
 
 export type ForYouData = {
   legislation: ForYouBill[];
-  tagsWithResults: string[];
-  availableTags: string[];
   offices: OfficialOffice[] | null;
-  location: LocationFilter;
 };
 
 export type UpdateFiltersFn = (p: Partial<FilterParams>) => void;

@@ -4,17 +4,7 @@ import type {
 } from "civi-legislation-data";
 import type { RepresentativesResult } from "~/representatives";
 import { findOverlap } from "../../for-you/utils";
-import { ALLOWED_GPT_TAGS, RepLevel } from "..";
-
-// todo: put this type directly in civi-legislation-data
-type CiviGptData = CiviGptLegislationData[keyof CiviGptLegislationData];
-
-export type ForYouBill = {
-  bill: CiviLegislationData;
-  gpt?: CiviGptData;
-  level: RepLevel;
-  sponsoredByRep?: string | false;
-};
+import { ALLOWED_GPT_TAGS, ForYouBill, RepLevel } from "..";
 
 export const selectData = (
   {
@@ -78,6 +68,8 @@ export const selectData = (
         return {
           bill,
           gpt: cleanedGpt,
+          coded_tags:
+            bill.classification === "ordinance" ? ["City Ordinance"] : [],
           level,
           sponsoredByRep,
         } as ForYouBill;

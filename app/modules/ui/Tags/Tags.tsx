@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { classNames } from "../styles";
 
-export const Tag: React.FC<{ className?: string; text: string }> = ({
-  text,
-  className,
-}) => {
+export const Tag: React.FC<{
+  className?: string;
+  text: string;
+  onClick?: Function;
+}> = ({ text, className, onClick }) => {
   let icon: string;
   let background: string;
   switch (text) {
@@ -48,6 +49,18 @@ export const Tag: React.FC<{ className?: string; text: string }> = ({
       icon = "🏛";
       background = "bg-teal-500";
       break;
+    case "Abortion":
+      icon = "👶";
+      background = "bg-rose-500";
+      break;
+    case "Immigration":
+      icon = "🛂";
+      background = "bg-cyan-500";
+      break;
+    case "City Ordinances":
+      icon = "🏙️";
+      background = "bg-teal-500";
+      break;
     case "Other":
     default:
       icon = "";
@@ -55,6 +68,8 @@ export const Tag: React.FC<{ className?: string; text: string }> = ({
   }
   return (
     <span
+      role={onClick ? "option" : "none"}
+      onClick={() => onClick?.()}
       className={classNames(
         baseTag,
         "text-sm text-opacity-90",
@@ -90,24 +105,19 @@ export const Tagging = ({
   };
 
   return (
-    <div className="text-center lg:text-right">
+    <div className="flex flex-wrap text-center lg:justify-end">
       {tags.map((tag) => (
-        <button
+        <Tag
+          text={tag}
           key={tag}
           onClick={() => handleTagClick(tag)}
           className={classNames(
-            baseTag,
-            "bg-black bg-opacity-50 text-base text-white text-opacity-90"
+            "cursor-pointer text-base text-white text-opacity-90",
+            selectedTags.includes(tag) || selectedTags.length === 0
+              ? "bg-opacity-100"
+              : "opacity-30"
           )}
-          style={{
-            opacity:
-              selectedTags.includes(tag) || selectedTags.length === 0
-                ? "1.0"
-                : "0.3",
-          }}
-        >
-          {tag}
-        </button>
+        />
       ))}
     </div>
   );

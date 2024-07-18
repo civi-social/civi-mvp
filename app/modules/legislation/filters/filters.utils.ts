@@ -1,4 +1,4 @@
-import { RepLevel, SupportedLocale } from "./filters.constants";
+import { AVAILABLE_TAGS, RepLevel, SupportedLocale } from "./filters.constants";
 import {
   LocationFilter,
   type Locales,
@@ -83,16 +83,16 @@ export const isCityLevel = (location: LocationFilter): boolean =>
 export const isStateLevel = (location: LocationFilter): boolean =>
   !isAddressFilter(location) && location === SupportedLocale.Illinois;
 
-export const hasTags = (
-  tags: string[] | null | undefined
-): tags is string[] => {
+export const hasTags = (tags: unknown): tags is string[] => {
   return Boolean(tags && Array.isArray(tags) && tags.length > 0);
 };
 export const stringifyTags = (tags: string[]) => {
   return tags.join(",");
 };
 
-export const parseTagsString = (tags: string | null) => {
+export const parseTagsString = (
+  tags: string | null | undefined
+): string[] | null => {
   const parsed = tags?.split(",").filter((tag) => tag.length > 0);
   return hasTags(parsed) ? parsed : null;
 };
@@ -101,6 +101,8 @@ export const DEFAULT_FILTERS: FilterParams = {
   location: DEFAULT_LOCALE,
   level: null,
   tags: null,
+  availableTags: AVAILABLE_TAGS,
+  dontShowSponsoredByReps: null,
 };
 
 export const parseRepLevel = (level?: string | null): RepLevel | null => {
@@ -109,6 +111,29 @@ export const parseRepLevel = (level?: string | null): RepLevel | null => {
 
 export interface FilterParams {
   location: LocationFilter;
-  level: RepLevel | null;
+  dontShowSponsoredByReps: true | null;
   tags: string[] | null;
+  availableTags: string[];
+  level: RepLevel | null;
 }
+
+export const parseDontShowSponsoredByReps = (v: unknown): true | null => {
+  return (typeof v === "string" && v === "true") || null;
+};
+
+export const createFilterParams = (p: {
+  location: string | Nullish;
+  level: string | Nullish;
+  tags: string | Nullish;
+  dontShowSponsoredByReps: string | Nullish;
+}) => {
+  return {
+    location: createLocationFilterFromString(p.location),
+    level: parseRepLevel(p.level),
+    tags: parseTagsString(p.tags),
+    dontShowSponsoredByReps: parseDontShowSponsoredByReps(
+      p.dontShowSponsoredByReps
+    ),
+    availableTags: AVAILABLE_TAGS,
+  };
+};

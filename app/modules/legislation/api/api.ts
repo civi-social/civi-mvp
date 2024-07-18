@@ -8,7 +8,6 @@ import { civiLegislationApi } from "civi-legislation-data";
 import { legislationCache } from "./legislation-cache";
 import axios from "axios";
 import {
-  AVAILABLE_TAGS,
   FilterParams,
   Locales,
   RepLevel,
@@ -154,13 +153,6 @@ export const getFilteredLegislation = async ({
     );
   }
 
-  const tagsWithResults = new Set<string>(["City Ordinance"]);
-  legislation.forEach((bill) => {
-    bill.gpt?.gpt_tags?.forEach((tag) => {
-      tagsWithResults.add(tag);
-    });
-  });
-
   // Sort by updated_at
   legislation = legislation.sort((a, b) => {
     const aUpdated = a.bill.updated_at || a.bill.statusDate;
@@ -177,13 +169,8 @@ export const getFilteredLegislation = async ({
       ]
     : null;
 
-  const location = filters.location;
-
   return {
     legislation,
-    availableTags: AVAILABLE_TAGS,
-    tagsWithResults: Array.from(tagsWithResults),
     offices,
-    location,
   };
 };

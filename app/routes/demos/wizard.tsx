@@ -142,6 +142,7 @@ const FakeBill = () => {
           "Illinois is considering creating a board to advise on the use of a drug called psilocybin. The board would help decide who can make and distribute the drug for medical purposes.",
         gpt_tags: ["Health Care"],
       }}
+      coded_tags={["Health Care"]}
       level={RepLevel.State}
       bill={
         {

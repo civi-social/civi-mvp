@@ -10,6 +10,15 @@ import { getEnv } from "~/config";
 import { useEffect, useState } from "react";
 import { ForYou } from "~/for-you";
 import {
+  DEFAULT_FILTERS,
+  FilterParams,
+  createFilterParams,
+  getLocation,
+  hasTags,
+  stringifyTags,
+} from "~app/modules/legislation/filters";
+import { getFilteredLegislation } from "../legislation/api";
+import {
   ForYouLoaderData,
   ForYouProps,
   GlobalState,
@@ -17,18 +26,6 @@ import {
   UpdateGlobalStateFn,
 } from "./foryou.types";
 import { getCookieFromString, useCookies } from "./utils";
-import {
-  DEFAULT_FILTERS,
-  FilterParams,
-  RepLevel,
-  createLocationFilterFromString,
-  getLocation,
-  hasTags,
-  parseRepLevel,
-  parseTagsString,
-  stringifyTags,
-} from "~app/modules/legislation/filters";
-import { getFilteredLegislation } from "../legislation/api";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const globalState: GlobalState = {
@@ -46,14 +43,20 @@ export const loader: LoaderFunction = async ({ request }) => {
     const location = getCookieFromString(cookieHeader, "location");
     const level = getCookieFromString(cookieHeader, "level");
     const tags = getCookieFromString(cookieHeader, "tags");
+    const dontShowSponsoredByReps = getCookieFromString(
+      cookieHeader,
+      "dontShowSponsoredByReps"
+    );
+
     if (!location) {
       globalState.noSavedFeed = false;
     } else {
-      savedPreferences = {
-        location: createLocationFilterFromString(location),
-        level: parseRepLevel(level),
-        tags: parseTagsString(tags),
-      };
+      savedPreferences = createFilterParams({
+        location,
+        level,
+        tags,
+        dontShowSponsoredByReps,
+      });
     }
 
     // Global State
@@ -70,12 +73,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (globalState.showExplore) {
     const tags = url.searchParams.get("tags");
     const location = url.searchParams.get("location");
-    const level = url.searchParams.get("level") as RepLevel;
-    searchParams = {
-      location: createLocationFilterFromString(location),
-      tags: parseTagsString(tags),
-      level: parseRepLevel(level),
-    };
+    const level = url.searchParams.get("level");
+    const dontShowSponsoredByReps = url.searchParams.get(
+      "dontShowSponsoredByReps"
+    );
+    searchParams = createFilterParams({
+      location,
+      level,
+      tags,
+      dontShowSponsoredByReps,
+    });
   }
 
   // Picking filters based on if feed or explore
@@ -132,17 +139,32 @@ export default function ForYouPage() {
     }
   }, []);
 
-  const updateFilters: UpdateFiltersFn = ({ location, tags, level }) => {
+  const updateFilters: UpdateFiltersFn = ({
+    location,
+    tags,
+    level,
+    dontShowSponsoredByReps,
+  }) => {
+    // Decide which storage to use
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const cookies = useCookies(document);
     const storage = showExplore ? newSearchParams : cookies;
+
+    // Update Filters
     location
       ? storage.set("location", getLocation(location))
       : storage.delete("location");
+
     hasTags(tags)
       ? storage.set("tags", stringifyTags(tags))
       : storage.delete("tags");
+
     level ? storage.set("level", level) : storage.delete("level");
+
+    dontShowSponsoredByReps
+      ? newSearchParams.set("dontShowSponsoredByReps", "true")
+      : newSearchParams.delete("dontShowSponsoredByReps");
+
     if (storage instanceof URLSearchParams) {
       setSearchParams(storage);
     } else {
