@@ -1,22 +1,25 @@
 import type { Env } from "~/config";
 
+import axios from "axios";
 import type {
   CiviGptLegislationData,
   CiviLegislationData,
 } from "civi-legislation-data";
 import { civiLegislationApi } from "civi-legislation-data";
-import { legislationCache } from "./legislation-cache";
-import axios from "axios";
-import {
-  FilterParams,
-  Locales,
-  RepLevel,
-  getAddress,
-  selectData,
-} from "../filters";
 import { ForYouData } from "~app/modules/for-you/foryou.types";
-import { getRepresentatives } from "~app/modules/representatives/api";
 import { hasOverlap } from "~app/modules/for-you/utils";
+import { getRepresentatives } from "~app/modules/representatives/api";
+import {
+  DataStores,
+  FilterParams,
+  ForYouBill,
+  RepLevel,
+  createForYouBill,
+  filterBillsOlderThanSixMonths,
+  filterNoisyCityBills,
+  getAddress,
+} from "../filters";
+import { legislationCache } from "./legislation-cache";
 
 const getCachedLegislationData = async (
   name: Parameters<typeof civiLegislationApi.getLegislationDataUrl>[0]
@@ -62,39 +65,30 @@ const getCachedLegislationGptData = async (
   return legislation;
 };
 
-export const getLegislations = async (
-  env: Env,
-  levels: RepLevel,
-  locale: Locales | null
-): Promise<{
+type LegislationResult = {
   legislation: CiviLegislationData[];
   gpt: CiviGptLegislationData;
-}> => {
-  console.log("getting bills for", locale, levels);
+};
+export const getLegislations = async (
+  locale: DataStores
+): Promise<LegislationResult> => {
+  console.log("getting bills for", locale);
   let legislation: CiviLegislationData[] = [];
   let gpt: CiviGptLegislationData = {};
   switch (locale) {
-    case "Chicago":
-      switch (levels) {
-        case RepLevel.City:
-          legislation = await getCachedLegislationData("chicago");
-          gpt = await getCachedLegislationGptData("chicago");
-          break;
-        case RepLevel.State:
-          legislation = await getCachedLegislationData("illinois");
-          gpt = await getCachedLegislationGptData("illinois");
-          break;
-        case RepLevel.National:
-          legislation = await getCachedLegislationData("usa");
-          gpt = await getCachedLegislationGptData("usa");
-          break;
-        default:
-          break;
-      }
+    case DataStores.Chicago:
+      legislation = await getCachedLegislationData("chicago");
+      gpt = await getCachedLegislationGptData("chicago");
+      break;
+    case DataStores.Illinois:
+      legislation = await getCachedLegislationData("illinois");
+      gpt = await getCachedLegislationGptData("illinois");
+      break;
+    case DataStores.USA:
+      legislation = await getCachedLegislationData("usa");
+      gpt = await getCachedLegislationGptData("usa");
       break;
     default:
-      legislation = [];
-      gpt = {};
       break;
   }
   return { legislation, gpt };
@@ -112,29 +106,44 @@ export const getFilteredLegislation = async ({
     ? await getRepresentatives(address, env)
     : null;
 
-  const city =
-    filters.location === "Chicago"
-      ? selectData(
-          await getLegislations(env, RepLevel.City, "Chicago"),
-          RepLevel.City,
-          representatives
-        )
-      : [];
+  const shouldGetChicago = filters.location === "Chicago";
+  const shouldGetIllinois = shouldGetChicago || filters.location === "Illinois";
 
-  const state =
-    filters.location === "Chicago" || filters.location === "Illinois"
-      ? selectData(
-          await getLegislations(env, RepLevel.State, "Chicago"),
-          RepLevel.State,
-          representatives
-        )
-      : [];
+  const allChicagoBills = shouldGetChicago
+    ? await getLegislations(DataStores.Chicago)
+    : null;
+  const allILBills = shouldGetIllinois
+    ? await getLegislations(DataStores.Illinois)
+    : null;
+  const allUSBills = await getLegislations(DataStores.USA);
 
-  const national = selectData(
-    await getLegislations(env, RepLevel.National, "Chicago"),
-    RepLevel.National,
-    representatives
-  );
+  // First select all bills that are sponsored, if the user wants sponsored bills
+
+  let city = [] as ForYouBill[];
+  if (allChicagoBills) {
+    city = allChicagoBills.legislation
+      .filter(filterBillsOlderThanSixMonths)
+      .filter(filterNoisyCityBills(representatives, RepLevel.City))
+      .map(
+        createForYouBill(allChicagoBills.gpt, representatives, RepLevel.City)
+      );
+  }
+
+  let state = [] as ForYouBill[];
+  if (allILBills) {
+    state = allILBills.legislation
+      .filter(filterBillsOlderThanSixMonths)
+      .map(createForYouBill(allILBills.gpt, representatives, RepLevel.State));
+  }
+
+  let national = [] as ForYouBill[];
+  if (allUSBills) {
+    national = allUSBills.legislation
+      .filter(filterBillsOlderThanSixMonths)
+      .map(
+        createForYouBill(allUSBills.gpt, representatives, RepLevel.National)
+      );
+  }
 
   const fullLegislation = [...city, ...state, ...national];
 

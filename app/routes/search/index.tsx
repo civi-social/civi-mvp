@@ -16,7 +16,11 @@ import type { RepresentativesResult } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
 import Representatives from "~/representatives/react/Representatives";
 import { AddressLookup, Instructions, Loading } from "~/ui";
-import { RepLevel, getLocale } from "~app/modules/legislation/filters";
+import {
+  DataStores,
+  RepLevel,
+  getLocale,
+} from "~app/modules/legislation/filters";
 
 type LoaderData = {
   legislation: CiviLegislationData[];
@@ -37,7 +41,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let legislation: CiviLegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
-    const res = await getLegislations(env, level, getLocale(address));
+    const res = await getLegislations(DataStores.Chicago);
     legislation = res.legislation;
   }
 

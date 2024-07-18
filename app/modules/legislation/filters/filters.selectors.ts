@@ -19,62 +19,70 @@ export const selectData = (
 ): ForYouBill[] => {
   return (
     legislation
-      .filter((bill) => {
-        // Filter out city ordinance and noisy bills if we don't have city representatives data
-        if (level === RepLevel.City && !representatives) {
-          return filterCityBills(bill);
-        }
-        return true;
-      })
-      // only show sponsored bills if filtered by rep
-      .filter((bill) => {
-        if (representatives) {
-          return filterBySponsoredBills(bill, representatives, level);
-        }
-        return true;
-      })
+      .filter(filterNoisyCityBills(representatives, level))
       // Filter by bills updated in the last 6 months
-      .filter((bill) => {
-        const updated = (bill.updated_at = bill.updated_at || bill.statusDate);
-        if (!updated) {
-          return false;
-        }
-        return !isDateOlderThanSixMonths(updated);
-      })
-      .map((bill) => {
-        const gptSummaries = gpt[bill.id];
-        // todo: move to civi-legislation-data
-        let gptTags = gptSummaries.gpt_tags;
-        let overlapped = findStringOverlap(gptTags || [], ALLOWED_GPT_TAGS);
-
-        // remove any extra others if it has other categories
-        if (overlapped.length > 1) {
-          overlapped = overlapped.filter((str) => str !== "Other");
-        }
-
-        // if it has no categories, add other
-        if (overlapped.length === 0) {
-          overlapped.push("Other");
-        }
-        const cleanedGpt = {
-          gpt_summary: gptSummaries.gpt_summary,
-          gpt_tags: overlapped,
-        };
-        const sponsoredByRep = findBillsSponsoredByRep(
-          representatives,
-          bill.sponsors,
-          level
-        );
-        return {
-          bill,
-          gpt: cleanedGpt,
-          coded_tags:
-            bill.classification === "ordinance" ? ["City Ordinance"] : [],
-          level,
-          sponsoredByRep,
-        } as ForYouBill;
-      })
+      .filter(filterBillsOlderThanSixMonths)
+      // only show sponsored bills if filtered by rep
+      .filter(filterBySponsoredBills(representatives, level))
+      .map(createForYouBill(gpt, representatives, level))
   );
+};
+
+export const createForYouBill =
+  (
+    gpt: CiviGptLegislationData,
+    representatives: RepresentativesResult | null,
+    level: RepLevel
+  ) =>
+  (bill: CiviLegislationData): ForYouBill => {
+    const gptSummaries = gpt[bill.id];
+    // todo: move to civi-legislation-data
+    let gptTags = gptSummaries.gpt_tags;
+    let overlapped = findStringOverlap(gptTags || [], ALLOWED_GPT_TAGS);
+
+    // remove any extra others if it has other categories
+    if (overlapped.length > 1) {
+      overlapped = overlapped.filter((str) => str !== "Other");
+    }
+
+    // if it has no categories, add other
+    if (overlapped.length === 0) {
+      overlapped.push("Other");
+    }
+    const cleanedGpt = {
+      gpt_summary: gptSummaries.gpt_summary,
+      gpt_tags: overlapped,
+    };
+    const sponsoredByRep = getUserRepNameIfBillIsSponsored(
+      representatives,
+      bill.sponsors,
+      level
+    );
+    return {
+      bill,
+      gpt: cleanedGpt,
+      coded_tags: bill.classification === "ordinance" ? ["City Ordinance"] : [],
+      level,
+      sponsoredByRep,
+    } as ForYouBill;
+  };
+
+export const filterNoisyCityBills =
+  (representatives: RepresentativesResult | null, level: RepLevel) =>
+  (bill: CiviLegislationData) => {
+    // Filter out city ordinance and noisy bills if we don't have city representatives data
+    if (level === RepLevel.City && !representatives) {
+      return filterCityBills(bill);
+    }
+    return true;
+  };
+
+export const filterBillsOlderThanSixMonths = (bill: CiviLegislationData) => {
+  const updated = (bill.updated_at = bill.updated_at || bill.statusDate);
+  if (!updated) {
+    return false;
+  }
+  return !isDateOlderThanSixMonths(updated);
 };
 
 // Generated from GPT
@@ -98,7 +106,7 @@ function isDateOlderThanSixMonths(dateString: string) {
   return inputDate < sixMonthsAgo;
 }
 
-const findBillsSponsoredByRep = (
+const getUserRepNameIfBillIsSponsored = (
   representatives: RepresentativesResult | null,
   sponsors: CiviLegislationData["sponsors"],
   level: RepLevel
@@ -181,13 +189,16 @@ const filterCityBills = (bill: CiviLegislationData) => {
   return true;
 };
 
-const filterBySponsoredBills = (
-  bill: CiviLegislationData,
-  reps: RepresentativesResult,
-  level: RepLevel
-) => {
-  return Boolean(findBillsSponsoredByRep(reps, bill.sponsors, level));
-};
+export const filterBySponsoredBills =
+  (reps: RepresentativesResult | null, level: RepLevel) =>
+  (bill: CiviLegislationData) => {
+    if (reps) {
+      return Boolean(
+        getUserRepNameIfBillIsSponsored(reps, bill.sponsors, level)
+      );
+    }
+    return true;
+  };
 
 // hack to find matches in sponsor names
 // From Bunkum, the name is "Martin, Matthew J." while, the office name may be "Matthew J. Martin"
