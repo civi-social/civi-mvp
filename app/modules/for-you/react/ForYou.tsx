@@ -55,7 +55,7 @@ const YourFeedSummary = (props: FYBFilterProps) => {
   switch (location) {
     case SupportedLocale.Chicago:
       locationName = "Chicago";
-      levelText = levelText || "City, State, & Federal";
+      levelText = levelText || "Local, State, & Federal";
       break;
     case SupportedLocale.Illinois:
       locationName = "Illinois";
@@ -66,72 +66,116 @@ const YourFeedSummary = (props: FYBFilterProps) => {
       levelText = levelText || "National";
       break;
   }
+
   if (isAddressFilter(location)) {
     locationName = "Chicago";
-    levelText = levelText || "City, State, & Federal";
+    levelText = levelText || "Local, State, & Federal";
   }
   if (!levelText) {
     levelText = "All";
   }
 
   const showSponsoredText =
-    legislators && !props.filters.dontShowSponsoredByReps;
+    legislators?.length > 1 && !props.filters.dontShowSponsoredByReps;
+
+  const showTagsText = hasTags(props.filters.tags);
+
+  const locationText = (
+    <>
+      {locationName && (
+        <span className="text-sm lg:text-lg">{locationName}! </span>
+      )}
+      <span className="text-sm opacity-80 lg:text-lg">
+        This feed is combining{" "}
+      </span>
+      <span className="text-sm lg:text-lg">{levelText}</span>
+      <span className="text-sm opacity-80 lg:text-lg">
+        {" "}
+        bills into a unified experience.
+      </span>
+    </>
+  );
+
+  const sponsoredText = (
+    <>
+      {showSponsoredText && (
+        <span className="mt-2 inline text-sm lg:block lg:text-lg">
+          <span className="opacity-80">It also includes any bills </span>
+          <span className="opacity-100">
+            sponsored by your representatives{showTagsText && ", "}
+          </span>{" "}
+        </span>
+      )}
+    </>
+  );
+
+  const tagText = (
+    <>
+      {showTagsText && (
+        <span className="inline text-sm lg:mt-2 lg:block lg:text-lg">
+          <span className="opacity-80">
+            {showSponsoredText ? "and includes" : "Including"} bills about{" "}
+          </span>
+          <span>the issues you care about. </span>
+        </span>
+      )}
+    </>
+  );
+
+  const tagCloud = (
+    <div className="flex flex-wrap justify-center font-sans lg:justify-end">
+      {props.filters?.tags?.map((v, i, arr) => {
+        const isLast = i === arr.length - 1;
+        return <Tag text={v} className="text-2xs lg:text-xs" />;
+      })}
+    </div>
+  );
 
   return (
-    <div className="flex flex-col rounded bg-black bg-opacity-30 p-3 text-center font-serif leading-tight text-white lg:mt-5 lg:items-end lg:text-right">
-      {/* Location Info */}
-      <div className="text-xl lg:text-2xl">
-        <span className="opacity-80">Hello</span>
-        {locationName && ` ${locationName}`}!
+    <>
+      {/* Mobile View */}
+      <div className="block rounded bg-black bg-opacity-20 p-3 text-center text-white lg:hidden">
+        {locationText}
+        {sponsoredText}
+        {tagText}
+        {tagCloud}
       </div>
-      {/* Sponsored Info */}
-      {showSponsoredText && (
-        <>
-          <div className="mt-2 opacity-80 lg:text-lg">
-            Including Bills Sponsored By Your Representatives{" "}
-          </div>
-          <div className="flex-inline hidden w-fit rounded bg-black bg-opacity-20 p-2 text-sm lg:block lg:text-right lg:text-sm">
-            {legislators.map((person, i) => {
-              const isLast = i === legislators.length - 1;
-              return (
-                <li key={person.name} className="inline lg:block">
-                  <span className="opacity-80">{person.title}</span>{" "}
-                  <a
-                    className="cursor-pointer decoration-dotted hover:underline"
-                    href={person.link}
-                    target="_blank"
-                  >
-                    {person.name}
-                    <span className="lg:hidden">{isLast ? "." : ", "}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </div>
-        </>
-      )}
-      {/* Tags Info */}
-      {hasTags(props.filters.tags) && (
-        <>
-          <div className="mt-2 text-lg opacity-80">
-            {showSponsoredText ? "Also including" : "Including"} bills tagged
-            with:
-          </div>{" "}
-          <div className="flex flex-wrap justify-center font-sans lg:justify-end">
-            {props.filters?.tags?.map((v, i, arr) => {
-              const isLast = i === arr.length - 1;
-              return <Tag text={v} className="text-2xs lg:text-xs" />;
-            })}
-          </div>
-        </>
-      )}
-      {/* Levels Info */}
-      <div className="mt-2 text-lg">
-        <span className="opacity-80">Filtering bills at </span>
-        <span>{levelText}</span>
-        <span className="opacity-80"> level.</span>
+      {/* Desktop View */}
+      <div className="hidden flex-col rounded bg-black bg-opacity-30 p-3 text-center font-serif leading-tight text-white lg:mt-5 lg:flex lg:items-end lg:text-right">
+        <div className="mt-2 text-sm lg:text-lg">{locationText}</div>
+        {/* Sponsored Info */}
+        {showSponsoredText && (
+          <>
+            {sponsoredText}
+            <div className="flex-inline hidden w-fit rounded bg-black bg-opacity-10 p-4 text-base lg:block lg:text-right">
+              {legislators.map((person, i) => {
+                const isLast = i === legislators.length - 1;
+                return (
+                  <li key={person.name} className="inline lg:block">
+                    <span className="opacity-80">{person.title}</span>{" "}
+                    <a
+                      className="cursor-pointer underline decoration-dotted hover:underline"
+                      href={person.link}
+                      target="_blank"
+                    >
+                      {person.name}
+                      <span className="lg:hidden">{isLast ? "." : ", "}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </div>
+          </>
+        )}
+        {/* Tags Info */}
+        {showTagsText && (
+          <>
+            {tagText}
+            {tagCloud}
+          </>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -155,7 +199,12 @@ const Navigation = (props: FYBFilterProps) => {
     mode = (
       <BillFilters
         onSave={() => {
-          setIsExploring(false);
+          props.saveToFeed();
+          props.updateGlobalState({
+            noSavedFeed: false,
+            showExplore: false,
+          });
+          setIsExploringState(false);
         }}
         {...props}
         title={
@@ -212,28 +261,6 @@ export const BillFilters = (
 
   const [showAddress, setShowAddress] = useState(isProbablyAddress);
 
-  const cityLabel = isCityLevel(props.filters.location) ? "Chicago" : "City";
-  const stateLabel =
-    isCityLevel(props.filters.location) || isStateLevel(props.filters.location)
-      ? "Illinois"
-      : "State";
-  const nationalLabel = "USA";
-  const levelOptions: { label: string; value: RepLevel | null }[] | null =
-    isCityLevel(props.filters.location)
-      ? [
-          { label: "All", value: null },
-          { label: cityLabel, value: RepLevel.City },
-          { label: stateLabel, value: RepLevel.State },
-          { label: nationalLabel, value: RepLevel.National },
-        ]
-      : isStateLevel(props.filters.location)
-      ? [
-          { label: "All", value: null },
-          { label: stateLabel, value: RepLevel.State },
-          { label: nationalLabel, value: RepLevel.National },
-        ]
-      : null;
-
   return (
     <div>
       <section>
@@ -241,10 +268,14 @@ export const BillFilters = (
           {props.title}
         </div>
 
-        <div className="flex justify-center">
-          <div className="flex w-full max-w-screen-md flex-col justify-center">
+        <div className="flex justify-center pt-4">
+          <div
+            className={classNames(
+              "flex w-full max-w-screen-md flex-col justify-center"
+            )}
+          >
             {/* Location Filter */}
-            <div className="pt-4">
+            <div>
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
                   Set Location
@@ -256,28 +287,24 @@ export const BillFilters = (
                     handleChange={(next) => {
                       if (!next) {
                         props.updateFilters({
-                          ...props.filters,
                           location: null,
                           level: null,
                         });
                       } else if (next === "Custom") {
                         setShowAddress(true);
                         props.updateFilters({
-                          ...props.filters,
                           location: next,
                           level: null,
                         });
                       } else if (next === "Chicago") {
                         setShowAddress(false);
                         props.updateFilters({
-                          ...props.filters,
                           location: SupportedLocale.Chicago,
                           level: null,
                         });
                       } else {
                         setShowAddress(false);
                         props.updateFilters({
-                          ...props.filters,
                           location: next,
                           level: null,
                         });
@@ -309,7 +336,6 @@ export const BillFilters = (
                         <AddressLookup
                           onClear={() => {
                             props.updateFilters({
-                              ...props.filters,
                               location: SupportedLocale.Custom,
                             });
                           }}
@@ -321,7 +347,6 @@ export const BillFilters = (
                               return;
                             }
                             props.updateFilters({
-                              ...props.filters,
                               location: { address },
                             });
                           }}
@@ -337,33 +362,6 @@ export const BillFilters = (
                 </div>
               </div>
             </div>
-            {/* Level Filter */}
-            {levelOptions && (
-              <div className="mt-4">
-                <div className="lg:px-1 lg:text-right">
-                  <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Only Show Bills From
-                  </span>
-                </div>
-                <RadioPicker<RepLevel | null | undefined | "">
-                  handleChange={(next) => {
-                    if (!next) {
-                      props.updateFilters({
-                        ...props.filters,
-                        level: null,
-                      });
-                    } else {
-                      props.updateFilters({
-                        ...props.filters,
-                        level: next,
-                      });
-                    }
-                  }}
-                  defaultValue={props.filters.level}
-                  options={levelOptions}
-                />
-              </div>
-            )}
             {/* Sponsored Filter */}
             {isAddressFilter(props.filters.location) && (
               <div className="my-4 justify-end">
@@ -375,7 +373,6 @@ export const BillFilters = (
                 <RadioPicker<true | null>
                   handleChange={(next) => {
                     props.updateFilters({
-                      ...props.filters,
                       dontShowSponsoredByReps: next,
                     });
                   }}
@@ -420,7 +417,6 @@ export const BillFilters = (
                   selected={props.filters.tags}
                   handleClick={(updatedTags) => {
                     props.updateFilters({
-                      ...props.filters,
                       tags: updatedTags,
                     });
                   }}
@@ -433,11 +429,6 @@ export const BillFilters = (
                 role="button"
                 className="rounded bg-white bg-opacity-50 px-4 py-2 text-base font-semibold text-black opacity-80 backdrop-blur hover:bg-opacity-100 lg:float-right"
                 onClick={() => {
-                  props.saveToFeed();
-                  props.updateGlobalState({
-                    noSavedFeed: false,
-                    showExplore: false,
-                  });
                   props.onSave();
                 }}
               >
@@ -451,14 +442,68 @@ export const BillFilters = (
   );
 };
 
-export const ForYouBills = ({ filteredLegislation }: ForYouLoaderData) => {
+const LevelFilter = (props: ForYouProps) => {
+  const cityLabel = isCityLevel(props.filters.location) ? "Chicago" : "City";
+  const stateLabel =
+    isCityLevel(props.filters.location) || isStateLevel(props.filters.location)
+      ? "Illinois"
+      : "State";
+  const nationalLabel = "USA";
+  const levelOptions: { label: string; value: RepLevel | null }[] | null =
+    isCityLevel(props.filters.location)
+      ? [
+          { label: "All", value: null },
+          { label: cityLabel, value: RepLevel.City },
+          { label: stateLabel, value: RepLevel.State },
+          { label: nationalLabel, value: RepLevel.National },
+        ]
+      : isStateLevel(props.filters.location)
+      ? [
+          { label: "All", value: null },
+          { label: stateLabel, value: RepLevel.State },
+          { label: nationalLabel, value: RepLevel.National },
+        ]
+      : null;
+
+  return (
+    <>
+      {levelOptions && (
+        <div className="mt-4">
+          <div className="bg-black bg-opacity-20 text-center lg:px-1">
+            <span className="text-xs font-bold uppercase text-white opacity-80">
+              Filter By
+            </span>
+          </div>
+          <RadioPicker<RepLevel | null | undefined | "">
+            handleChange={(next) => {
+              if (!next) {
+                props.updateFilters({
+                  level: null,
+                });
+              } else {
+                props.updateFilters({
+                  level: next,
+                });
+              }
+            }}
+            optionClassName="flex-1 my-0 rounded-bl-none rounded-br-none rounded-tr-none rounded-tl-none justify-center"
+            defaultValue={props.filters.level}
+            options={levelOptions}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+export const ForYouBills = (props: ForYouProps) => {
   const { demoWarnComponent } = useDemoContent();
   return (
     <section>
       <div className="flex justify-center">
         <div className="flex max-w-lg flex-col justify-center">
           <div>
-            <div className="flex items-center rounded-lg bg-gray-100 bg-opacity-30 p-4">
+            <div className="flex items-center rounded-lg bg-gray-100 bg-opacity-30 p-4 text-sm lg:text-base">
               <RobotSvg
                 style={{
                   width: "25px",
@@ -470,7 +515,8 @@ export const ForYouBills = ({ filteredLegislation }: ForYouLoaderData) => {
             </div>
             {demoWarnComponent}
           </div>
-          {filteredLegislation.map((l) => (
+          <LevelFilter {...props} />
+          {props.filteredLegislation.map((l) => (
             <Bill key={l.bill.id + l.bill.title} {...l} />
           ))}
         </div>
@@ -605,10 +651,8 @@ export const ForYouShell = ({
         className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
       >
         <aside className="via-opacity-30 flex h-full flex-col text-left">
-          <div className="px-5 pt-5">
-            <div className="mb-5 rounded-md bg-opacity-95 text-left">
-              {left}
-            </div>
+          <div className="mb-4 px-3 pt-3">
+            {left}
             <CiviUpdates />
           </div>
         </aside>

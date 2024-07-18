@@ -27,7 +27,7 @@ export const getRadioStyle = (
     );
   } else {
     return classNames(
-      "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white",
+      "mx-0 inline-flex cursor-pointer py-2 px-4 text-white",
       location === "first"
         ? "rounded-l-lg"
         : location === "last"

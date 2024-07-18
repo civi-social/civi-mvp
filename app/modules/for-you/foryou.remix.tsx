@@ -15,6 +15,7 @@ import {
   createFilterParams,
   getLocation,
   hasTags,
+  parseRepLevel,
   stringifyTags,
 } from "~app/modules/legislation/filters";
 import { getFilteredLegislation } from "../legislation/api";
@@ -67,13 +68,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
 
   globalState.showExplore = url.searchParams.get("showExplore") === "true";
+
+  const levelSearchParam = url.searchParams.get("level");
+
   const shouldShowExplore = globalState.noSavedFeed || globalState.showExplore;
 
   let searchParams: FilterParams | null = null;
   if (shouldShowExplore) {
     const tags = url.searchParams.get("tags");
     const location = url.searchParams.get("location");
-    const level = url.searchParams.get("level");
+    const level = levelSearchParam;
     const dontShowSponsoredByReps = url.searchParams.get(
       "dontShowSponsoredByReps"
     );
@@ -85,6 +89,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
   }
 
+  // The one search param used on the feed is level
+  if (savedPreferences && levelSearchParam) {
+    savedPreferences = {
+      ...savedPreferences,
+      level: parseRepLevel(levelSearchParam),
+    };
+  }
+
   // Picking filters based on if feed or explore
   const filters: FilterParams =
     shouldShowExplore && searchParams
@@ -93,6 +105,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       ? savedPreferences
       : DEFAULT_FILTERS;
 
+  console.log("FILTERS", filters.level, url.searchParams.get("level"));
   const env = getEnv(process.env);
 
   const forYouDataResult = await getFilteredLegislation({
@@ -129,18 +142,11 @@ export default function ForYouPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [globalState, setGlobalState] = useState(result.globalState);
-
-  useEffect(() => {
-    // Delete search params if not on explore
-    if (!globalState.showExplore && !globalState.noSavedFeed) {
-      setSearchParams(new URLSearchParams());
-    }
-  }, []);
+  const [filters, setFilters] = useState(result.filters);
 
   const updateFilters: UpdateFiltersFn = (next) => {
     // Decide which storage to use
     const storage = new URLSearchParams(searchParams.toString());
-
     // Update Filters
     if ("location" in next) {
       location
@@ -163,12 +169,8 @@ export default function ForYouPage() {
         ? storage.set("dontShowSponsoredByReps", "true")
         : storage.delete("dontShowSponsoredByReps");
     }
-
-    if (storage instanceof URLSearchParams) {
-      setSearchParams(storage);
-    } else {
-      setGlobalState({ ...globalState, noSavedFeed: false });
-    }
+    setFilters({ ...filters, ...next });
+    setSearchParams(storage);
   };
 
   const saveToFeed = () => {
@@ -227,6 +229,7 @@ export default function ForYouPage() {
   return (
     <ForYou
       {...result}
+      filters={filters}
       globalState={globalState}
       updateGlobalState={updateGlobalState}
       updateFilters={updateFilters}
