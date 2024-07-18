@@ -346,11 +346,15 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
                 />
                 <div className=" bg-primary rounded-lg rounded-t-none bg-black bg-opacity-50 py-2 px-4 text-center text-white shadow-md lg:text-right">
                   <span className="inline-block text-xs font-semibold uppercase opacity-80">
-                    Showing Bills Sponsored By These Representatives
+                    {props.filters.dontShowSponsoredByReps
+                      ? "Not Showing Bills Sponsored By Representatives Of This Address"
+                      : "Showing Bills Sponsored By These Representatives"}
                   </span>
-                  <div className="text-sm opacity-80">
-                    <Legislators offices={props.offices} />
-                  </div>
+                  {!props.filters.dontShowSponsoredByReps && (
+                    <div className="text-sm opacity-80">
+                      <Legislators offices={props.offices} />
+                    </div>
+                  )}
                   {props.showAllOfficesButton}
                 </div>
               </div>
