@@ -57,13 +57,13 @@ const ForYouPreferences = (props: FYBFilterProps) => {
         <ForYouPreferencesRead {...props} />
       )}
       <button
-        className="lg:float-right"
+        className="rounded bg-black bg-opacity-70 px-2 py-1 text-lg font-bold uppercase text-white lg:float-right"
         onClick={() => {
           props.updateFilters(props.filters);
           setIsEditingState(!editing);
         }}
       >
-        {editing ? "Finish" : "Update Preferences"}
+        {editing ? "Save Preferences" : "Update Preferences"}
       </button>
     </>
   );
