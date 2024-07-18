@@ -5,54 +5,65 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import type { Env } from "~/config";
 import { getEnv } from "~/config";
-import type { FilterParams, ForYouBill, UpdateFiltersFn } from "~/for-you";
-import { ForYou, forYouData } from "~/for-you";
-import type { RepLevel } from "~/levels";
-import type { OfficialOffice } from "~/representatives";
-import { getCookieFromString } from "./utils";
 
-interface LoaderData {
-  legislation: ForYouBill[];
-  offices: OfficialOffice[] | null;
-  address: string | null;
-  tags: string[];
-  env: Env;
-  filters: FilterParams;
-  savedPreferences: {
-    address: string;
-  };
-}
+import { ForYou, forYouData } from "~/for-you";
+import {
+  AddressFilter,
+  LocationFilter,
+  isSupportedLocale,
+  type Locales,
+  type RepLevel,
+  createLocationFilterFromString,
+} from "~/levels";
+import {
+  FilterParams,
+  ForYouLoaderData,
+  ForYouProps,
+  UpdateFiltersFn,
+} from "./foryou.types";
+import { getCookieFromString } from "./utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookieHeader = request.headers.get("Cookie");
   const cookieAddress = getCookieFromString(cookieHeader || "", "address");
-  const savedPreferences = {
-    address: cookieAddress,
+
+  const savedPreferences: FilterParams = {
+    location: { address: cookieAddress },
   };
 
   const url = new URL(request.url);
-  const filters: FilterParams = {
-    tags: url.searchParams.get("tags")?.split(","),
-    address: url.searchParams.get("address") || cookieAddress,
-    level: url.searchParams.get("level") as RepLevel,
-  };
+  const showExplore = url.searchParams.get("showExplore") === "true";
+
+  const locationParam = url.searchParams.get("location") as Locales | string;
+  const locationFilter: LocationFilter =
+    createLocationFilterFromString(locationParam);
+
+  const filters: FilterParams = showExplore
+    ? {
+        tags: url.searchParams.get("tags")?.split(","),
+        location: locationFilter,
+        level: url.searchParams.get("level") as RepLevel,
+        showExplore: url.searchParams.get("showExplore") === "true",
+      }
+    : savedPreferences;
 
   const env = getEnv(process.env);
 
-  const { legislation, tags, offices, address } = await forYouData({
-    env,
-    filters,
-  });
+  const { legislation, availableTags, tagsWithResults, offices, location } =
+    await forYouData({
+      env,
+      filters,
+    });
 
-  return json<LoaderData>({
+  return json<ForYouLoaderData>({
     legislation,
     env,
-    tags,
+    availableTags,
+    tagsWithResults,
     filters,
     offices,
-    address,
+    location,
     savedPreferences,
   });
 };
@@ -65,7 +76,7 @@ export const action: ActionFunction = async ({ request }) => {
   return json<ActionData>({}, { status: 200 });
 };
 
-export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
+export const meta: MetaFunction = ({ data }: { data: ForYouProps }) => {
   return {
     title: "Bill Updates - Windy Civi",
     viewport: "width=device-width,initial-scale=1",
@@ -74,28 +85,21 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
 };
 
 export default function ForYouPage() {
-  const {
-    legislation,
-    tags,
-    filters,
-    offices,
-    env,
-    address,
-    savedPreferences,
-  } = useLoaderData<LoaderData>();
+  const result = useLoaderData<ForYouProps>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateFilters: UpdateFiltersFn = ({
-    address,
+    location,
     tags,
     level,
     showExplore,
   }) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    address
-      ? newSearchParams.set("address", address)
-      : newSearchParams.delete("address");
-
+    location && typeof location === "object"
+      ? newSearchParams.set("location", location.address)
+      : location
+      ? newSearchParams.set("location", location)
+      : newSearchParams.delete("location");
     tags && Array.isArray(tags) && tags.length > 0
       ? newSearchParams.set("tags", tags.join(","))
       : newSearchParams.delete("tags");
@@ -108,16 +112,5 @@ export default function ForYouPage() {
     setSearchParams(newSearchParams);
   };
 
-  return (
-    <ForYou
-      env={env}
-      tags={tags}
-      legislation={legislation}
-      offices={offices}
-      address={address}
-      filters={filters}
-      savedPreferences={savedPreferences}
-      updateFilters={updateFilters}
-    />
-  );
+  return <ForYou {...result} updateFilters={updateFilters} />;
 }

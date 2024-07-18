@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { classNames } from "../styles";
 
+type OptionLocation = "first" | "last" | "middle";
 interface Option<T extends unknown> {
   label: string;
   value: T;
+  className?: (isSelected: boolean, location: OptionLocation) => string;
 }
 
 // i === options.length - 1
@@ -12,7 +14,7 @@ interface Option<T extends unknown> {
 export const getRadioStyle = (
   type: "transparent" | "solid",
   isSelected: boolean,
-  location?: "first" | "last"
+  location?: OptionLocation
 ) => {
   if (type === "transparent") {
     return classNames(
@@ -41,11 +43,13 @@ export const RadioPicker = <T extends unknown>({
   handleChange,
   defaultValue,
   type,
+  optionClassName,
 }: {
   options: Option<T>[];
   handleChange: (s: T) => void;
   defaultValue: T;
   type?: "transparent";
+  optionClassName?: string | false | null;
 }) => {
   const [selectedOption, setSelectedOption] = useState<T>(defaultValue);
 
@@ -60,22 +64,28 @@ export const RadioPicker = <T extends unknown>({
       aria-label="Filter By City, State, or National Bills"
       className="flex flex-row justify-center lg:justify-end"
     >
-      {options.map((option, i) => (
-        <div
-          key={String(option.value)}
-          role="radio"
-          tabIndex={0}
-          aria-checked={defaultValue === option.value}
-          onClick={() => handleOptionChange(option.value as T)}
-          className={getRadioStyle(
-            type || "solid",
-            option.value === selectedOption,
-            i === 0 ? "first" : i === options.length - 1 ? "last" : undefined
-          )}
-        >
-          {option.label}
-        </div>
-      ))}
+      {options.map((option, i) => {
+        const isSelected = option.value === selectedOption;
+        const location =
+          i === 0 ? "first" : i === options.length - 1 ? "last" : "middle";
+
+        return (
+          <div
+            key={String(option.value)}
+            role="radio"
+            tabIndex={0}
+            aria-checked={defaultValue === option.value}
+            onClick={() => handleOptionChange(option.value as T)}
+            className={classNames(
+              optionClassName,
+              getRadioStyle(type || "solid", isSelected, location),
+              option.className?.(isSelected, location)
+            )}
+          >
+            {option.label}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -1,12 +1,12 @@
 import type { Env } from "~/config";
 import { getLegislations } from "~/legislation/api";
-import { RepLevel } from "~/levels";
+import { Locales, RepLevel, SupportedLocale, getAddress } from "~/levels";
 import type { OfficialOffice } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
-import type { FilterParams } from "./react/ForYou";
 import type { ForYouBill } from "./selector";
 import { selectData } from "./selector";
 import { hasOverlap } from "./utils";
+import { FilterParams, ForYouData } from "./foryou.types";
 
 export const forYouData = async ({
   env,
@@ -14,27 +14,29 @@ export const forYouData = async ({
 }: {
   env: Env;
   filters: FilterParams;
-}): Promise<{
-  legislation: ForYouBill[];
-  tags: string[];
-  offices: OfficialOffice[] | null;
-  address: string | null;
-}> => {
-  const representatives = filters.address
-    ? await getRepresentatives(filters.address, env)
+}): Promise<ForYouData> => {
+  const address = getAddress(filters.location);
+  const representatives = address
+    ? await getRepresentatives(address, env)
     : null;
 
-  const city = selectData(
-    await getLegislations(env, RepLevel.City, "Chicago"),
-    RepLevel.City,
-    representatives
-  );
+  const city =
+    filters.location === "Chicago"
+      ? selectData(
+          await getLegislations(env, RepLevel.City, "Chicago"),
+          RepLevel.City,
+          representatives
+        )
+      : [];
 
-  const state = selectData(
-    await getLegislations(env, RepLevel.State, "Chicago"),
-    RepLevel.State,
-    representatives
-  );
+  const state =
+    filters.location === "Chicago" || filters.location === "Illinois"
+      ? selectData(
+          await getLegislations(env, RepLevel.State, "Chicago"),
+          RepLevel.State,
+          representatives
+        )
+      : [];
 
   const national = selectData(
     await getLegislations(env, RepLevel.National, "Chicago"),
@@ -59,10 +61,10 @@ export const forYouData = async ({
     );
   }
 
-  const tags = new Set<string>();
+  const tagsWithResults = new Set<string>(["City Ordinance"]);
   legislation.forEach((bill) => {
     bill.gpt?.gpt_tags?.forEach((tag) => {
-      tags.add(tag);
+      tagsWithResults.add(tag);
     });
   });
 
@@ -82,12 +84,29 @@ export const forYouData = async ({
       ]
     : null;
 
-  const address = filters.address || null;
+  const location = filters.location;
 
   return {
     legislation,
-    tags: Array.from(tags),
+    availableTags: AVAILABLE_TAGS,
+    tagsWithResults: Array.from(tagsWithResults),
     offices,
-    address,
+    location,
   };
 };
+
+const AVAILABLE_TAGS = [
+  "Education",
+  "Democracy",
+  "Health Care",
+  "Public Safety",
+  "Transit",
+  "Abortion",
+  "Immigration",
+  "Foreign Policy",
+  "States Rights",
+  "Civil Rights",
+  "Climate Change",
+  "City Ordinances",
+  "Other",
+];

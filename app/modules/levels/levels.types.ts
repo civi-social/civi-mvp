@@ -5,4 +5,17 @@ export enum RepLevel {
   National = "national",
 }
 
-export type Locales = "Chicago";
+export enum SupportedLocale {
+  Chicago = "Chicago",
+  Illinois = "Illinois",
+  USA = "USA",
+  Custom = "Custom",
+}
+
+export type Locales = `${SupportedLocale}`;
+
+export type LocationFilter = SupportedLocale | AddressFilter | Nullish;
+
+export type AddressFilter = { address: string };
+
+export type Nullish = undefined | "" | null;
