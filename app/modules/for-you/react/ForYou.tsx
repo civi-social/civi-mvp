@@ -9,6 +9,7 @@ import {
   Tag,
   Tagging,
   classNames,
+  getRadioStyle,
 } from "~/ui";
 import type { ForYouBill } from "../selector";
 
@@ -221,8 +222,21 @@ const FilterNavigation = (props: FYBFilterProps) => {
             { label: "Explore", value: true },
           ]}
         />
+
         <div className="flex-1 text-right">
-          <a className="text-white opacity-60" href="https://windycivi.com">
+          {/* <RadioPicker
+            type="transparent"
+            handleChange={(next) => {
+              window.location.href = "https:/w";
+              setIsEditing(next);
+            }}
+            defaultValue={false}
+            options={[{ label: "About", value: true }]}
+          /> */}
+          <a
+            className={getRadioStyle("transparent", false, "last")}
+            href="https://windycivi.com"
+          >
             About
           </a>
         </div>

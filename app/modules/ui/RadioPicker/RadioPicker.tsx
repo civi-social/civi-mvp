@@ -6,6 +6,36 @@ interface Option<T extends unknown> {
   value: T;
 }
 
+// i === options.length - 1
+//         selectedOption === option.value
+
+export const getRadioStyle = (
+  type: "transparent" | "solid",
+  isSelected: boolean,
+  location?: "first" | "last"
+) => {
+  if (type === "transparent") {
+    return classNames(
+      "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white text-sm uppercase border-b-2 border-white border-solid",
+      `${
+        isSelected
+          ? "opacity-100 border-opacity-50"
+          : "opacity-70 border-opacity-0"
+      }`
+    );
+  } else {
+    return classNames(
+      "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white",
+      location === "first"
+        ? "rounded-l-lg"
+        : location === "last"
+        ? "rounded-r-lg"
+        : "",
+      `${isSelected ? "bg-black bg-opacity-50" : "bg-black bg-opacity-20"}`
+    );
+  }
+};
+
 export const RadioPicker = <T extends unknown>({
   options,
   handleChange,
@@ -24,33 +54,6 @@ export const RadioPicker = <T extends unknown>({
     setSelectedOption(newVal);
   };
 
-  const getStyle = (option: Option<T>, i: number) => {
-    if (type === "transparent") {
-      return classNames(
-        "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white text-sm uppercase border-b-2 border-white border-solid",
-        `${
-          selectedOption === option.value
-            ? "opacity-100 border-opacity-50"
-            : "opacity-70 border-opacity-0"
-        }`
-      );
-    } else {
-      return classNames(
-        "my-1 mx-0 inline-flex cursor-pointer py-2 px-4 text-white",
-        i === 0
-          ? "rounded-l-lg"
-          : i === options.length - 1
-          ? "rounded-r-lg"
-          : "",
-        `${
-          selectedOption === option.value
-            ? "bg-black bg-opacity-50"
-            : "bg-black bg-opacity-20"
-        }`
-      );
-    }
-  };
-
   return (
     <div
       role="radiogroup"
@@ -64,7 +67,11 @@ export const RadioPicker = <T extends unknown>({
           tabIndex={0}
           aria-checked={defaultValue === option.value}
           onClick={() => handleOptionChange(option.value as T)}
-          className={getStyle(option, i)}
+          className={getRadioStyle(
+            type || "solid",
+            option.value === selectedOption,
+            i === 0 ? "first" : i === options.length - 1 ? "last" : undefined
+          )}
         >
           {option.label}
         </div>
