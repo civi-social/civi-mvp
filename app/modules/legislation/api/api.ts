@@ -138,23 +138,23 @@ export const getFilteredLegislation = async ({
 
   const fullLegislation = [...city, ...state, ...national];
 
-  let legislation: typeof fullLegislation = fullLegislation;
+  let filteredLegislation: typeof fullLegislation = fullLegislation;
 
   if (filters.level) {
-    legislation = fullLegislation.filter(
+    filteredLegislation = fullLegislation.filter(
       (bill) => bill.level === filters.level
     );
   }
 
   if (filters.tags && Array.isArray(filters.tags)) {
     const filterTags = filters.tags;
-    legislation = legislation.filter((bill) =>
+    filteredLegislation = filteredLegislation.filter((bill) =>
       hasOverlap(bill.gpt?.gpt_tags || [], filterTags)
     );
   }
 
   // Sort by updated_at
-  legislation = legislation.sort((a, b) => {
+  filteredLegislation = filteredLegislation.sort((a, b) => {
     const aUpdated = a.bill.updated_at || a.bill.statusDate;
     const bUpdated = b.bill.updated_at || b.bill.statusDate;
     return Date.parse(bUpdated) - Date.parse(aUpdated);
@@ -170,7 +170,8 @@ export const getFilteredLegislation = async ({
     : null;
 
   return {
-    legislation,
+    fullLegislation,
+    filteredLegislation,
     offices,
   };
 };

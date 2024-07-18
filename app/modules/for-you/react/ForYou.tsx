@@ -412,7 +412,7 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
   );
 };
 
-export const ForYouBills = ({ legislation }: ForYouLoaderData) => {
+export const ForYouBills = ({ filteredLegislation }: ForYouLoaderData) => {
   const { demoWarnComponent } = useDemoContent();
   return (
     <section>
@@ -431,7 +431,7 @@ export const ForYouBills = ({ legislation }: ForYouLoaderData) => {
             </div>
             {demoWarnComponent}
           </div>
-          {legislation.map((l) => (
+          {filteredLegislation.map((l) => (
             <Bill key={l.bill.id + l.bill.title} {...l} />
           ))}
         </div>

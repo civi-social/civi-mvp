@@ -21,7 +21,8 @@ export interface GlobalState {
 }
 
 export type ForYouData = {
-  legislation: ForYouBill[];
+  fullLegislation: ForYouBill[];
+  filteredLegislation: ForYouBill[];
   offices: OfficialOffice[] | null;
 };
 
