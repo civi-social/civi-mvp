@@ -57,14 +57,14 @@ export const Tag: React.FC<{
       icon = "🛂";
       background = "bg-cyan-500";
       break;
-    case "City Ordinances":
+    case "Ordinance":
       icon = "🏙️";
       background = "bg-teal-500";
       break;
     case "Other":
     default:
       icon = "";
-      background = "bg-black";
+      background = "bg-gray-500";
   }
   return (
     <span

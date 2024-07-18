@@ -15,7 +15,7 @@ export const ALLOWED_GPT_TAGS = [
   "Other",
 ];
 
-export const AVAILABLE_TAGS = ["City Ordinances", ...ALLOWED_GPT_TAGS];
+export const AVAILABLE_TAGS = ["Ordinance", ...ALLOWED_GPT_TAGS];
 
 export enum RepLevel {
   City = "city",

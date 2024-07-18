@@ -8,7 +8,6 @@ import {
   FilterParams,
   ForYouBill,
   LegislationResult,
-  Nullish,
   RepLevel,
   findOverlap,
   findStringOverlap,
@@ -46,8 +45,7 @@ export const createForYouBill =
       bill.sponsors,
       level
     );
-    const coded_tags =
-      bill.classification === "ordinance" ? ["City Ordinance"] : [];
+    const coded_tags = bill.classification === "ordinance" ? ["Ordinance"] : [];
 
     const allTags = [...(cleanedGpt?.gpt_tags || []), ...coded_tags];
 
@@ -165,7 +163,12 @@ export const selectBillsFromFilters = (
 
   // Stuff to add
   bills.forEach((bill) => {
-    if (shouldGetSponsoredBills && bill.sponsoredByRep) {
+    const addSponsored = shouldGetSponsoredBills && bill.sponsoredByRep;
+    const addTagged = tagsOverLap(bill.allTags, filters.tags);
+    // If no filters are selected, show all bills
+    if (!addSponsored && !addTagged) {
+      filteredLegislation.push(bill);
+    } else if (shouldGetSponsoredBills && bill.sponsoredByRep) {
       filteredLegislation.push(bill);
     } else if (tagsOverLap(bill.allTags, filters.tags)) {
       filteredLegislation.push(bill);

@@ -35,6 +35,7 @@ export function setCookieInDom(
 
 export const useCookies = (doc: typeof document) => {
   return {
+    get: (cookieName: string) => getCookieFromString(doc.cookie, cookieName),
     set: (cookieName: string, cookieValue: string) =>
       setCookieInDom(doc, cookieName, cookieValue, 10065),
     delete: (cookieName: string) =>

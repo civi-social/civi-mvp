@@ -6,14 +6,11 @@ import { useAppContext } from "~/app-shell/AppContext";
 import type { Env } from "~/config";
 
 export const AddressLookup: FC<{
-  env: Env;
   onPlaceSelected: (address: string) => void;
+  onClear: () => void;
   value?: string;
-}> = ({ env, value, onPlaceSelected }) => {
+}> = ({ value, onPlaceSelected, onClear }) => {
   const config = useAppContext();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const addressKey = env.FORMATTED_ADDRESS_SEARCH_KEY;
-  const levelKey = env.REP_LEVEL_SEARCH_KEY;
 
   return config?.apiKey ? (
     <div className="lg:text-right">
@@ -33,14 +30,9 @@ export const AddressLookup: FC<{
       />
       {value && (
         <button
-          className="mx-1 rounded bg-black bg-opacity-30 px-2 text-xs uppercase text-white"
+          className="mx-1 mb-2 rounded bg-black bg-opacity-30 px-2 text-xs uppercase text-white"
           onClick={() => {
-            const newSearchParams = new URLSearchParams(
-              searchParams.toString()
-            );
-            newSearchParams.delete(addressKey);
-            newSearchParams.delete(levelKey);
-            setSearchParams(newSearchParams);
+            onClear();
           }}
         >
           Clear Address

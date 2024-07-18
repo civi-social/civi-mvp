@@ -12,6 +12,7 @@ export interface ForYouLoaderData extends ForYouData {
 export interface ForYouProps extends ForYouLoaderData {
   updateFilters: UpdateFiltersFn;
   updateGlobalState: UpdateGlobalStateFn;
+  saveToFeed: () => void;
 }
 
 export interface GlobalState {

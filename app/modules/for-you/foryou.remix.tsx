@@ -48,15 +48,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       "dontShowSponsoredByReps"
     );
 
-    if (!location) {
-      globalState.noSavedFeed = false;
-    } else {
+    if (location) {
       savedPreferences = createFilterParams({
         location,
         level,
         tags,
         dontShowSponsoredByReps,
       });
+      globalState.noSavedFeed = false;
     }
 
     // Global State
@@ -130,40 +129,41 @@ export default function ForYouPage() {
 
   const [globalState, setGlobalState] = useState(result.globalState);
 
-  const showExplore = result.globalState.showExplore;
-
   useEffect(() => {
     // Delete search params if not on explore
-    if (!result.globalState.showExplore) {
+    if (!globalState.showExplore && !globalState.noSavedFeed) {
       setSearchParams(new URLSearchParams());
     }
   }, []);
 
-  const updateFilters: UpdateFiltersFn = ({
-    location,
-    tags,
-    level,
-    dontShowSponsoredByReps,
-  }) => {
+  const updateFilters: UpdateFiltersFn = (next) => {
     // Decide which storage to use
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const cookies = useCookies(document);
-    const storage = showExplore ? newSearchParams : cookies;
+    const storage = globalState.showExplore ? newSearchParams : cookies;
 
     // Update Filters
-    location
-      ? storage.set("location", getLocation(location))
-      : storage.delete("location");
+    if ("location" in next) {
+      location
+        ? storage.set("location", getLocation(next.location))
+        : storage.delete("location");
+    }
 
-    hasTags(tags)
-      ? storage.set("tags", stringifyTags(tags))
-      : storage.delete("tags");
+    if ("tags" in next) {
+      hasTags(next.tags)
+        ? storage.set("tags", stringifyTags(next.tags))
+        : storage.delete("tags");
+    }
 
-    level ? storage.set("level", level) : storage.delete("level");
+    if ("level" in next) {
+      next.level ? storage.set("level", next.level) : storage.delete("level");
+    }
 
-    dontShowSponsoredByReps
-      ? newSearchParams.set("dontShowSponsoredByReps", "true")
-      : newSearchParams.delete("dontShowSponsoredByReps");
+    if ("dontShowSponsoredByReps" in next) {
+      next.dontShowSponsoredByReps
+        ? storage.set("dontShowSponsoredByReps", "true")
+        : storage.delete("dontShowSponsoredByReps");
+    }
 
     if (storage instanceof URLSearchParams) {
       setSearchParams(storage);
@@ -172,15 +172,48 @@ export default function ForYouPage() {
     }
   };
 
+  const saveToFeed = () => {
+    const cookies = useCookies(document);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    ["location", "tags", "level", "dontShowSponsoredByReps"].forEach(
+      (filterParam) => {
+        const savedParam = newSearchParams.get(filterParam);
+        if (savedParam) {
+          cookies.set(filterParam, savedParam);
+        } else {
+          cookies.delete(filterParam);
+        }
+      }
+    );
+  };
+
   const updateGlobalState: UpdateGlobalStateFn = (next) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
+    const cookies = useCookies(document);
     if ("showExplore" in next) {
-      next.showExplore
-        ? newSearchParams.set("showExplore", "true")
-        : newSearchParams.delete("showExplore");
+      // Get default filter data from your feed
+      if (next.showExplore) {
+        newSearchParams.set("showExplore", "true");
+      } else {
+        newSearchParams.delete("showExplore");
+      }
+
+      // Go through the filters and add/remove them based on the mode
+      ["location", "tags", "level", "dontShowSponsoredByReps"].forEach(
+        (filterParam) => {
+          if (next.showExplore) {
+            const savedParam = cookies.get(filterParam);
+            if (savedParam) {
+              newSearchParams.set(filterParam, savedParam);
+            }
+          } else {
+            newSearchParams.delete(filterParam);
+          }
+        }
+      );
     }
+
     if ("lastVisited" in next) {
-      const cookies = useCookies(document);
       const date = new Date();
       let day = date.getDate();
       let month = date.getMonth() + 1;
@@ -198,6 +231,7 @@ export default function ForYouPage() {
       globalState={globalState}
       updateGlobalState={updateGlobalState}
       updateFilters={updateFilters}
+      saveToFeed={saveToFeed}
     />
   );
 }

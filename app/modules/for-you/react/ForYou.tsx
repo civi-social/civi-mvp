@@ -23,6 +23,7 @@ import {
   RepLevel,
   SupportedLocale,
   getLocation,
+  hasTags,
   isAddressFilter,
   isCityLevel,
   isNotCustomLocation,
@@ -37,130 +38,118 @@ import {
 import { Carousel } from "~app/modules/ui/Carousel/Carousel";
 import { FYBFilterProps, ForYouLoaderData, ForYouProps } from "../foryou.types";
 
-const ForYouPreferences = (props: FYBFilterProps) => {
-  const [editing, setIsEditingState] = useState(props.globalState.noSavedFeed);
-  return (
-    <>
-      {editing ? (
-        <BillFilters
-          {...props}
-          title={
-            props.globalState.noSavedFeed
-              ? "We Want To Help You Engage With The Legislation That Impacts You"
-              : "Update Preferences"
-          }
-        />
-      ) : (
-        <ForYouPreferencesRead {...props} />
-      )}
-      <button
-        className="rounded bg-black bg-opacity-70 px-2 py-1 text-lg font-bold uppercase text-white lg:float-right"
-        onClick={() => {
-          props.updateFilters(props.filters);
-          setIsEditingState(!editing);
-        }}
-      >
-        {editing ? "Save Preferences" : "Update Preferences"}
-      </button>
-    </>
-  );
-};
-
-const ForYouPreferencesRead = (props: FYBFilterProps) => {
+const YourFeedSummary = (props: FYBFilterProps) => {
   const legislators = getLegislators(props.offices);
+  const location = props.filters.location;
+  let levelText =
+    props.filters.level === RepLevel.City
+      ? "city, state, & federal"
+      : props.filters.level === RepLevel.State
+      ? "state & federal"
+      : props.filters.level === RepLevel.National
+      ? "federal"
+      : "";
+
+  let locationName = "";
+
+  switch (location) {
+    case SupportedLocale.Chicago:
+      locationName = "Chicago";
+      levelText = levelText || "city, state, & federal";
+      break;
+    case SupportedLocale.Illinois:
+      locationName = "Illinois";
+      levelText = levelText || "state & federal";
+      break;
+    case SupportedLocale.USA:
+      locationName = "America";
+      levelText = levelText || "National";
+      break;
+  }
+  if (isAddressFilter(location)) {
+    locationName = "Chicago";
+    levelText = levelText || "city, state, & federal";
+  }
+  if (!levelText) {
+    levelText = "All";
+  }
+
+  const showSponsoredText =
+    legislators && !props.filters.dontShowSponsoredByReps;
 
   return (
-    <div className="flex flex-col lg:mt-10">
-      <div className="text-center font-serif leading-tight text-white lg:text-right">
-        <div className="text-xl opacity-80 lg:text-2xl">
-          Looking at bills sponsored by{" "}
-          {/* <span className="font-semibold">{props.address}</span> */}
+    <div className="flex flex-col lg:mt-5">
+      <div className="rounded bg-black bg-opacity-30 p-3 text-center font-serif leading-tight text-white lg:text-right">
+        {/* Location Info */}
+        <div className="text-xl lg:text-2xl">
+          <span className="opacity-80">Hello</span>
+          {locationName && ` ${locationName}`}!
         </div>
-        <div className="text-sm lg:text-base">
-          Your City
-          {legislators
-            .filter((person) => person.level === RepLevel.City)
-            .map((person, i) => {
-              const isLast = i === legislators.length - 1;
-              return (
-                <span key={person.name}>
-                  {isLast ? ` & ` : ` `}
-                  <a
-                    className="cursor-pointer underline decoration-dotted opacity-80"
-                    href={person.link}
-                    target="_blank"
-                  >
-                    {person.title} {person.name}
-                  </a>
-                  {isLast ? `.` : ","}
-                </span>
-              );
-            })}
-        </div>
-        <div className="text-sm lg:text-base">
-          Your State
-          {legislators
-            .filter((person) => person.level === RepLevel.State)
-            .map((person, i) => {
-              const isLast = i === legislators.length - 1;
-              return (
-                <span key={person.name}>
-                  {isLast ? ` & ` : ` `}
-                  <a
-                    className="cursor-pointer underline decoration-dotted opacity-80"
-                    href={person.link}
-                    target="_blank"
-                  >
-                    {person.title} {person.name}
-                  </a>
-                  {isLast ? `.` : ","}
-                </span>
-              );
-            })}{" "}
-        </div>
-        <div className="text-sm lg:text-base">
-          Your Country
-          {legislators
-            .filter((person) => person.level === RepLevel.National)
-            .map((person, i, arr) => {
+        {/* Sponsored Info */}
+        {showSponsoredText && (
+          <>
+            <div className="mt-2 text-lg">
+              <span className="opacity-80">Showing any bills </span>
+              <span className="opacity-100">sponsored by your reps:</span>{" "}
+            </div>
+            <div className="text-sm lg:text-base">
+              <ul>
+                {legislators.map((person, i) => {
+                  const isLast = i === legislators.length - 1;
+                  return (
+                    <li key={person.name} className="inline lg:block">
+                      <span className="opacity-80">{person.title}</span>{" "}
+                      <a
+                        className="cursor-pointer decoration-dotted hover:underline"
+                        href={person.link}
+                        target="_blank"
+                      >
+                        {person.name}
+                        <span className="lg:hidden">{isLast ? "." : ", "}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </>
+        )}
+        {/* Tags Info */}
+        {hasTags(props.filters.tags) && (
+          <>
+            <div className="mt-2 text-lg opacity-80">
+              {showSponsoredText ? "Also showing" : "Showing"} bills tagged with
+            </div>{" "}
+            {props.filters?.tags?.map((v, i, arr) => {
               const isLast = i === arr.length - 1;
               return (
-                <span key={person.name}>
-                  {isLast ? ` & ` : ` `}
-                  <a
-                    className="cursor-pointer underline decoration-dotted opacity-80"
-                    href={person.link}
-                    target="_blank"
-                  >
-                    {person.title} {person.name}
-                  </a>
-                  {isLast ? `.` : ","}
+                <span>
+                  {isLast ? "& " : ""}
+                  {v}
+                  {!isLast ? ", " : "."}
                 </span>
               );
             })}
+          </>
+        )}
+        {/* Levels Info */}
+        <div className="mt-2 text-lg">
+          <span className="opacity-80">Filtering bills at </span>
+          <span>{levelText}</span>
+          <span className="opacity-80"> level.</span>
         </div>
-        <div className="mt-2 text-xl opacity-80">
-          Also looking at bills tagged with
-        </div>{" "}
-        {props.filters?.tags?.map((v, i, arr) => {
-          const isLast = i === arr.length - 1;
-          return (
-            <span>
-              {isLast ? "& " : ""}
-              {v}
-              {!isLast ? ", " : "."}
-            </span>
-          );
-        })}
       </div>
     </div>
   );
 };
 
 const Navigation = (props: FYBFilterProps) => {
-  const [exploring, setIsExploringState] = useState(
-    props.globalState.showExplore
-  );
+  const shouldShowExplore =
+    props.globalState.noSavedFeed || props.globalState.showExplore;
+
+  const hideNav = props.globalState.noSavedFeed;
+
+  const [exploring, setIsExploringState] = useState(shouldShowExplore);
   const setIsExploring = (next: boolean) => {
     props.updateGlobalState({
       showExplore: next,
@@ -171,9 +160,21 @@ const Navigation = (props: FYBFilterProps) => {
   let mode: React.ReactNode;
 
   if (exploring) {
-    mode = <BillFilters {...props} title="Explore Legislation" />;
+    mode = (
+      <BillFilters
+        onSave={() => {
+          setIsExploring(false);
+        }}
+        {...props}
+        title={
+          hideNav
+            ? "We Want To Help You Engage With The Legislation That Impacts You"
+            : "Explore Legislation"
+        }
+      />
+    );
   } else {
-    mode = <ForYouPreferences {...props} />;
+    mode = <YourFeedSummary {...props} />;
   }
   return (
     <div>
@@ -181,17 +182,20 @@ const Navigation = (props: FYBFilterProps) => {
         <div className="flex-1">
           <Logo />
         </div>
-        <RadioPicker
-          type="transparent"
-          handleChange={(next) => {
-            setIsExploring(next);
-          }}
-          defaultValue={exploring}
-          options={[
-            { label: "Your Feed", value: false },
-            { label: "Explore", value: true },
-          ]}
-        />
+        <div className={classNames(hideNav && "hidden")}>
+          <RadioPicker
+            key={String(exploring)}
+            type="transparent"
+            handleChange={(next) => {
+              setIsExploring(next);
+            }}
+            defaultValue={exploring}
+            options={[
+              { label: "Your Feed", value: false },
+              { label: "Explore", value: true },
+            ]}
+          />
+        </div>
 
         <div className="flex-1 text-right">
           <a
@@ -207,7 +211,9 @@ const Navigation = (props: FYBFilterProps) => {
   );
 };
 
-export const BillFilters = (props: FYBFilterProps & { title: string }) => {
+export const BillFilters = (
+  props: FYBFilterProps & { title: string; onSave: () => void }
+) => {
   const isProbablyAddress =
     !isNotCustomLocation(props.filters.location) &&
     !isNullish(props.filters.location);
@@ -293,7 +299,12 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
                   <div className="mb-4 flex-1 rounded-b-md bg-black bg-opacity-50">
                     <div className="lg:px-1 lg:text-right">
                       <AddressLookup
-                        env={props.env}
+                        onClear={() => {
+                          props.updateFilters({
+                            ...props.filters,
+                            location: SupportedLocale.Custom,
+                          });
+                        }}
                         onPlaceSelected={(address) => {
                           if (!address.includes("Chicago, IL")) {
                             alert(
@@ -321,7 +332,7 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
               <div className="my-4 justify-end">
                 <div className="lg:px-1 lg:text-right">
                   <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                    Show Sponsored Bills
+                    Follow Sponsored Bills
                   </span>
                 </div>
                 <RadioPicker<true | null>
@@ -362,7 +373,7 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
             <div className="my-4">
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Show Bills Tagged With
+                  Follow Bills Tagged With
                 </span>
               </div>
               <div className="rounded-lg bg-black bg-opacity-30 p-2">
@@ -407,6 +418,21 @@ export const BillFilters = (props: FYBFilterProps & { title: string }) => {
             )}
           </div>
         </div>
+        <div className="flex w-full justify-center">
+          <button
+            className="mt-5 rounded-full bg-pink-500 px-4 py-2 text-base font-semibold text-white shadow lg:float-right"
+            onClick={() => {
+              props.saveToFeed();
+              props.updateGlobalState({
+                noSavedFeed: false,
+                showExplore: false,
+              });
+              props.onSave();
+            }}
+          >
+            Save Preferences To Your Feed
+          </button>
+        </div>
       </section>
     </div>
   );
@@ -440,7 +466,13 @@ export const ForYouBills = ({ filteredLegislation }: ForYouLoaderData) => {
   );
 };
 
-export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
+export const Bill = ({
+  bill,
+  gpt,
+  level,
+  sponsoredByRep,
+  allTags,
+}: ForYouBill) => {
   const levelsMap: Record<RepLevel, string> = {
     [RepLevel.City]: "Chicago",
     [RepLevel.State]: "IL",
@@ -493,9 +525,9 @@ export const Bill = ({ bill, gpt, level, sponsoredByRep }: ForYouBill) => {
   return (
     <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
       <div className="flex flex-wrap items-center justify-between">
-        {gpt?.gpt_tags && (
+        {allTags && (
           <div className="flex flex-row flex-wrap">
-            {[...new Set(gpt.gpt_tags)].map((v) => (
+            {[...new Set(allTags)].map((v) => (
               <div className="inline-flex" key={v}>
                 <Tag className="text-xs" text={v} />
               </div>
@@ -557,7 +589,7 @@ export const ForYouShell = ({
       <Grid
         style={{
           background:
-            "linear-gradient(to bottom, rgba(255,29,135,1) 0vh, rgba(255,82,37,1) 65vh, rgba(238,145, 126,1) 120vh, rgba(0,0,0,0.1) 220vh)" as StyleHack,
+            "linear-gradient(to bottom, rgba(255,29,135,1) 0px, rgba(255,82,37,1) 600px, rgba(238,145, 126,1) 1000px, rgba(0,0,0,0.1) 1500px)" as StyleHack,
         }}
         className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
       >

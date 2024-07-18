@@ -65,8 +65,8 @@ export const getLegislators = (
         return {
           title: officialOffice.office.name
             .replace("Chicago City Alderperson", "Alder")
-            .replace("IL State Representative", "Rep")
-            .replace("IL State Senator", "Senator")
+            .replace("IL State Representative", "State Rep")
+            .replace("IL State Senator", "State Senator")
             .replace("U.S. Representative", "Rep")
             .replace("U.S. Senator", "Senator"),
           name: name,
