@@ -25,6 +25,7 @@ import Modal from "~/ui/Modal/Modal";
 import {
   RepLevel,
   SupportedLocale,
+  getBillUpdateAt,
   getLocation,
   isAddressFilter,
   isCityLevel,
@@ -450,38 +451,92 @@ const LevelFilter = (props: ForYouProps) => {
   );
 };
 
+const newBillGlow = {
+  filter: "drop-shadow(0px 0px 8px rgb(59, 130, 246))",
+};
+
 export const ForYouBills = (props: ForYouProps) => {
+  const lastVisited = props.globalState.lastVisited;
+
+  // Getting the index of the first item after the last visit date, and splitting there.
+  let indexOfSplit = -1;
+  for (var i = 0; i < props.filteredLegislation.length; i++) {
+    const billUpdatedAt = getBillUpdateAt(props.filteredLegislation[i]);
+    if (billUpdatedAt <= lastVisited) {
+      indexOfSplit = i;
+      break;
+    }
+  }
+
+  let bills: React.ReactNode;
+  // No Results
+  if (props.filteredLegislation.length === 0) {
+    bills = <NoResults />;
+    // We have a last read date
+  } else if (indexOfSplit > 0) {
+    const unreadList = props.filteredLegislation.slice(0, indexOfSplit);
+    const readList = props.filteredLegislation.slice(indexOfSplit);
+    bills = (
+      <>
+        <div
+          style={newBillGlow}
+          className="mt-4 rounded bg-blue-500 px-3 py-1 text-center text-lg font-bold uppercase"
+        >
+          New Updates Since Your Last Visit
+        </div>
+        {unreadList.map((l) => (
+          <Bill key={l.bill.id + l.bill.title} {...l} glow={true} />
+        ))}
+        <div
+          style={{ height: "40px" }}
+          className="mt-4 flex items-center justify-center rounded bg-green-500 px-3 py-1 text-center text-lg font-bold uppercase"
+        >
+          All Caught Up
+        </div>
+        {readList.map((l) => (
+          <Bill key={l.bill.id + l.bill.title} {...l} />
+        ))}
+      </>
+    );
+  } else {
+    bills = (
+      <>
+        {props.filteredLegislation.map((l) => (
+          <Bill key={l.bill.id + l.bill.title} {...l} />
+        ))}
+      </>
+    );
+  }
+
   return (
     <section>
       <div className="flex justify-center">
         <div className="flex max-w-lg flex-col justify-center">
           {props.globalState.noSavedFeed && <LLMWarning />}
           <LevelFilter {...props} />
-          {props.filteredLegislation.length === 0 && (
-            <div className="mt-5 w-full flex-1 rounded bg-white bg-opacity-80 p-10 font-serif text-black">
-              <div className="text-xl">No Results Found.</div>
-              <p>
-                Try updating your preferences. Also feel free to submit a bug on
-                our{" "}
-                <a
-                  className="underline"
-                  href="https://github.com/chihacknight/breakout-groups/issues/219"
-                  target="_blank"
-                >
-                  Chi Hack Night
-                </a>{" "}
-                channel.
-              </p>
-            </div>
-          )}
-          {props.filteredLegislation.map((l) => (
-            <Bill key={l.bill.id + l.bill.title} {...l} />
-          ))}
+          {bills}
         </div>
       </div>
     </section>
   );
 };
+
+const NoResults = () => (
+  <div className="mt-5 w-full flex-1 rounded bg-white bg-opacity-80 p-10 font-serif text-black">
+    <div className="text-xl">No Results Found.</div>
+    <p>
+      Try updating your preferences. Also feel free to submit a bug on our{" "}
+      <a
+        className="underline"
+        href="https://github.com/chihacknight/breakout-groups/issues/219"
+        target="_blank"
+      >
+        Chi Hack Night
+      </a>{" "}
+      channel.
+    </p>
+  </div>
+);
 
 const LLMWarning = () => {
   return (
@@ -504,7 +559,8 @@ export const Bill = ({
   level,
   sponsoredByRep,
   allTags,
-}: ForYouBill) => {
+  glow,
+}: ForYouBill & { glow?: boolean }) => {
   const levelsMap: Record<RepLevel, string> = {
     [RepLevel.City]: "Chicago",
     [RepLevel.State]: "IL",
@@ -553,7 +609,12 @@ export const Bill = ({
     },
   ].filter((c) => c.content);
   return (
-    <article className="mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4">
+    <article
+      style={glow ? newBillGlow : {}}
+      className={classNames(
+        "mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4"
+      )}
+    >
       {allTags && (
         <div className="flex flex-row flex-wrap justify-center">
           {[...new Set(allTags)].map((v) => (

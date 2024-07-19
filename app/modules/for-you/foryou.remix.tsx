@@ -26,7 +26,7 @@ import {
   UpdateFiltersFn,
   UpdateGlobalStateFn,
 } from "./foryou.types";
-import { getCookieFromString, useCookies } from "./utils";
+import { formatDate, getCookieFromString, useCookies } from "./utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const globalState: GlobalState = {
@@ -60,8 +60,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
 
     // Global State
+    // We have a temp hold state that we leverage for actual rendering, while
+    // the long running cookie lastVisited can be used to check actual history.
+    const lastVisitHold = getCookieFromString(cookieHeader, "lastVisitHold");
     const lastVisited = getCookieFromString(cookieHeader, "lastVisited");
-    globalState.lastVisited = lastVisited || "";
+    globalState.lastVisited = lastVisitHold || lastVisited || "";
   }
 
   // Explore State is in the URL Search Params
@@ -130,7 +133,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const meta: MetaFunction = ({ data }: { data: ForYouProps }) => {
   return {
-    title: "Bill Updates - Windy Civi",
+    title: "Your Feed - Windy Civi",
     viewport: "width=device-width,initial-scale=1",
     charset: "utf-8",
   };
@@ -142,6 +145,23 @@ export default function ForYouPage() {
 
   const [globalState, setGlobalState] = useState(result.globalState);
   const [filters, setFilters] = useState(result.filters);
+
+  // Update the last updated timestamp
+  useEffect(() => {
+    const cookies = useCookies(document);
+    const today = formatDate();
+    const previousDate = cookies.get("lastVisited");
+    const holdDate = cookies.get("lastVisitedHold");
+    if (previousDate !== today) {
+      cookies.set("lastVisitHold", previousDate, 0.5);
+      cookies.set("lastVisited", today);
+      setGlobalState({ ...globalState, lastVisited: previousDate });
+    }
+    // If hold date exists, use it for global state
+    if (holdDate) {
+      setGlobalState({ ...globalState, lastVisited: holdDate });
+    }
+  }, []);
 
   const updateFilters: UpdateFiltersFn = (next) => {
     // Decide which storage to use
@@ -213,14 +233,10 @@ export default function ForYouPage() {
       );
     }
 
-    if ("lastVisited" in next) {
-      const date = new Date();
-      let day = date.getDate();
-      let month = date.getMonth() + 1;
-      let year = date.getFullYear();
-      let currentDate = `${year}-${month}-${day}`;
-      cookies.set("lastVisited", currentDate);
-    }
+    // if ("lastVisited" in next) {
+    //   console.log("LAST VISITED");
+    //   cookies.set("lastVisited", formatDate());
+    // }
     setSearchParams(newSearchParams);
     setGlobalState({ ...globalState, ...next });
   };

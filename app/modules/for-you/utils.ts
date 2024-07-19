@@ -36,9 +36,24 @@ export function setCookieInDom(
 export const useCookies = (doc: typeof document) => {
   return {
     get: (cookieName: string) => getCookieFromString(doc.cookie, cookieName),
-    set: (cookieName: string, cookieValue: string) =>
-      setCookieInDom(doc, cookieName, cookieValue, 10065),
+    set: (
+      cookieName: string,
+      cookieValue: string,
+      expirationDays: number = 10065
+    ) => setCookieInDom(doc, cookieName, cookieValue, expirationDays),
     delete: (cookieName: string) =>
       setCookieInDom(doc, cookieName, "", "DELETE"),
   };
 };
+
+export function formatDate(date?: string) {
+  var d = date ? new Date(date) : new Date(),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
+}

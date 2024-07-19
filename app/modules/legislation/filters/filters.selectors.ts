@@ -199,11 +199,14 @@ const tagsOverLap = (tagList1: unknown, tagList2: unknown) => {
 
 export const sortByUpdatedAt = (bills: ForYouBill[]) => {
   return bills.sort((a, b) => {
-    const aUpdated = a.bill.updated_at || a.bill.statusDate;
-    const bUpdated = b.bill.updated_at || b.bill.statusDate;
+    const aUpdated = getBillUpdateAt(a);
+    const bUpdated = getBillUpdateAt(b);
     return Date.parse(bUpdated) - Date.parse(aUpdated);
   });
 };
+
+export const getBillUpdateAt = (bill: ForYouBill) =>
+  bill.bill.updated_at || bill.bill.statusDate;
 
 type ForYouBillArrayFilter = (bill: ForYouBill) => boolean;
 
