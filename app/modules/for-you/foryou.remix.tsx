@@ -133,7 +133,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const meta: MetaFunction = ({ data }: { data: ForYouProps }) => {
   return {
-    title: "Your Feed - Windy Civi",
+    title: "Windy Civi",
     viewport: "width=device-width,initial-scale=1",
     charset: "utf-8",
   };

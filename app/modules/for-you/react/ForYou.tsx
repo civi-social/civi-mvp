@@ -262,12 +262,13 @@ export const BillFilters = (
             <div>
               <div className="lg:px-1 lg:text-right">
                 <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Set Location
+                  Set Location{" "}
                 </span>
               </div>
               <div className="flex items-end justify-end">
                 <div className="flex w-full flex-col">
                   <RadioPicker
+                    type="transparent"
                     handleChange={(next) => {
                       if (next === false) {
                         props.updateFilters({
@@ -277,23 +278,24 @@ export const BillFilters = (
                       setShowAddress(next);
                     }}
                     defaultValue={showAddress}
-                    optionClassName="flex-1 bg-gray-800 rounded-bl-none rounded-br-none mb-0 w-max text-sm uppercase lg:justify-center text-opacity-90 font-bold"
+                    containerClassName="justify-center flex"
+                    optionClassName="border-none rounded-bl-none rounded-br-none mb-0 w-max text-sm uppercase lg:justify-center text-opacity-90 font-bold"
                     options={[
                       {
                         label: "By Locale",
                         value: false,
                         className: (isSelected) =>
                           isSelected
-                            ? "bg-opacity-40"
-                            : "bg-opacity-10 text-black",
+                            ? "bg-opacity-40 underline"
+                            : "bg-opacity-10",
                       },
                       {
                         label: "By Address",
                         value: true,
                         className: (isSelected) =>
                           isSelected
-                            ? "bg-opacity-40"
-                            : "bg-opacity-10 text-black",
+                            ? "bg-opacity-40 underline"
+                            : "bg-opacity-10",
                       },
                     ]}
                   />
@@ -307,8 +309,9 @@ export const BillFilters = (
                           });
                           setShowAddress(false);
                         }}
+                        containerClassName="justify-end flex flex-row gap-2 mt-2"
                         defaultValue={props.filters.location}
-                        optionClassName="flex-1 w-max rounded-tl-none rounded-tr-none shadow"
+                        optionClassName="flex-1 w-max rounded shadow"
                         options={[
                           {
                             label: "Chicago",
@@ -327,8 +330,8 @@ export const BillFilters = (
                     </div>
                   )}
                   {showAddress && (
-                    <div className="flex-1 rounded-b-md bg-black bg-opacity-30">
-                      <div className="shadow-md lg:px-1 lg:text-right">
+                    <div className="flex-1 rounded-md bg-black bg-opacity-30 py-2 shadow-md">
+                      <div className="lg:px-1 lg:text-right">
                         <AddressLookup
                           onClear={() => {
                             props.updateFilters({

@@ -17,7 +17,7 @@ export const AddressLookup: FC<{
         key={value || ""}
         options={{ types: ["address"] }}
         apiKey={config.apiKey}
-        placeholder="Enter Address..."
+        placeholder="🏠 Enter Address..."
         defaultValue={value}
         className="w-full rounded-md bg-transparent px-2 py-1 text-white placeholder-white outline-none lg:py-2 lg:text-right lg:text-lg"
         onPlaceSelected={({ formatted_address }) => {
