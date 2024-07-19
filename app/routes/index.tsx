@@ -1,8 +1,3 @@
 /* spell-checker: disable */
 
-export {
-  loader,
-  action,
-  meta,
-  default,
-} from "~app/modules/for-you/foryou.remix";
+export { loader, action, default } from "~app/modules/for-you/foryou.remix";
