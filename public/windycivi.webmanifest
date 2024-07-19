@@ -2,7 +2,6 @@
   "name": "Windy Civi",
   "short_name": "Windy Civi",
   "description": "Get Updates On Legislation You Care About",
-  "start_url": "./index.html",
   "display": "standalone",
   "prefer-related-application": false,
   "background_color": "#ff1d87",
