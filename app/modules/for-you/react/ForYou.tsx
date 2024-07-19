@@ -796,7 +796,6 @@ const Legislators = ({ offices, showAllReps }: LegislatorsFunc) => {
             <Legislator
               {...person}
               onClick={(key) => {
-                console.log("KEY", key);
                 setShowOfficeToShow(key);
               }}
             />

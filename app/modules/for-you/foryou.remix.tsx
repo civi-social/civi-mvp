@@ -233,10 +233,6 @@ export default function ForYouPage() {
       );
     }
 
-    // if ("lastVisited" in next) {
-    //   console.log("LAST VISITED");
-    //   cookies.set("lastVisited", formatDate());
-    // }
     setSearchParams(newSearchParams);
     setGlobalState({ ...globalState, ...next });
   };
