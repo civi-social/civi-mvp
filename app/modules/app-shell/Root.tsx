@@ -1,4 +1,8 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -13,10 +17,19 @@ import {
 import { getEnv } from "~/config";
 import AppProvider from "./AppProvider";
 import type { Config } from "./types";
+import { useEffect } from "react";
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: "stylesheet", href: "css/main.css" },
+    { rel: "stylesheet", href: "css/tailwind.css" },
+    { rel: "manifest", href: "windycivi.webmanifest" },
+  ];
+};
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Civi",
+  title: "Windy Civi",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -35,8 +48,8 @@ export default function App() {
 
   return (
     <html lang="en" className="h-full" data-theme="light">
+      <Meta />
       <head>
-        <Meta />
         <Links />
       </head>
       <body>
