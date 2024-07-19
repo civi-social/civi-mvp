@@ -248,7 +248,7 @@ export const BillFilters = (
   return (
     <div>
       <section>
-        <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-white lg:text-right">
+        <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-white lg:text-left">
           {props.title}
         </div>
 
@@ -260,11 +260,6 @@ export const BillFilters = (
           >
             {/* Location Filter */}
             <div>
-              <div className="lg:px-1 lg:text-right">
-                <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Set Location{" "}
-                </span>
-              </div>
               <div className="flex items-end justify-end">
                 <div className="flex w-full flex-col">
                   <RadioPicker
@@ -277,6 +272,13 @@ export const BillFilters = (
                       }
                       setShowAddress(next);
                     }}
+                    before={
+                      <div className="my-1 flex flex-1 items-center py-2 px-2">
+                        <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
+                          Set Location{" "}
+                        </span>
+                      </div>
+                    }
                     defaultValue={showAddress}
                     containerClassName="justify-center flex"
                     optionClassName="border-none rounded-bl-none rounded-br-none mb-0 w-max text-sm uppercase lg:justify-center text-opacity-90 font-bold"
@@ -285,17 +287,13 @@ export const BillFilters = (
                         label: "By Locale",
                         value: false,
                         className: (isSelected) =>
-                          isSelected
-                            ? "bg-opacity-40 underline"
-                            : "bg-opacity-10",
+                          isSelected ? "opacity-80 underline" : "opacity-60",
                       },
                       {
                         label: "By Address",
                         value: true,
                         className: (isSelected) =>
-                          isSelected
-                            ? "bg-opacity-40 underline"
-                            : "bg-opacity-10",
+                          isSelected ? "opacity-80 underline" : "opacity-60",
                       },
                     ]}
                   />
@@ -331,7 +329,7 @@ export const BillFilters = (
                   )}
                   {showAddress && (
                     <div className="flex-1 rounded-md bg-black bg-opacity-30 py-2 shadow-md">
-                      <div className="lg:px-1 lg:text-right">
+                      <div className="pb-1 shadow-md lg:px-1 lg:text-right">
                         <AddressLookup
                           onClear={() => {
                             props.updateFilters({
@@ -544,7 +542,7 @@ const NoResults = () => (
 
 const LLMWarning = () => {
   return (
-    <div className="flex items-center rounded-lg bg-gray-100 bg-opacity-30 p-4 text-sm lg:text-base">
+    <div className="mt-4 flex items-center rounded-lg bg-gray-100 bg-opacity-30 p-4 text-sm lg:text-base">
       <RobotSvg
         style={{
           width: "25px",
