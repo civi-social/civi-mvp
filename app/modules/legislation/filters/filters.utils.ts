@@ -1,5 +1,4 @@
-import type {
-  RepLevel} from "./filters.constants";
+import type { RepLevel } from "./filters.constants";
 import {
   AVAILABLE_TAGS,
   DEFAULT_LOCALE,
@@ -36,8 +35,7 @@ export const isAddressFilter = (
   if (
     typeof location === "object" &&
     location !== null &&
-    "address" in location &&
-    typeof location.address === "string"
+    "address" in location
   ) {
     return true;
   }
