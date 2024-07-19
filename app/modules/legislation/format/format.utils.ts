@@ -1,4 +1,4 @@
-import { RepLevel } from "../levels";
+import { RepLevel } from "../filters";
 
 // TODO: Move to backend
 export const mapToReadableStatus = (

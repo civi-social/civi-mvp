@@ -24,10 +24,12 @@
     "daisyui",
     "datasource",
     "datasources",
+    "dont",
     "esbuild",
     "esque",
     "fkey",
     "flyctl",
+    "foryou",
     "giddyup",
     "halsted",
     "healtcheck",
@@ -57,6 +59,7 @@
     "textbox",
     "typecheck",
     "Vitest",
-    "Waitlist"
+    "Waitlist",
+    "windycivi"
   ]
 }

@@ -1,17 +1,22 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useTransition } from "@remix-run/react";
+import {
+  Link,
+  useLoaderData,
+  useSearchParams,
+  useTransition,
+} from "@remix-run/react";
 import type { CiviLegislationData } from "civi-legislation-data";
 import { FaUserCircle } from "react-icons/fa";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import { getLegislations } from "~/legislation/api";
-import { getLocale, RepLevel } from "~/levels";
 import LevelsNav from "~/levels/react/LevelsNav";
 import type { RepresentativesResult } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
 import Representatives from "~/representatives/react/Representatives";
 import { AddressLookup, Instructions, Loading } from "~/ui";
+import { DataStores, RepLevel } from "~app/modules/legislation/filters";
 
 type LoaderData = {
   legislation: CiviLegislationData[];
@@ -32,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let legislation: CiviLegislationData[] = [];
   if (address) {
     representatives = await getRepresentatives(address, env);
-    const res = await getLegislations(env, level, getLocale(address));
+    const res = await getLegislations(DataStores.Chicago);
     legislation = res.legislation;
   }
 
@@ -46,10 +51,24 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 const Header = ({ env }: { env: Env }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <header className="navbar justify-between bg-indigo-500">
       <div className="form-control">
-        <AddressLookup env={env} />
+        <AddressLookup
+          onClear={() => {
+            setSearchParams(new URLSearchParams());
+          }}
+          onPlaceSelected={(formatted_address) => {
+            const newSearchParams = new URLSearchParams(
+              searchParams.toString()
+            );
+            formatted_address
+              ? newSearchParams.set("address", formatted_address)
+              : newSearchParams.delete("address");
+            setSearchParams(newSearchParams);
+          }}
+        />
       </div>
       <div className="dropdown-end dropdown">
         <label

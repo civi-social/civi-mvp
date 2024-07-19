@@ -1,7 +1,7 @@
 // App.tsx
 import React, { useState } from "react";
 import { Bill } from "~app/modules/for-you";
-import { RepLevel } from "~app/modules/levels";
+import { RepLevel } from "~app/modules/legislation/filters";
 import { NewsletterForm } from "~app/modules/newsletter-form/NewsletterForm";
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
 import { Link } from "@remix-run/react";
@@ -137,11 +137,13 @@ const BillIntro: React.FC<ScreenProps> = ({ onNextStep }) => {
 const FakeBill = () => {
   return (
     <Bill
+      allTags={[]}
       gpt={{
         gpt_summary:
           "Illinois is considering creating a board to advise on the use of a drug called psilocybin. The board would help decide who can make and distribute the drug for medical purposes.",
         gpt_tags: ["Health Care"],
       }}
+      coded_tags={["Health Care"]}
       level={RepLevel.State}
       bill={
         {
