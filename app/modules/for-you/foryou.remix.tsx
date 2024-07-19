@@ -9,9 +9,9 @@ import { getEnv } from "~/config";
 
 import { useEffect, useState } from "react";
 import { ForYou } from "~/for-you";
+import type { FilterParams } from "~app/modules/legislation/filters";
 import {
   DEFAULT_FILTERS,
-  FilterParams,
   createFilterParams,
   getLocation,
   hasTags,
@@ -19,14 +19,14 @@ import {
   stringifyTags,
 } from "~app/modules/legislation/filters";
 import { getFilteredLegislation } from "../legislation/api";
-import {
+import type {
   ForYouLoaderData,
   ForYouProps,
   GlobalState,
   UpdateFiltersFn,
   UpdateGlobalStateFn,
 } from "./foryou.types";
-import { formatDate, getCookieFromString, useCookies } from "./utils";
+import { formatDate, getCookieFromString, cookieFactory } from "./utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const globalState: GlobalState = {
@@ -148,7 +148,7 @@ export default function ForYouPage() {
 
   // Update the last updated timestamp
   useEffect(() => {
-    const cookies = useCookies(document);
+    const cookies = cookieFactory(document);
     const today = formatDate();
     const previousDate = cookies.get("lastVisited");
     const holdDate = cookies.get("lastVisitedHold");
@@ -161,6 +161,8 @@ export default function ForYouPage() {
     if (holdDate) {
       setGlobalState({ ...globalState, lastVisited: holdDate });
     }
+    // Only want this to run once
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   const updateFilters: UpdateFiltersFn = (next) => {
@@ -193,7 +195,7 @@ export default function ForYouPage() {
   };
 
   const saveToFeed = () => {
-    const cookies = useCookies(document);
+    const cookies = cookieFactory(document);
     const newSearchParams = new URLSearchParams(searchParams.toString());
     ["location", "tags", "level", "dontShowSponsoredByReps"].forEach(
       (filterParam) => {
@@ -209,7 +211,7 @@ export default function ForYouPage() {
 
   const updateGlobalState: UpdateGlobalStateFn = (next) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    const cookies = useCookies(document);
+    const cookies = cookieFactory(document);
     if ("showExplore" in next) {
       // Get default filter data from your feed
       if (next.showExplore) {

@@ -10,7 +10,7 @@ import React from "react";
 import type { Env } from "~/config";
 import { getEnv } from "~/config";
 import { getLegislations } from "~/legislation/api";
-import { RepLevel } from "~/legislation/filters";
+import { DataStores } from "~/legislation/filters";
 import { DynamicPoll } from "~/poll/Poll";
 import { getChicagoWard } from "~/representatives/api";
 import type { RepresentativesOcIdResult } from "~/representatives/representatives.types";
@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     id || "",
     env
   );
-  const { legislation } = await getLegislations(env, RepLevel.City, "Chicago");
+  const { legislation } = await getLegislations(DataStores.Chicago);
 
   return json<LoaderData>({ legislation, representative, env });
 };

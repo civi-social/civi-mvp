@@ -1,6 +1,4 @@
 import civiLogo from "~/app-shell/assets/civi-temp-logo.png";
-import { CardSection, CardTitle, Spacing } from "~/ui";
-import { useDemoContent } from "../demos/Demos";
 
 export const IntroContent = () => {
   return (

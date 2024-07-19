@@ -6,12 +6,13 @@ import type {
   CiviLegislationData,
 } from "civi-legislation-data";
 import { civiLegislationApi } from "civi-legislation-data";
-import { ForYouData } from "~app/modules/for-you/foryou.types";
+import type { ForYouData } from "~app/modules/for-you/foryou.types";
 import { getRepresentatives } from "~app/modules/representatives/api";
+import type {
+  FilterParams,
+  LegislationResult} from "../filters";
 import {
   DataStores,
-  FilterParams,
-  LegislationResult,
   RepLevel,
   SupportedLocale,
   createForYouBillsFromMultipleSources,

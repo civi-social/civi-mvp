@@ -33,7 +33,17 @@ export function setCookieInDom(
   doc.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
 }
 
-export const useCookies = (doc: typeof document) => {
+/**
+ *      (o)(o)
+ *    w"      "w
+ *   W  -====-  W
+ *    "w      w"
+ *   w""""""""""w
+ *  W            W
+ *  Cookie Factory
+ *   nom nom nom
+ */
+export const cookieFactory = (doc: typeof document) => {
   return {
     get: (cookieName: string) => getCookieFromString(doc.cookie, cookieName),
     set: (

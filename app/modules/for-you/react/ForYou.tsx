@@ -36,7 +36,7 @@ import {
   mapToReadableStatus,
 } from "~app/modules/legislation/format/format.utils";
 import { Carousel } from "~app/modules/ui/Carousel/Carousel";
-import { FYBFilterProps, ForYouProps } from "../foryou.types";
+import type { FYBFilterProps, ForYouProps } from "../foryou.types";
 
 const YourFeedSummary = (
   props: FYBFilterProps & { setIsExploring: (b: boolean) => void }
@@ -530,6 +530,7 @@ const NoResults = () => (
         className="underline"
         href="https://github.com/chihacknight/breakout-groups/issues/219"
         target="_blank"
+        rel="noreferrer"
       >
         Chi Hack Night
       </a>{" "}
@@ -568,7 +569,6 @@ export const Bill = ({
     [RepLevel.National]: "USA",
   };
   const {
-    classification,
     identifier,
     id,
     title,
@@ -635,6 +635,7 @@ export const Bill = ({
             readableStatus.type === "in-progress" && "bg-blue-200",
             readableStatus.type === "fail" && "bg-red-200"
           )}
+          rel="noreferrer"
         >
           {readableStatus.name} {date}
         </a>
@@ -820,7 +821,7 @@ const Legislator = (
 ) => {
   return (
     <span
-      role="radio"
+      role="button"
       className="cursor-pointer underline decoration-dotted hover:underline"
       onClick={() => person.onClick(getRepKey(person))}
     >

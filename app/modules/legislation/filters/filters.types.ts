@@ -1,10 +1,10 @@
 // todo: put this file directly in civi-legislation-data
 
-import {
+import type {
   CiviGptLegislationData,
   CiviLegislationData,
 } from "civi-legislation-data";
-import { RepLevel, SupportedLocale } from "./filters.constants";
+import type { RepLevel, SupportedLocale } from "./filters.constants";
 
 export type Locales = `${SupportedLocale}`;
 
@@ -29,3 +29,11 @@ export type LegislationResult = {
   legislation: CiviLegislationData[];
   gpt: CiviGptLegislationData;
 };
+
+export interface FilterParams {
+  location: LocationFilter;
+  dontShowSponsoredByReps: true | null;
+  tags: string[] | null;
+  availableTags: string[];
+  level: RepLevel | null;
+}

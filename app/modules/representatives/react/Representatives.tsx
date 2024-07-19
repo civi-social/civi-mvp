@@ -1,8 +1,9 @@
-import type { FC } from "react";
-import { Bills, RepLevel } from "~/legislation";
 import type { CiviLegislationData } from "civi-legislation-data";
-import { OfficialOfficeList } from "~/representatives";
+import type { FC } from "react";
+import type { RepLevel } from "~/legislation";
+import { Bills } from "~/legislation";
 import type { RepresentativesResult } from "~/representatives";
+import { OfficialOfficeList } from "~/representatives";
 
 type Props = {
   formattedAddress: string | null;

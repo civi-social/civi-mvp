@@ -1,4 +1,4 @@
-import { FilterParams } from "./filters.utils";
+import type { FilterParams } from "./filters.types";
 
 export const ALLOWED_GPT_TAGS = [
   "Education",

@@ -3,12 +3,13 @@ import type {
   CiviLegislationData,
 } from "civi-legislation-data";
 import type { RepresentativesResult } from "~/representatives";
+import type {
+  FilterParams,
+  ForYouBill,
+  LegislationResult} from "..";
 import {
   ALLOWED_GPT_TAGS,
   CustomTags,
-  FilterParams,
-  ForYouBill,
-  LegislationResult,
   RepLevel,
   findOverlap,
   findStringOverlap,

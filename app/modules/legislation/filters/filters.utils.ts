@@ -1,14 +1,16 @@
+import type {
+  RepLevel} from "./filters.constants";
 import {
   AVAILABLE_TAGS,
   DEFAULT_LOCALE,
-  RepLevel,
   SupportedLocale,
 } from "./filters.constants";
-import {
+
+import type {
   AddressFilter,
+  Locales,
   LocationFilter,
   Nullish,
-  type Locales,
 } from "./filters.types";
 
 export const getLocale = (
@@ -100,14 +102,6 @@ export const parseTagsString = (
 export const parseRepLevel = (level?: string | null): RepLevel | null => {
   return !level ? null : level === "true" ? null : (level as RepLevel);
 };
-
-export interface FilterParams {
-  location: LocationFilter;
-  dontShowSponsoredByReps: true | null;
-  tags: string[] | null;
-  availableTags: string[];
-  level: RepLevel | null;
-}
 
 export const parseDontShowSponsoredByReps = (v: unknown): true | null => {
   return (typeof v === "string" && v === "true") || null;

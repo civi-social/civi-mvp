@@ -1,7 +1,7 @@
-import { Env } from "../config";
-import { FilterParams, LocationFilter } from "../legislation";
-import { OfficialOffice } from "../representatives";
-import { ForYouBill } from "../legislation/filters";
+import type { Env } from "../config";
+import type { FilterParams } from "../legislation";
+import type { OfficialOffice } from "../representatives";
+import type { ForYouBill } from "../legislation/filters";
 
 export interface ForYouLoaderData extends ForYouData {
   env: Env;

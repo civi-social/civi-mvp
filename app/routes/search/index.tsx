@@ -16,11 +16,7 @@ import type { RepresentativesResult } from "~/representatives";
 import { getRepresentatives } from "~/representatives/api";
 import Representatives from "~/representatives/react/Representatives";
 import { AddressLookup, Instructions, Loading } from "~/ui";
-import {
-  DataStores,
-  RepLevel,
-  getLocale,
-} from "~app/modules/legislation/filters";
+import { DataStores, RepLevel } from "~app/modules/legislation/filters";
 
 type LoaderData = {
   legislation: CiviLegislationData[];
@@ -60,7 +56,9 @@ const Header = ({ env }: { env: Env }) => {
     <header className="navbar justify-between bg-indigo-500">
       <div className="form-control">
         <AddressLookup
-          env={env}
+          onClear={() => {
+            setSearchParams(new URLSearchParams());
+          }}
           onPlaceSelected={(formatted_address) => {
             const newSearchParams = new URLSearchParams(
               searchParams.toString()

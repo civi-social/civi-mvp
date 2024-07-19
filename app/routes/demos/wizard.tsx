@@ -137,6 +137,7 @@ const BillIntro: React.FC<ScreenProps> = ({ onNextStep }) => {
 const FakeBill = () => {
   return (
     <Bill
+      allTags={[]}
       gpt={{
         gpt_summary:
           "Illinois is considering creating a board to advise on the use of a drug called psilocybin. The board would help decide who can make and distribute the drug for medical purposes.",

@@ -8,7 +8,7 @@ export const OfficialOfficeList: FC<{
   return (
     <>
       {officialOffice.map((s: OfficialOffice) => (
-        <RepresentativeCard {...s} />
+        <RepresentativeCard key={s.official.name} {...s} />
       ))}
     </>
   );
