@@ -1,9 +1,7 @@
 /* tslint:disable */
-import { useSearchParams } from "@remix-run/react";
-import { useState, type FC, useEffect } from "react";
+import { type FC } from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useAppContext } from "~/app-shell/AppContext";
-import type { Env } from "~/config";
 
 export const AddressLookup: FC<{
   onPlaceSelected: (address: string) => void;
@@ -13,7 +11,7 @@ export const AddressLookup: FC<{
   const config = useAppContext();
 
   return config?.apiKey ? (
-    <div className="lg:text-right">
+    <div className="flex items-center lg:text-right">
       <Autocomplete
         // Hack to force remount
         key={value || ""}
@@ -21,7 +19,7 @@ export const AddressLookup: FC<{
         apiKey={config.apiKey}
         placeholder="Enter Address..."
         defaultValue={value}
-        className="w-full rounded-md bg-transparent px-2 py-1 text-white placeholder-white outline-none lg:text-right"
+        className="w-full rounded-md bg-transparent px-2 py-1 text-white placeholder-white outline-none lg:py-2 lg:text-right lg:text-lg"
         onPlaceSelected={({ formatted_address }) => {
           if (formatted_address) {
             onPlaceSelected(formatted_address);
@@ -30,12 +28,13 @@ export const AddressLookup: FC<{
       />
       {value && (
         <button
-          className="mx-1 mb-2 rounded bg-black bg-opacity-30 px-2 text-xs uppercase text-white"
+          style={{ width: "27px", height: "25px" }}
+          className="mx-1 rounded-full bg-black bg-opacity-40 text-xs text-white opacity-60 hover:opacity-100"
           onClick={() => {
             onClear();
           }}
         >
-          Clear Address
+          X
         </button>
       )}
     </div>

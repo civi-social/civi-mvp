@@ -1,9 +1,13 @@
-import type { GoogleRepresentativesResponse } from "~/representatives/api/google.types";
+import type {
+  GoogleRepresentativesResponse,
+  Office,
+  Official,
+} from "~/representatives/api/google.types";
+import { RepLevel, hasOverlap } from "../legislation";
 import type {
   OfficialOffice,
   RepresentativesResult,
 } from "./representatives.types";
-import { RepLevel, hasOverlap } from "../legislation";
 
 export const transformGoogleCivicInfo = (
   data: GoogleRepresentativesResponse
@@ -36,7 +40,14 @@ export const transformGoogleCivicInfo = (
 
 export const getLegislators = (
   offices?: OfficialOffice[] | null
-): { title: string; name: string; link: string; level: RepLevel }[] => {
+): {
+  office: Office;
+  official: Official;
+  title: string;
+  name: string;
+  link: string;
+  level: RepLevel;
+}[] => {
   if (!offices) {
     return [];
   }
@@ -63,6 +74,8 @@ export const getLegislators = (
           .filter((name) => name.length > 1)
           .join(" ");
         return {
+          office: officialOffice.office,
+          official: officialOffice.official,
           title: officialOffice.office.name
             .replace("Chicago City Alderperson", "Alder")
             .replace("IL State Representative", "State Rep")

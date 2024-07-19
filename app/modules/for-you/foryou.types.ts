@@ -32,5 +32,5 @@ export type UpdateFiltersFn = (p: Partial<FilterParams>) => void;
 export type UpdateGlobalStateFn = (p: Partial<GlobalState>) => void;
 
 export type FYBFilterProps = ForYouProps & {
-  showAllOfficesButton?: React.ReactNode;
+  showAllReps?: () => void;
 };

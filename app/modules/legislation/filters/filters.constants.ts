@@ -37,7 +37,6 @@ export enum SupportedLocale {
   Chicago = "Chicago",
   Illinois = "Illinois",
   USA = "USA",
-  Custom = "Custom",
 }
 
 export enum DataStores {

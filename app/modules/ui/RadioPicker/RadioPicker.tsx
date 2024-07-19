@@ -44,12 +44,14 @@ export const RadioPicker = <T extends unknown>({
   defaultValue,
   type,
   optionClassName,
+  containerClassName,
 }: {
   options: Option<T>[];
   handleChange: (s: T) => void;
   defaultValue: T;
   type?: "transparent";
   optionClassName?: string | false | null;
+  containerClassName?: string | false | null;
 }) => {
   const [selectedOption, setSelectedOption] = useState<T>(defaultValue);
 
@@ -62,7 +64,9 @@ export const RadioPicker = <T extends unknown>({
     <div
       role="radiogroup"
       aria-label="Filter By City, State, or National Bills"
-      className="flex flex-row justify-center lg:justify-end"
+      className={
+        containerClassName || "flex flex-row justify-center lg:justify-end"
+      }
     >
       {options.map((option, i) => {
         const isSelected = option.value === selectedOption;

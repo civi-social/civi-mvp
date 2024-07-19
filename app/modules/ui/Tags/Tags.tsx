@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { classNames } from "../styles";
 import { CustomTags } from "~app/modules/legislation/filters";
+import { classNames } from "../styles";
 
 export const Tag: React.FC<{
+  type?: "tiny";
   className?: string;
   text: string;
   onClick?: Function;
-}> = ({ text, className, onClick }) => {
+}> = ({ type, text, className, onClick }) => {
   let icon: string;
   let background: string;
   switch (text) {
@@ -75,13 +76,21 @@ export const Tag: React.FC<{
     <span
       role={onClick ? "option" : "none"}
       onClick={() => onClick?.()}
-      className={classNames(
-        baseTag,
-        "font-medium uppercase text-opacity-90",
-        background,
-        "text-white",
-        className
-      )}
+      className={
+        type === "tiny"
+          ? classNames(
+              "text-2xs mx-1 rounded-full px-1",
+              background,
+              "bg-opacity-60"
+            )
+          : classNames(
+              baseTag,
+              "font-medium uppercase text-opacity-90",
+              background,
+              "text-white",
+              className
+            )
+      }
     >
       {text} {icon}
     </span>
@@ -121,7 +130,7 @@ export const Tagging = ({
             "cursor-pointer text-xs font-bold text-opacity-90 lg:text-sm",
             selectedTags.includes(tag) || selectedTags.length === 0
               ? "bg-opacity-70"
-              : "opacity-40"
+              : "bg-opacity-20 opacity-70 grayscale"
           )}
         />
       ))}

@@ -5,10 +5,10 @@ import {
   SupportedLocale,
 } from "./filters.constants";
 import {
-  LocationFilter,
-  type Locales,
-  Nullish,
   AddressFilter,
+  LocationFilter,
+  Nullish,
+  type Locales,
 } from "./filters.types";
 
 export const getLocale = (
@@ -77,9 +77,6 @@ export const createLocationFilterFromString = (
     ? ({ address: locationParam } as AddressFilter)
     : DEFAULT_LOCALE;
 
-export const isNotCustomLocation = (location: LocationFilter): boolean =>
-  isSupportedLocale(location) && location !== SupportedLocale.Custom;
-
 export const isCityLevel = (location: LocationFilter): boolean =>
   isAddressFilter(location) || location === SupportedLocale.Chicago;
 
@@ -101,7 +98,7 @@ export const parseTagsString = (
 };
 
 export const parseRepLevel = (level?: string | null): RepLevel | null => {
-  return !level ? null : (level as RepLevel);
+  return !level ? null : level === "true" ? null : (level as RepLevel);
 };
 
 export interface FilterParams {
