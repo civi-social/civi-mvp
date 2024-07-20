@@ -5,8 +5,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Public Sans", ...defaultTheme.fontFamily.sans],
-        serif: ["Bitter", ...defaultTheme.fontFamily.serif],
+        sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
+        serif: ["Fraunces", ...defaultTheme.fontFamily.serif],
+        mono: ["IBM Plex Mono", ...defaultTheme.fontFamily.mono],
       },
       colors: {
         indigo: {

@@ -17,7 +17,6 @@ import {
 import { getEnv } from "~/config";
 import AppProvider from "./AppProvider";
 import type { Config } from "./types";
-import { useEffect } from "react";
 
 export const links: LinksFunction = () => {
   return [

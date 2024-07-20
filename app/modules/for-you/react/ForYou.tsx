@@ -613,7 +613,7 @@ export const Bill = ({
     <article
       style={glow ? newBillGlow : {}}
       className={classNames(
-        "mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4"
+        "mt-4 flex select-text flex-col gap-y-2 rounded border border-gray-200 bg-white p-4"
       )}
     >
       {allTags && (
@@ -631,7 +631,7 @@ export const Bill = ({
           target="_blank"
           href={link}
           className={classNames(
-            "inline-block rounded px-2 text-sm uppercase",
+            "inline-block select-none rounded px-2 text-sm uppercase",
             readableStatus.type === "pass" && "bg-green-200",
             readableStatus.type === "in-progress" && "bg-blue-200",
             readableStatus.type === "fail" && "bg-red-200"
@@ -671,7 +671,7 @@ export const ForYouShell = ({
 }) => {
   const skipToContentId = "main-content";
   return (
-    <Container>
+    <Container className="select-none">
       <a
         className="bg-primary absolute left-0 z-10 m-3 -translate-y-16 p-3 text-primary-content transition focus:translate-y-0"
         href={`#${skipToContentId}`}

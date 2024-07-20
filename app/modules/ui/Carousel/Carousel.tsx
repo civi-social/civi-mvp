@@ -61,16 +61,18 @@ export const Carousel = ({
           {data.length > 1 && (
             <button
               onClick={prevSlide}
-              className="text-black focus:outline-none"
+              className="select-none text-black focus:outline-none"
             >
               {"<"}
             </button>
           )}
-          <div className="text-sm font-bold">{data[currentIndex].title}</div>
+          <div className="select-none text-sm font-bold">
+            {data[currentIndex].title}
+          </div>
           {data.length > 1 && (
             <button
               onClick={nextSlide}
-              className="text-black focus:outline-none"
+              className="select-none text-black focus:outline-none"
             >
               {">"}
             </button>
