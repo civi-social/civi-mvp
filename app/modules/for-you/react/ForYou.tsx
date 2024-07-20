@@ -823,7 +823,7 @@ const Legislator = (
   return (
     <span
       role="button"
-      className="cursor-pointer underline decoration-dotted hover:underline"
+      className="cursor-pointer select-text underline decoration-dotted hover:underline"
       onClick={() => person.onClick(getRepKey(person))}
     >
       <span className="opacity-80">{person.title}</span>{" "}
