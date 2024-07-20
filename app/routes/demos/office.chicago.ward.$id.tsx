@@ -48,15 +48,6 @@ export const action: ActionFunction = async ({ request }) => {
   return json<ActionData>({}, { status: 200 });
 };
 
-export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
-  const name = getOfficialsName(data.representative);
-  const officeName = getOfficeName(data.representative);
-  const title = ` ${name}, ${officeName} | civi`;
-  return {
-    title,
-  };
-};
-
 export default function OfficePage() {
   const { legislation, representative } = useLoaderData<LoaderData>();
   const name = getOfficialsName(representative);

@@ -131,14 +131,6 @@ export const action: ActionFunction = async ({ request }) => {
   return json<ActionData>({}, { status: 200 });
 };
 
-export const meta: MetaFunction = ({ data }: { data: ForYouProps }) => {
-  return {
-    title: "Windy Civi",
-    viewport: "width=device-width,initial-scale=1",
-    charset: "utf-8",
-  };
-};
-
 export default function ForYouPage() {
   const result = useLoaderData<ForYouProps>();
   const [searchParams, setSearchParams] = useSearchParams();
