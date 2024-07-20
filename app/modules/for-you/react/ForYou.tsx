@@ -631,7 +631,7 @@ export const Bill = ({
           target="_blank"
           href={link}
           className={classNames(
-            "inline-block select-none rounded px-2 text-sm uppercase",
+            "inline-block rounded px-2 text-sm uppercase",
             readableStatus.type === "pass" && "bg-green-200",
             readableStatus.type === "in-progress" && "bg-blue-200",
             readableStatus.type === "fail" && "bg-red-200"
