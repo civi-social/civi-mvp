@@ -14,7 +14,7 @@ import {
   parseRepLevel,
   stringifyTags,
 } from "~app/modules/data/legislation/filters";
-import { getFilteredLegislation } from "../data/legislation/api";
+import { getFilteredLegislation } from "~app/modules/data/api";
 import type {
   FeedLoaderData,
   FeedProps,

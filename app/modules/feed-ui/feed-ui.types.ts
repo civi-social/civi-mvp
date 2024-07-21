@@ -24,6 +24,6 @@ export type UpdateFiltersFn = (p: Partial<FilterParams>) => void;
 
 export type UpdateGlobalStateFn = (p: Partial<GlobalState>) => void;
 
-export type FYBFilterProps = FeedProps & {
+export type FeedFilterProps = FeedProps & {
   showAllReps?: () => void;
 };

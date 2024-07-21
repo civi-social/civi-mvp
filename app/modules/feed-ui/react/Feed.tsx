@@ -1,160 +1,21 @@
+import React, { useState } from "react";
+import { getLocation } from "~app/modules/data/legislation/filters";
 import type { StyleHack } from "~app/modules/design-system";
 import {
   Container,
   Grid,
+  Modal,
   RadioPicker,
-  Tag,
   classNames,
   getRadioStyle,
 } from "~app/modules/design-system";
-
-import React, { useState } from "react";
-import {
-  RepLevel,
-  SupportedLocale,
-  getLocation,
-  isAddressFilter,
-} from "~app/modules/data/legislation/filters";
-import { getLegislators } from "~app/modules/data/representatives";
-import Modal from "~app/modules/design-system/Modal/Modal";
-import { CiviUpdates, Logo } from "~app/modules/feed-ui/react/Intro";
-import type { FYBFilterProps, FeedProps } from "../feed-ui.types";
+import type { FeedFilterProps, FeedProps } from "../feed-ui.types";
 import { FeedBills } from "./Bills";
-import { BillFilters } from "./Filters";
-import {
-  Legislators,
-  LegislatorsToggle,
-  RepresentativesList,
-} from "./Representatives";
+import { BillFilters, YourFilterSummary } from "./Filters";
+import { CiviUpdates, Logo } from "./Intro";
+import { RepresentativesList } from "./Representatives";
 
-const YourFeedSummary = (
-  props: FYBFilterProps & { setIsExploring: (b: boolean) => void }
-) => {
-  const legislators = getLegislators(props.offices);
-  const location = props.filters.location;
-  let levelText =
-    props.filters.level === RepLevel.City
-      ? "Local, State, & National"
-      : props.filters.level === RepLevel.State
-      ? "State & National"
-      : props.filters.level === RepLevel.National
-      ? "National"
-      : "";
-
-  let locationName = "";
-
-  switch (location) {
-    case SupportedLocale.Chicago:
-      locationName = "Chicago";
-      levelText = levelText || "Local, State, & National";
-      break;
-    case SupportedLocale.Illinois:
-      locationName = "Illinois";
-      levelText = levelText || "State & National";
-      break;
-    case SupportedLocale.USA:
-      locationName = "America";
-      levelText = levelText || "National";
-      break;
-  }
-
-  if (isAddressFilter(location)) {
-    locationName = "Chicago";
-    levelText = levelText || "Local, State, & National";
-  }
-  if (!levelText) {
-    levelText = "All";
-  }
-
-  const showSponsoredText =
-    legislators?.length > 1 && !props.filters.dontShowSponsoredByReps;
-
-  const locationText = (
-    <div className="mb-1 text-left font-serif text-sm lg:text-lg">
-      {locationName && (
-        <div className="mb-1 inline lg:block lg:text-3xl">{locationName}! </div>
-      )}
-      {/* If only 1 layer, "combining" messaging doesn't make sense. */}
-      {levelText === "National" ? (
-        <>
-          This feed is summarizing bills that impact the entire country in an an
-          easy to digest way.
-        </>
-      ) : (
-        <>
-          <span className="opacity-80 ">This feed is combining </span>
-          <span>{levelText}</span>
-          <span className="opacity-80"> bills into a unified experience.</span>
-        </>
-      )}
-    </div>
-  );
-
-  const legislatorToggle = legislators?.length > 1 && (
-    <div className="mb-1 rounded bg-black bg-opacity-20 p-1">
-      <div className="mb-1 text-xs uppercase opacity-80 lg:text-base">
-        {showSponsoredText ? (
-          <>Following Bills Sponsored By Your Reps</>
-        ) : (
-          <>Your Representatives</>
-        )}
-      </div>
-      <div className="block lg:hidden">
-        <LegislatorsToggle
-          offices={props.offices}
-          showAllReps={props.showAllReps}
-        />
-      </div>
-
-      <div className="m-2 hidden lg:block">
-        <Legislators offices={props.offices} showAllReps={props.showAllReps} />
-      </div>
-    </div>
-  );
-
-  const tagCloud = (
-    <div className="rounded bg-black bg-opacity-20 p-1">
-      <div className="mb-1 text-xs uppercase opacity-80 lg:text-base">
-        Issue You Follow
-      </div>
-      <div className="my-1 flex flex-wrap justify-center font-sans lg:hidden lg:justify-end">
-        {props.filters?.tags?.map((v) => {
-          return <Tag key={v} type="tiny" text={v} />;
-        })}
-      </div>
-      <div className="my-1 hidden flex-wrap justify-center font-sans lg:flex">
-        {props.filters?.tags?.map((v) => {
-          return <Tag key={v} text={v} />;
-        })}
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="block rounded bg-black bg-opacity-20 p-3 text-center text-white">
-      {locationText}
-      <div className="lg:px-1 lg:text-right">
-        <span className="inline-block rounded-sm text-xs font-bold uppercase">
-          <span className="opacity-60">Preferences</span> (
-          <span
-            role="button"
-            className="underline opacity-80"
-            onClick={() => {
-              props.setIsExploring(true);
-            }}
-          >
-            Edit
-          </span>
-          )
-        </span>
-      </div>
-      {legislatorToggle}
-      {tagCloud}
-    </div>
-  );
-};
-
-const Navigation = (props: FYBFilterProps) => {
+const Navigation = (props: FeedFilterProps) => {
   const shouldShowExplore =
     props.globalState.noSavedFeed || props.globalState.showExplore;
 
@@ -190,7 +51,7 @@ const Navigation = (props: FYBFilterProps) => {
       />
     );
   } else {
-    mode = <YourFeedSummary {...props} setIsExploring={setIsExploring} />;
+    mode = <YourFilterSummary {...props} setIsExploring={setIsExploring} />;
   }
   return (
     <div>
