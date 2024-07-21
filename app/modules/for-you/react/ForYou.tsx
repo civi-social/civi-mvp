@@ -613,7 +613,7 @@ export const Bill = ({
     <article
       style={glow ? newBillGlow : {}}
       className={classNames(
-        "mt-4 flex flex-col gap-y-2 rounded border border-gray-200 bg-white p-4"
+        "mt-4 flex select-text flex-col gap-y-2 rounded border border-gray-200 bg-white p-4"
       )}
     >
       {allTags && (
@@ -671,7 +671,7 @@ export const ForYouShell = ({
 }) => {
   const skipToContentId = "main-content";
   return (
-    <Container>
+    <Container className="select-none">
       <a
         className="bg-primary absolute left-0 z-10 m-3 -translate-y-16 p-3 text-primary-content transition focus:translate-y-0"
         href={`#${skipToContentId}`}
@@ -823,7 +823,7 @@ const Legislator = (
   return (
     <span
       role="button"
-      className="cursor-pointer underline decoration-dotted hover:underline"
+      className="cursor-pointer select-text underline decoration-dotted hover:underline"
       onClick={() => person.onClick(getRepKey(person))}
     >
       <span className="opacity-80">{person.title}</span>{" "}
