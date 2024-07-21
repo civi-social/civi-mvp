@@ -1,7 +1,7 @@
 import { FaGlobe } from "react-icons/fa";
 import {
   getBillUpdateAt,
-  FeedBill,
+  WindyCiviBill,
   RepLevel,
   getLastStatus,
   mapToReadableStatus,
@@ -107,7 +107,7 @@ const Bill = ({
   sponsoredByRep,
   allTags,
   glow,
-}: FeedBill & { glow?: boolean }) => {
+}: WindyCiviBill & { glow?: boolean }) => {
   const levelsMap: Record<RepLevel, string> = {
     [RepLevel.City]: "Chicago",
     [RepLevel.State]: "IL",
