@@ -1,6 +1,6 @@
 import type { Env } from "../config";
 import type { FilterParams } from "../data/legislation";
-import { FeedData } from "../data/api/api.types";
+import { FeedData } from "../data/types";
 
 export interface FeedLoaderData extends FeedData {
   env: Env;

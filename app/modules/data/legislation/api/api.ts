@@ -4,7 +4,7 @@ import type {
   CiviLegislationData,
 } from "civi-legislation-data";
 import { civiLegislationApi } from "civi-legislation-data";
-import { DataStores } from "../filters";
+import { DataStores } from "../../filters";
 import { LegislationResult } from "../legislation.types";
 import { legislationCache } from "./legislation-cache";
 

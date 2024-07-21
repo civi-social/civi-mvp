@@ -12,8 +12,8 @@ import {
   selectBillsFromFilters,
   sortByUpdatedAt,
   getAddress,
-} from "../legislation";
-import { getRepresentatives } from "../representatives/api";
+} from "./legislation";
+import { getRepresentatives } from "./representatives/api";
 
 export const getFilteredLegislation = async ({
   env,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getLocation } from "~app/modules/data/legislation/filters";
+import { getLocation } from "~app/modules/data/filters";
 import type { StyleHack } from "~app/modules/design-system";
 import {
   Container,

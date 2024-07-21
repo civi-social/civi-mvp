@@ -5,7 +5,7 @@ import { getEnv } from "~app/modules/config";
 
 import { useEffect, useState } from "react";
 import { Feed } from "~app/modules/feed-ui";
-import type { FilterParams } from "~app/modules/data/legislation/filters";
+import type { FilterParams } from "~app/modules/data/filters";
 import {
   DEFAULT_FILTERS,
   createFilterParams,
@@ -13,7 +13,7 @@ import {
   hasTags,
   parseRepLevel,
   stringifyTags,
-} from "~app/modules/data/legislation/filters";
+} from "~app/modules/data/filters";
 import { getFilteredLegislation } from "~app/modules/data/api";
 import type {
   FeedLoaderData,
