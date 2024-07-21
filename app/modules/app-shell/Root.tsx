@@ -14,7 +14,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { getEnv } from "~/config";
+import { getEnv } from "~app/modules/config";
 import AppProvider from "./AppProvider";
 import type { Config } from "./types";
 
