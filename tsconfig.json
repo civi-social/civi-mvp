@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "~app/*": ["./app/*"],
-      "~/*": ["./app/modules/*"]
+      "~/*": ["app/modules/*"]
     },
     "skipLibCheck": true,
     "noEmit": true,
