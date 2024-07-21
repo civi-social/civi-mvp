@@ -1,3 +1,4 @@
-export * from "./react/Bills";
+export * from "./api";
 export * from "./filters";
-export * from "./format";
+export * from "./legislation.utils";
+export * from "./legislation.types";

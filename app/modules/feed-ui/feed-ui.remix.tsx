@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getEnv } from "~app/modules/config";
 
 import { useEffect, useState } from "react";
-import { ForYou } from "~app/modules/feed-ui";
+import { Feed } from "~app/modules/feed-ui";
 import type { FilterParams } from "~app/modules/data/legislation/filters";
 import {
   DEFAULT_FILTERS,
@@ -16,8 +16,8 @@ import {
 } from "~app/modules/data/legislation/filters";
 import { getFilteredLegislation } from "../data/legislation/api";
 import type {
-  ForYouLoaderData,
-  ForYouProps,
+  FeedLoaderData,
+  FeedProps,
   GlobalState,
   UpdateFiltersFn,
   UpdateGlobalStateFn,
@@ -110,16 +110,16 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const env = getEnv(process.env);
 
-  const forYouDataResult = await getFilteredLegislation({
+  const filteredLegislation = await getFilteredLegislation({
     env,
     filters,
   });
 
-  return json<ForYouLoaderData>({
+  return json<FeedLoaderData>({
     env,
     filters,
     globalState,
-    ...forYouDataResult,
+    ...filteredLegislation,
   });
 };
 
@@ -132,7 +132,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function ForYouPage() {
-  const result = useLoaderData<ForYouProps>();
+  const result = useLoaderData<FeedProps>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [globalState, setGlobalState] = useState(result.globalState);
@@ -232,7 +232,7 @@ export default function ForYouPage() {
   };
 
   return (
-    <ForYou
+    <Feed
       {...result}
       filters={filters}
       globalState={globalState}

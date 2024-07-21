@@ -3,7 +3,7 @@ import type {
   CiviLegislationData,
 } from "civi-legislation-data";
 import type { RepresentativesResult } from "~app/modules/data/representatives";
-import type { FilterParams, ForYouBill, LegislationResult } from "..";
+import type { FilterParams } from "..";
 import {
   ALLOWED_GPT_TAGS,
   CustomTags,
@@ -13,14 +13,15 @@ import {
   hasOverlap,
   hasTags,
 } from "..";
+import { FeedBill, LegislationResult } from "../legislation.types";
 
-export const createForYouBill =
+const createFeedBill =
   (
     gpt: CiviGptLegislationData,
     representatives: RepresentativesResult | null,
     level: RepLevel
   ) =>
-  (bill: CiviLegislationData): ForYouBill => {
+  (bill: CiviLegislationData): FeedBill => {
     const gptSummaries = gpt[bill.id];
     // todo: move to civi-legislation-data
     let gptTags = gptSummaries.gpt_tags;
@@ -60,11 +61,11 @@ export const createForYouBill =
       allTags,
       level,
       sponsoredByRep,
-    } as ForYouBill;
+    } as FeedBill;
   };
 
 export const filterNoisyCityBills =
-  (shouldKeepOrdinances: boolean) => (bill: ForYouBill) => {
+  (shouldKeepOrdinances: boolean) => (bill: FeedBill) => {
     // Filter out city ordinance and noisy bills if we don't have city representatives data
     if (shouldKeepOrdinances) {
       return true;
@@ -73,7 +74,7 @@ export const filterNoisyCityBills =
     }
   };
 
-export const filterBillsOlderThanSixMonths = (bill: ForYouBill) => {
+export const filterBillsOlderThanSixMonths = (bill: FeedBill) => {
   const updated = (bill.bill.updated_at =
     bill.bill.updated_at || bill.bill.statusDate);
   if (!updated) {
@@ -158,7 +159,7 @@ const getUserRepNameIfBillIsSponsored = (
 };
 
 export const selectBillsFromFilters = (
-  bills: ForYouBill[],
+  bills: FeedBill[],
   filters: FilterParams,
   reps: RepresentativesResult | null
 ) => {
@@ -195,7 +196,7 @@ const tagsOverLap = (tagList1: unknown, tagList2: unknown) => {
   );
 };
 
-export const sortByUpdatedAt = (bills: ForYouBill[]) => {
+export const sortByUpdatedAt = (bills: FeedBill[]) => {
   return bills.sort((a, b) => {
     const aUpdated = getBillUpdateAt(a);
     const bUpdated = getBillUpdateAt(b);
@@ -203,28 +204,28 @@ export const sortByUpdatedAt = (bills: ForYouBill[]) => {
   });
 };
 
-export const getBillUpdateAt = (bill: ForYouBill) =>
+export const getBillUpdateAt = (bill: FeedBill) =>
   bill.bill.updated_at || bill.bill.statusDate;
 
-type ForYouBillArrayFilter = (bill: ForYouBill) => boolean;
+type FeedBillArrayFilter = (bill: FeedBill) => boolean;
 
-export const createForYouBillsFromMultipleSources = (
+export const createFeedBillsFromMultipleSources = (
   representatives: RepresentativesResult | null,
   dataStores: [
     LegislationResult | null | false,
     RepLevel,
-    ForYouBillArrayFilter[] | null
+    FeedBillArrayFilter[] | null
   ][]
 ) => {
-  let allBills = [] as ForYouBill[];
+  let allBills = [] as FeedBill[];
   dataStores.forEach(([legislationResult, repLevel, extraFilters]) => {
-    let localeBills = [] as ForYouBill[];
+    let localeBills = [] as FeedBill[];
     if (!legislationResult) {
-      return [] as ForYouBill[];
+      return [] as FeedBill[];
     }
     // Create the for you bill structure
     localeBills = legislationResult.legislation.map(
-      createForYouBill(legislationResult.gpt, representatives, repLevel)
+      createFeedBill(legislationResult.gpt, representatives, repLevel)
     );
 
     // Filter by default filters
