@@ -118,7 +118,7 @@ const FeedShell = ({
           </div>
         </aside>
         <main id={skipToContentId} className="h-full">
-          <div className="mx-3 lg:my-5 ">{right}</div>
+          <div className="mx-3">{right}</div>
         </main>
       </Grid>
     </Container>

@@ -56,123 +56,134 @@ const YourRepFilter = (props: FeedFilterProps) => {
 export const BillFilters = (
   props: FeedFilterProps & { title: string; onSave: () => void }
 ) => {
-  const addressSelected = isAddressFilter(props.filters.location);
-
   return (
-    <div>
-      <section>
-        <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-white lg:text-left">
-          {props.title}
-        </div>
+    <section>
+      <div className="mt-4 font-serif text-2xl font-semibold leading-tight text-white lg:text-left">
+        {props.title}
+      </div>
 
-        <div className="flex justify-center pt-4">
-          <div
-            className={classNames(
-              "flex w-full max-w-screen-md flex-col justify-center"
-            )}
-          >
-            {/* Location Filter */}
-            <div>
-              <div className="flex items-end justify-end">
-                <div className="flex w-full flex-col">
-                  <div
-                    className={classNames(
-                      "flex-1 rounded-md bg-black bg-opacity-30 shadow-md",
-                      addressSelected && "py-2"
-                    )}
-                  >
-                    <div className="lg:text-right">
-                      <AddressLookup
-                        onClear={() => {
-                          props.updateFilters({
-                            location: SupportedLocale.USA,
-                          });
-                        }}
-                        onPlaceSelected={(address) => {
-                          if (!address.includes("Chicago, IL")) {
-                            alert(
-                              "Only Chicago custom addresses are supported at the moment."
-                            );
-                            return;
-                          }
-                          props.updateFilters({
-                            location: { address },
-                          });
-                        }}
-                        value={
-                          isAddressFilter(props.filters.location)
-                            ? props.filters.location.address
-                            : ""
-                        }
-                      />
-                    </div>
-                    {addressSelected && <YourRepFilter {...props} />}
-                  </div>
-                  <OrDivider />
-                  <div className="flex-1 rounded-b-md">
-                    <RadioPicker
-                      handleChange={(next) => {
-                        props.updateFilters({
-                          location: next,
-                          level: null,
-                        });
-                      }}
-                      containerClassName="justify-end flex flex-row gap-2"
-                      defaultValue={props.filters.location}
-                      optionClassName="flex-1 w-max rounded shadow"
-                      options={[
-                        {
-                          label: "Chicago",
-                          value: SupportedLocale.Chicago,
-                        },
-                        {
-                          label: "Illinois",
-                          value: SupportedLocale.Illinois,
-                        },
-                        {
-                          label: "USA",
-                          value: SupportedLocale.USA,
-                        },
-                      ]}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Tags Filter */}
-            <div className="mt-4">
-              <div className="lg:px-1 lg:text-right">
-                <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                  Include Bills Tagged With
-                </span>
-              </div>
-              <div className="rounded-lg bg-black bg-opacity-30 p-2">
-                <Tagging
-                  tags={props.filters.availableTags}
-                  selected={props.filters.tags}
-                  handleClick={(updatedTags) => {
-                    props.updateFilters({
-                      tags: updatedTags,
-                    });
-                  }}
-                />
-              </div>
-            </div>
-            {/* Save Button */}
-            <div className="mt-4 flex w-full justify-center">
-              <div
-                role="button"
-                className="rounded bg-white bg-opacity-50 px-4 py-2 text-base font-semibold text-black opacity-80 backdrop-blur hover:bg-opacity-100 lg:float-right"
-                onClick={() => {
-                  props.onSave();
-                }}
-              >
-                Save Preferences To Your Feed
-              </div>
+      <div className="flex justify-center pt-4">
+        <div
+          className={classNames(
+            "flex w-full max-w-screen-md flex-col justify-center"
+          )}
+        >
+          {/* Location Filter */}
+          <FilterContainer title="Set Location">
+            <LocationFilter {...props} />
+          </FilterContainer>
+          {/* Tags Filter */}
+          <FilterContainer title="Include Bills Tagged With">
+            <Tagging
+              tags={props.filters.availableTags}
+              selected={props.filters.tags}
+              handleClick={(updatedTags) => {
+                props.updateFilters({
+                  tags: updatedTags,
+                });
+              }}
+            />
+          </FilterContainer>
+          {/* Save Button */}
+          <div className="mt-4 flex w-full justify-center">
+            <div
+              role="button"
+              className="rounded bg-green-600 px-4 py-2 text-base font-semibold text-white mix-blend-difference backdrop-blur hover:bg-opacity-100 lg:float-right"
+              onClick={() => {
+                props.onSave();
+              }}
+            >
+              Save Preferences To Your Feed
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+};
+
+const FilterContainer: React.FC<{ title: React.ReactNode }> = ({
+  title,
+  children,
+}) => {
+  return (
+    <div className="mt-4">
+      <div className="lg:px-1 lg:text-right">
+        <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
+          {title}
+        </span>
+      </div>
+      <div className="rounded-lg bg-black bg-opacity-30 p-2">{children}</div>
+    </div>
+  );
+};
+
+const LocationFilter = (props: FeedFilterProps) => {
+  const addressSelected = isAddressFilter(props.filters.location);
+
+  return (
+    <div className="flex w-full flex-col">
+      <div
+        className={classNames(
+          "flex-1 rounded-md bg-black bg-opacity-30 shadow-md",
+          addressSelected && "py-2"
+        )}
+      >
+        <div className="lg:text-right">
+          <AddressLookup
+            onClear={() => {
+              props.updateFilters({
+                location: SupportedLocale.USA,
+              });
+            }}
+            onPlaceSelected={(address) => {
+              if (!address.includes("Chicago, IL")) {
+                alert(
+                  "Only Chicago custom addresses are supported at the moment."
+                );
+                return;
+              }
+              props.updateFilters({
+                location: { address },
+              });
+            }}
+            value={
+              isAddressFilter(props.filters.location)
+                ? props.filters.location.address
+                : ""
+            }
+          />
+        </div>
+        {addressSelected && <YourRepFilter {...props} />}
+      </div>
+      <OrDivider />
+      <div className="flex-1 rounded-b-md">
+        <RadioPicker
+          handleChange={(next) => {
+            props.updateFilters({
+              location: next,
+              level: null,
+            });
+          }}
+          containerClassName="justify-end flex flex-row gap-2"
+          defaultValue={props.filters.location}
+          optionClassName="flex-1 w-max rounded shadow"
+          options={[
+            {
+              label: "Chicago",
+              value: SupportedLocale.Chicago,
+            },
+            {
+              label: "Illinois",
+              value: SupportedLocale.Illinois,
+            },
+            {
+              label: "USA",
+              value: SupportedLocale.USA,
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 };
