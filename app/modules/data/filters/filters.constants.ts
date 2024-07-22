@@ -16,13 +16,13 @@ export const ALLOWED_GPT_TAGS = [
 ];
 
 // City level filters for tags that are not GPT tags
-export enum CustomTags {
+export enum CustomCityTags {
   "Ordinance" = "City Ordinance",
   "Resolution" = "City Resolution",
 }
 
 export const AVAILABLE_TAGS = [
-  ...Object.values(CustomTags),
+  ...Object.values(CustomCityTags),
   ...ALLOWED_GPT_TAGS,
 ];
 

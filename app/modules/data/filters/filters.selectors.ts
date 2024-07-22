@@ -6,7 +6,7 @@ import type { RepresentativesResult } from "~app/modules/data/representatives";
 import type { FilterParams, WindyCiviBill } from "../legislation";
 import {
   ALLOWED_GPT_TAGS,
-  CustomTags,
+  CustomCityTags,
   RepLevel,
   findOverlap,
   findStringOverlap,
@@ -206,9 +206,9 @@ const createFeedBill =
     );
     const coded_tags =
       bill.classification === "ordinance"
-        ? [CustomTags.Ordinance]
+        ? [CustomCityTags.Ordinance]
         : bill.classification === "resolution"
-        ? [CustomTags.Resolution]
+        ? [CustomCityTags.Resolution]
         : [];
 
     const allTags = [...(cleanedGpt?.gpt_tags || []), ...coded_tags];

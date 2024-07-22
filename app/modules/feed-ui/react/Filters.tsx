@@ -19,55 +19,44 @@ import { getLegislators } from "~app/modules/data/representatives";
 
 const YourRepFilter = (props: FeedFilterProps) => {
   return (
-    <>
-      {isAddressFilter(props.filters.location) && (
-        <div>
-          <div className="bg-primary flex flex-col items-center justify-between py-2 px-4 text-center text-white lg:flex-row lg:text-left">
-            <div className="flex-1 text-sm font-semibold lg:text-base">
-              <span className="opacity-80">
-                These Are Your Primary Representatives.
-              </span>
-              <div>Include Bills Sponsored By Them?</div>
-              <RadioPicker<true | null>
-                handleChange={(next) => {
-                  props.updateFilters({
-                    dontShowSponsoredByReps: next,
-                  });
-                }}
-                defaultValue={props.filters.dontShowSponsoredByReps}
-                containerClassName="flex justify-center lg:justify-start my-2"
-                optionClassName="text-xs"
-                options={[
-                  {
-                    label: "Yes",
-                    value: null,
-                  },
-                  {
-                    label: "No",
-                    value: true,
-                  },
-                ]}
-              />{" "}
-            </div>
-            <div className="flex-1 text-center lg:text-right">
-              <Legislators
-                offices={props.offices}
-                showAllReps={props.showAllReps}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <div className="bg-primary flex flex-col items-center justify-between py-2 px-4 text-center text-white lg:flex-row lg:text-left">
+      <div className="flex-1 text-sm font-semibold lg:text-base">
+        <span className="opacity-80">
+          These Are Your Primary Representatives.
+        </span>
+        <div>Include Bills Sponsored By Them?</div>
+        <RadioPicker<true | null>
+          handleChange={(next) => {
+            props.updateFilters({
+              dontShowSponsoredByReps: next,
+            });
+          }}
+          defaultValue={props.filters.dontShowSponsoredByReps}
+          containerClassName="flex justify-center lg:justify-start my-2"
+          optionClassName="text-xs"
+          options={[
+            {
+              label: "Yes",
+              value: null,
+            },
+            {
+              label: "No",
+              value: true,
+            },
+          ]}
+        />{" "}
+      </div>
+      <div className="flex-1 text-center lg:text-right">
+        <Legislators offices={props.offices} showAllReps={props.showAllReps} />
+      </div>
+    </div>
   );
 };
 
 export const BillFilters = (
   props: FeedFilterProps & { title: string; onSave: () => void }
 ) => {
-  const [showAddress, setShowAddress] = useState(
-    isAddressFilter(props.filters.location)
-  );
+  const addressSelected = isAddressFilter(props.filters.location);
 
   return (
     <div>
@@ -86,101 +75,67 @@ export const BillFilters = (
             <div>
               <div className="flex items-end justify-end">
                 <div className="flex w-full flex-col">
-                  <RadioPicker
-                    type="transparent"
-                    handleChange={(next) => {
-                      if (next === false) {
-                        props.updateFilters({
-                          location: SupportedLocale.USA,
-                        });
-                      }
-                      setShowAddress(next);
-                    }}
-                    before={
-                      <div className="my-1 flex flex-1 items-center py-2 px-2">
-                        <span className="inline-block rounded-sm text-sm font-bold uppercase text-black opacity-70">
-                          Set Location{" "}
-                        </span>
-                      </div>
-                    }
-                    defaultValue={showAddress}
-                    containerClassName="justify-center flex"
-                    optionClassName="border-none rounded-bl-none rounded-br-none mb-0 w-max text-sm uppercase lg:justify-center text-opacity-90 font-bold"
-                    options={[
-                      {
-                        label: "By Locale",
-                        value: false,
-                        className: (isSelected) =>
-                          isSelected ? "opacity-80 underline" : "opacity-60",
-                      },
-                      {
-                        label: "By Address",
-                        value: true,
-                        className: (isSelected) =>
-                          isSelected ? "opacity-80 underline" : "opacity-60",
-                      },
-                    ]}
-                  />
-                  {!showAddress && (
-                    <div className="flex-1 rounded-b-md">
-                      <RadioPicker
-                        handleChange={(next) => {
+                  <div
+                    className={classNames(
+                      "flex-1 rounded-md bg-black bg-opacity-30 shadow-md",
+                      addressSelected && "py-2"
+                    )}
+                  >
+                    <div className="lg:text-right">
+                      <AddressLookup
+                        onClear={() => {
                           props.updateFilters({
-                            location: next,
-                            level: null,
+                            location: SupportedLocale.USA,
                           });
-                          setShowAddress(false);
                         }}
-                        containerClassName="justify-end flex flex-row gap-2 mt-2"
-                        defaultValue={props.filters.location}
-                        optionClassName="flex-1 w-max rounded shadow"
-                        options={[
-                          {
-                            label: "Chicago",
-                            value: SupportedLocale.Chicago,
-                          },
-                          {
-                            label: "Illinois",
-                            value: SupportedLocale.Illinois,
-                          },
-                          {
-                            label: "USA",
-                            value: SupportedLocale.USA,
-                          },
-                        ]}
+                        onPlaceSelected={(address) => {
+                          if (!address.includes("Chicago, IL")) {
+                            alert(
+                              "Only Chicago custom addresses are supported at the moment."
+                            );
+                            return;
+                          }
+                          props.updateFilters({
+                            location: { address },
+                          });
+                        }}
+                        value={
+                          isAddressFilter(props.filters.location)
+                            ? props.filters.location.address
+                            : ""
+                        }
                       />
                     </div>
-                  )}
-                  {showAddress && (
-                    <div className="flex-1 rounded-md bg-black bg-opacity-30 py-2 shadow-md">
-                      <div className="pb-1 shadow-md lg:px-1 lg:text-right">
-                        <AddressLookup
-                          onClear={() => {
-                            props.updateFilters({
-                              location: SupportedLocale.USA,
-                            });
-                          }}
-                          onPlaceSelected={(address) => {
-                            if (!address.includes("Chicago, IL")) {
-                              alert(
-                                "Only Chicago custom addresses are supported at the moment."
-                              );
-                              return;
-                            }
-                            props.updateFilters({
-                              location: { address },
-                            });
-                          }}
-                          value={
-                            isAddressFilter(props.filters.location)
-                              ? props.filters.location.address
-                              : ""
-                          }
-                        />
-                      </div>
-                      <YourRepFilter {...props} />
-                    </div>
-                  )}
+                    {addressSelected && <YourRepFilter {...props} />}
+                  </div>
+                  <OrDivider />
+                  <div className="flex-1 rounded-b-md">
+                    <RadioPicker
+                      handleChange={(next) => {
+                        props.updateFilters({
+                          location: next,
+                          level: null,
+                        });
+                      }}
+                      containerClassName="justify-end flex flex-row gap-2"
+                      defaultValue={props.filters.location}
+                      optionClassName="flex-1 w-max rounded shadow"
+                      options={[
+                        {
+                          label: "Chicago",
+                          value: SupportedLocale.Chicago,
+                        },
+                        {
+                          label: "Illinois",
+                          value: SupportedLocale.Illinois,
+                        },
+                        {
+                          label: "USA",
+                          value: SupportedLocale.USA,
+                        },
+                      ]}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -218,6 +173,16 @@ export const BillFilters = (
           </div>
         </div>
       </section>
+    </div>
+  );
+};
+
+const OrDivider = () => {
+  return (
+    <div className="flex items-center gap-2 opacity-50">
+      <hr className="flex-1 border-dashed border-black" />
+      <div>or</div>
+      <hr className="flex-1 border-dashed border-black" />
     </div>
   );
 };

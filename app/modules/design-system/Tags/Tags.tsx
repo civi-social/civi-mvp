@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CustomTags } from "~app/modules/data/filters";
+import { CustomCityTags } from "~app/modules/data/filters";
 import { classNames } from "../styles";
 
 export const Tag: React.FC<{
@@ -59,11 +59,11 @@ export const Tag: React.FC<{
       icon = "🛂";
       background = "bg-cyan-500";
       break;
-    case CustomTags.Ordinance:
+    case CustomCityTags.Ordinance:
       icon = "🏙️";
       background = "bg-teal-500";
       break;
-    case CustomTags.Resolution:
+    case CustomCityTags.Resolution:
       icon = "📜";
       background = "bg-rose-500";
       break;
