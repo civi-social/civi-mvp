@@ -1,3 +1,4 @@
+import { WindyCiviBill } from "../types";
 import type { RepLevel } from "./filters.constants";
 import {
   AVAILABLE_TAGS,
@@ -120,6 +121,15 @@ export const createFilterParams = (p: {
     ),
     availableTags: AVAILABLE_TAGS,
   };
+};
+
+export const getBillUpdateAt = (bill: WindyCiviBill) =>
+  bill.bill.updated_at || bill.bill.statusDate;
+
+export const tagsOverLap = (tagList1: unknown, tagList2: unknown) => {
+  return (
+    hasTags(tagList1) && hasTags(tagList2) && hasOverlap(tagList1, tagList2)
+  );
 };
 
 export const hasOverlap = (arr1: string[], arr2: string[]): boolean => {

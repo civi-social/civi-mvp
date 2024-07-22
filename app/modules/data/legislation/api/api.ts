@@ -1,25 +1,11 @@
-import type { Env } from "~app/modules/config";
-
 import axios from "axios";
 import type {
   CiviGptLegislationData,
   CiviLegislationData,
 } from "civi-legislation-data";
 import { civiLegislationApi } from "civi-legislation-data";
-import type { ForYouData } from "~app/modules/feed-ui/feed-ui.types";
-import { getRepresentatives } from "~app/modules/data/representatives/api";
-import type { FilterParams, LegislationResult } from "../filters";
-import {
-  DataStores,
-  RepLevel,
-  SupportedLocale,
-  createForYouBillsFromMultipleSources,
-  filterNoisyCityBills,
-  getAddress,
-  isAddressFilter,
-  selectBillsFromFilters,
-  sortByUpdatedAt,
-} from "../filters";
+import { DataStores } from "../../filters";
+import { LegislationResult } from "../legislation.types";
 import { legislationCache } from "./legislation-cache";
 
 const getCachedLegislationData = async (
@@ -89,88 +75,4 @@ export const getLegislations = async (
       break;
   }
   return { legislation, gpt };
-};
-
-export const getFilteredLegislation = async ({
-  env,
-  filters,
-}: {
-  env: Env;
-  filters: FilterParams;
-}): Promise<ForYouData> => {
-  const { representatives, offices } = await getRepsAndOffices(
-    env,
-    filters.location
-  );
-
-  // Check which bills to retrieve
-  // todo: put this in a generic map to allow for extensibility
-  const shouldGetChicago =
-    filters.location === SupportedLocale.Chicago ||
-    isAddressFilter(filters.location);
-  const shouldGetIllinois =
-    shouldGetChicago || filters.location === SupportedLocale.Illinois;
-
-  // Get all bills from all the network
-  const allChicagoBills =
-    shouldGetChicago && (await getLegislations(DataStores.Chicago));
-  const allILBills =
-    shouldGetIllinois && (await getLegislations(DataStores.Illinois));
-  const allUSBills = await getLegislations(DataStores.USA);
-
-  const shouldShowSponsoredOrdinances = Boolean(
-    representatives && !filters.dontShowSponsoredByReps
-  );
-
-  // First select all bills that are sponsored, if the user wants sponsored bills
-  const fullLegislation = createForYouBillsFromMultipleSources(
-    representatives,
-    [
-      [
-        allChicagoBills,
-        RepLevel.City,
-        [filterNoisyCityBills(shouldShowSponsoredOrdinances)],
-      ],
-      [allILBills, RepLevel.State, null],
-      [allUSBills, RepLevel.National, null],
-    ]
-  );
-
-  // Then select and filter bills based on user filters
-  let filteredLegislation = selectBillsFromFilters(
-    fullLegislation,
-    filters,
-    representatives
-  );
-
-  // Sort by updated_at
-  filteredLegislation = sortByUpdatedAt(filteredLegislation);
-
-  return {
-    fullLegislation,
-    filteredLegislation,
-    offices,
-  };
-};
-
-const getRepsAndOffices = async (
-  env: Env,
-  location: FilterParams["location"]
-) => {
-  // Get representatives
-  const address = getAddress(location);
-  const representatives = address
-    ? await getRepresentatives(address, env)
-    : null;
-
-  // Get a list of all representative offices
-  const offices = representatives
-    ? [
-        ...representatives.offices.city,
-        ...representatives.offices.county,
-        ...representatives.offices.state,
-        ...representatives.offices.national,
-      ]
-    : null;
-  return { representatives, offices };
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CustomTags } from "~app/modules/data/legislation/filters";
+import { CustomTags } from "~app/modules/data/filters";
 import { classNames } from "../styles";
 
 export const Tag: React.FC<{

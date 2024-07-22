@@ -1,1 +1,1 @@
-export * from "./react/ForYou";
+export * from "./react/Feed";
