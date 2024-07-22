@@ -91,11 +91,14 @@ const Navigation = (props: FeedFilterProps) => {
 const FeedShell = ({
   left,
   right,
+  showRight,
 }: {
   left: React.ReactNode;
   right: React.ReactNode;
+  showRight?: boolean;
 }) => {
   const skipToContentId = "main-content";
+  const ContainerComponent = showRight ? Grid : Container;
   return (
     <Container className="select-none">
       <a
@@ -104,7 +107,7 @@ const FeedShell = ({
       >
         Skip To Content
       </a>
-      <Grid
+      <ContainerComponent
         style={{
           background:
             "linear-gradient(to bottom, rgba(255,29,135,1) 0px, rgba(255,82,37,1) 600px, rgba(238,145, 126,1) 1000px, rgba(0,0,0,0.1) 1500px)" as StyleHack,
@@ -117,10 +120,12 @@ const FeedShell = ({
             <CiviUpdates />
           </div>
         </aside>
-        <main id={skipToContentId} className="h-full">
-          <div className="mx-3">{right}</div>
-        </main>
-      </Grid>
+        {showRight && (
+          <main id={skipToContentId} className="h-full">
+            <div className="mx-3">{right}</div>
+          </main>
+        )}
+      </ContainerComponent>
     </Container>
   );
 };
@@ -132,6 +137,8 @@ export const Feed = (props: FeedProps) => {
     setShowOfficeModal(true);
   };
 
+  const location = getLocation(props.filters.location);
+
   return (
     <>
       {props.offices && showOfficeModal ? (
@@ -141,7 +148,7 @@ export const Feed = (props: FeedProps) => {
         >
           <div className="flex w-full max-w-2xl flex-col gap-y-5 justify-self-center">
             <div className="text-center text-lg font-light">
-              Representatives for {getLocation(props.filters.location)}.
+              Representatives for {location}.
             </div>
             <RepresentativesList officialOffice={props.offices} />
           </div>
@@ -150,6 +157,7 @@ export const Feed = (props: FeedProps) => {
         <FeedShell
           left={<Navigation {...props} showAllReps={showAllReps} />}
           right={<FeedBills {...props} />}
+          showRight={location !== null}
         />
       )}
     </>

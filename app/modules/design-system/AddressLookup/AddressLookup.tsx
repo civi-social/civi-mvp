@@ -19,7 +19,7 @@ export const AddressLookup: FC<{
         apiKey={config.apiKey}
         placeholder="🏠 Enter Address..."
         defaultValue={value}
-        className="w-full rounded-md bg-transparent p-2 text-white placeholder-white outline-none lg:text-right lg:text-lg"
+        className="w-full rounded-md bg-transparent p-2  px-2 text-white placeholder-transparent outline-none lg:text-right lg:text-lg"
         onPlaceSelected={({ formatted_address }) => {
           if (formatted_address) {
             onPlaceSelected(formatted_address);

@@ -1,10 +1,6 @@
 import { WindyCiviBill } from "../types";
 import type { RepLevel } from "./filters.constants";
-import {
-  AVAILABLE_TAGS,
-  DEFAULT_LOCALE,
-  SupportedLocale,
-} from "./filters.constants";
+import { AVAILABLE_TAGS, SupportedLocale } from "./filters.constants";
 
 import type {
   AddressFilter,
@@ -61,22 +57,18 @@ export const isSupportedLocale = (
 
 export const getLocation = (
   location: string | AddressFilter | Nullish
-): string => {
-  return isAddressFilter(location)
-    ? location.address
-    : location || DEFAULT_LOCALE;
+): string | null => {
+  return isAddressFilter(location) ? location.address : location || null;
 };
 
 export const createLocationFilterFromString = (
   locationParam: unknown
 ): LocationFilter =>
-  isNullish(locationParam)
-    ? DEFAULT_LOCALE
-    : isSupportedLocale(locationParam)
+  isSupportedLocale(locationParam)
     ? locationParam
     : typeof locationParam === "string" && locationParam.length > 0
     ? ({ address: locationParam } as AddressFilter)
-    : DEFAULT_LOCALE;
+    : null;
 
 export const isCityLevel = (location: LocationFilter): boolean =>
   isAddressFilter(location) || location === SupportedLocale.Chicago;

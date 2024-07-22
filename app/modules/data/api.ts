@@ -22,11 +22,14 @@ export const getFilteredLegislation = async ({
   env: Env;
   filters: FilterParams;
 }): Promise<FeedData> => {
-  const { representatives, offices } = await getRepsAndOffices(
-    env,
-    filters.location
-  );
-
+  // Must set location to get data
+  if (!filters.location) {
+    return {
+      fullLegislation: [],
+      filteredLegislation: [],
+      offices: null,
+    };
+  }
   // Check which bills to retrieve
   // todo: put this in a generic map to allow for extensibility
   const shouldGetChicago =
@@ -41,6 +44,11 @@ export const getFilteredLegislation = async ({
   const allILBills =
     shouldGetIllinois && (await getLegislations(DataStores.Illinois));
   const allUSBills = await getLegislations(DataStores.USA);
+
+  const { representatives, offices } = await getRepsAndOffices(
+    env,
+    filters.location
+  );
 
   const shouldShowSponsoredOrdinances = Boolean(
     representatives && !filters.dontShowSponsoredByReps

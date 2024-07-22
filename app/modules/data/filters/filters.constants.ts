@@ -45,10 +45,8 @@ export enum DataStores {
   USA = "USA",
 }
 
-export const DEFAULT_LOCALE = SupportedLocale.USA;
-
 export const DEFAULT_FILTERS: FilterParams = {
-  location: DEFAULT_LOCALE,
+  location: null,
   level: null,
   tags: null,
   availableTags: AVAILABLE_TAGS,
