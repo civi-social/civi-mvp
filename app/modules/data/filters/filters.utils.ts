@@ -85,7 +85,11 @@ export const isLocationChicago = (location: LocationFilter) =>
   isAddressChicago(location) || location === SupportedLocale.Chicago;
 
 const isAddressChicago = (location: LocationFilter) =>
-  isAddressFilter(location) && location.address.includes("Chicago, IL");
+  isAddressFilter(location) &&
+  stringIsInAddress(
+    ["Chicago, IL", "Chicago,IL", "Chicago, Illinois", "Chicago,Illinois"],
+    location
+  );
 
 // State Level
 
@@ -93,10 +97,15 @@ export const isStateLevel = (location: LocationFilter): boolean =>
   isLocationIL(location);
 
 const isAddressIL = (location: LocationFilter) =>
-  isAddressFilter(location) && location.address.includes(", IL");
+  isAddressFilter(location) && stringIsInAddress([", IL", ",IL"], location);
 
 export const isLocationIL = (location: LocationFilter) =>
   isAddressIL(location) || location === SupportedLocale.Illinois;
+
+const stringIsInAddress = (variations: string[], location: AddressFilter) =>
+  variations.some((str) =>
+    location.address.toLowerCase().includes(str.toLowerCase())
+  );
 
 export const hasTags = (tags: unknown): tags is string[] => {
   return Boolean(tags && Array.isArray(tags) && tags.length > 0);
