@@ -1,6 +1,7 @@
 import type { Env } from "../config";
 import type { FilterParams } from "../data/legislation";
 import { FeedData } from "../data/types";
+import { RouteOption } from "./feed-ui.constants";
 
 export interface FeedLoaderData extends FeedData {
   env: Env;
@@ -11,13 +12,14 @@ export interface FeedLoaderData extends FeedData {
 export interface FeedProps extends FeedLoaderData {
   updateFilters: UpdateFiltersFn;
   updateGlobalState: UpdateGlobalStateFn;
-  saveToFeed: () => void;
+  saveToFeed: (next: Partial<FilterParams>) => void;
+  deleteAllData: () => void;
 }
 
 export interface GlobalState {
-  showExplore: boolean;
   lastVisited: string; // timestamp
-  noSavedFeed: boolean;
+  hideLLMWarning: boolean;
+  route: RouteOption;
 }
 
 export type UpdateFiltersFn = (p: Partial<FilterParams>) => void;

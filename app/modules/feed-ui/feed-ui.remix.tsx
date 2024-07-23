@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getEnv } from "~app/modules/config";
 
 import { useEffect, useState } from "react";
-import { Feed } from "~app/modules/feed-ui";
+import { getFilteredLegislation } from "~app/modules/data/api";
 import type { FilterParams } from "~app/modules/data/filters";
 import {
   DEFAULT_FILTERS,
@@ -14,26 +14,22 @@ import {
   parseRepLevel,
   stringifyTags,
 } from "~app/modules/data/filters";
-import { getFilteredLegislation } from "~app/modules/data/api";
-import type {
-  FeedLoaderData,
-  FeedProps,
-  GlobalState,
-  UpdateFiltersFn,
-  UpdateGlobalStateFn,
+import { Feed } from "~app/modules/feed-ui";
+import { DEFAULT_GLOBAL_STATE, RouteOption } from "./feed-ui.constants";
+import {
+  type FeedLoaderData,
+  type FeedProps,
+  type UpdateFiltersFn,
+  type UpdateGlobalStateFn,
 } from "./feed-ui.types";
 import {
+  cookieFactory,
   formatDate,
   getCookieFromString,
-  cookieFactory,
 } from "./feed-ui.utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const globalState: GlobalState = {
-    lastVisited: "",
-    noSavedFeed: true,
-    showExplore: false,
-  };
+  const globalState = DEFAULT_GLOBAL_STATE;
 
   // Feed State is in Cookies
   const cookieHeader = request.headers.get("Cookie");
@@ -44,19 +40,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     const location = getCookieFromString(cookieHeader, "location");
     const level = getCookieFromString(cookieHeader, "level");
     const tags = getCookieFromString(cookieHeader, "tags");
-    const dontShowSponsoredByReps = getCookieFromString(
-      cookieHeader,
-      "dontShowSponsoredByReps"
-    );
 
     if (location) {
       savedPreferences = createFilterParams({
         location,
         level,
         tags,
-        dontShowSponsoredByReps,
       });
-      globalState.noSavedFeed = false;
     }
 
     // Global State
@@ -65,30 +55,39 @@ export const loader: LoaderFunction = async ({ request }) => {
     const lastVisitHold = getCookieFromString(cookieHeader, "lastVisitHold");
     const lastVisited = getCookieFromString(cookieHeader, "lastVisited");
     globalState.lastVisited = lastVisitHold || lastVisited || "";
+
+    const hideLLMWarning = getCookieFromString(cookieHeader, "hideLLMWarning");
+    if (hideLLMWarning) {
+      globalState.hideLLMWarning = true;
+    }
   }
 
   // Explore State is in the URL Search Params
   const url = new URL(request.url);
 
-  globalState.showExplore = url.searchParams.get("showExplore") === "true";
+  const showExplore = url.searchParams.get("showExplore");
+
+  if (!savedPreferences) {
+    globalState.route = RouteOption.INTRO;
+  } else if (savedPreferences && showExplore) {
+    globalState.route = RouteOption.EXPLORE;
+  } else {
+    globalState.route = RouteOption.FEED;
+  }
+
+  const shouldAcceptSearchParams = globalState.route === RouteOption.EXPLORE;
 
   const levelSearchParam = url.searchParams.get("level");
 
-  const shouldShowExplore = globalState.noSavedFeed || globalState.showExplore;
-
   let searchParams: FilterParams | null = null;
-  if (shouldShowExplore) {
+  if (shouldAcceptSearchParams) {
     const tags = url.searchParams.get("tags");
     const location = url.searchParams.get("location");
     const level = levelSearchParam;
-    const dontShowSponsoredByReps = url.searchParams.get(
-      "dontShowSponsoredByReps"
-    );
     searchParams = createFilterParams({
       location,
       level,
       tags,
-      dontShowSponsoredByReps,
     });
   }
 
@@ -102,7 +101,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // Picking filters based on if feed or explore
   const filters: FilterParams =
-    shouldShowExplore && searchParams
+    shouldAcceptSearchParams && searchParams
       ? searchParams
       : savedPreferences
       ? savedPreferences
@@ -140,6 +139,10 @@ export default function ForYouPage() {
 
   // Update the last updated timestamp
   useEffect(() => {
+    // Ignore on intro
+    if (globalState.route === RouteOption.INTRO) {
+      return;
+    }
     const cookies = cookieFactory(document);
     const today = formatDate();
     const previousDate = cookies.get("lastVisited");
@@ -162,9 +165,17 @@ export default function ForYouPage() {
     const storage = new URLSearchParams(searchParams.toString());
     // Update Filters
     if ("location" in next) {
-      location
-        ? storage.set("location", getLocation(next.location))
-        : storage.delete("location");
+      // Always delete level to reset
+      storage.delete("level");
+
+      const locationString = getLocation(next.location);
+      if (!locationString) {
+        storage.delete("location");
+      } else {
+        storage.set("location", locationString);
+      }
+    } else if ("level" in next) {
+      next.level ? storage.set("level", next.level) : storage.delete("level");
     }
 
     if ("tags" in next) {
@@ -173,58 +184,69 @@ export default function ForYouPage() {
         : storage.delete("tags");
     }
 
-    if ("level" in next) {
-      next.level ? storage.set("level", next.level) : storage.delete("level");
-    }
-
-    if ("dontShowSponsoredByReps" in next) {
-      next.dontShowSponsoredByReps
-        ? storage.set("dontShowSponsoredByReps", "true")
-        : storage.delete("dontShowSponsoredByReps");
-    }
     setFilters({ ...filters, ...next });
     setSearchParams(storage);
   };
 
-  const saveToFeed = () => {
+  const saveToFeed: FeedProps["saveToFeed"] = (next) => {
     const cookies = cookieFactory(document);
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    ["location", "tags", "level", "dontShowSponsoredByReps"].forEach(
-      (filterParam) => {
-        const savedParam = newSearchParams.get(filterParam);
-        if (savedParam) {
-          cookies.set(filterParam, savedParam);
-        } else {
-          cookies.delete(filterParam);
-        }
+    Object.keys(next).forEach((k) => {
+      const key = k as keyof FilterParams;
+      let value = next[key] ? String(next[key]) : null;
+      if (key === "location") {
+        value = getLocation(next[key] as FilterParams["location"]);
       }
-    );
+      if (value) {
+        cookies.set(key, value);
+      } else {
+        cookies.delete(key);
+      }
+    });
+    setFilters({ ...filters, ...next });
+    // Reset URL Search Params
+    setSearchParams(new URLSearchParams());
+  };
+
+  const deleteAllData = () => {
+    const cookies = cookieFactory(document);
+    cookies.delete("location");
+    cookies.delete("tags");
+    cookies.delete("level");
+    cookies.delete("lastVisited");
+    cookies.delete("lastVisitHold");
+    cookies.delete("hideLLMWarning");
+    setFilters(DEFAULT_FILTERS);
+    setGlobalState(DEFAULT_GLOBAL_STATE);
+    setSearchParams(new URLSearchParams());
   };
 
   const updateGlobalState: UpdateGlobalStateFn = (next) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const cookies = cookieFactory(document);
-    if ("showExplore" in next) {
+    if ("route" in next) {
+      const showExplore = next.route === RouteOption.EXPLORE;
       // Get default filter data from your feed
-      if (next.showExplore) {
+      if (next.route === RouteOption.EXPLORE) {
         newSearchParams.set("showExplore", "true");
       } else {
         newSearchParams.delete("showExplore");
       }
 
       // Go through the filters and add/remove them based on the mode
-      ["location", "tags", "level", "dontShowSponsoredByReps"].forEach(
-        (filterParam) => {
-          if (next.showExplore) {
-            const savedParam = cookies.get(filterParam);
-            if (savedParam) {
-              newSearchParams.set(filterParam, savedParam);
-            }
-          } else {
-            newSearchParams.delete(filterParam);
+      ["location", "tags", "level"].forEach((filterParam) => {
+        if (showExplore) {
+          const savedParam = cookies.get(filterParam);
+          if (savedParam) {
+            newSearchParams.set(filterParam, savedParam);
           }
+        } else {
+          newSearchParams.delete(filterParam);
         }
-      );
+      });
+    }
+
+    if ("hideLLMWarning" in next) {
+      cookies.set("hideLLMWarning", "true");
     }
 
     setSearchParams(newSearchParams);
@@ -239,6 +261,7 @@ export default function ForYouPage() {
       updateGlobalState={updateGlobalState}
       updateFilters={updateFilters}
       saveToFeed={saveToFeed}
+      deleteAllData={deleteAllData}
     />
   );
 }

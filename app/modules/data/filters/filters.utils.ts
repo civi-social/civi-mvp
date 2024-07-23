@@ -1,13 +1,16 @@
+import e from "express";
 import { WindyCiviBill } from "../types";
 import type { RepLevel } from "./filters.constants";
 import {
   AVAILABLE_TAGS,
-  DEFAULT_LOCALE,
+  ChicagoTags,
+  SPONSORED_BY_REP_TAG,
   SupportedLocale,
 } from "./filters.constants";
 
 import type {
   AddressFilter,
+  FilterParams,
   Locales,
   LocationFilter,
   Nullish,
@@ -61,32 +64,50 @@ export const isSupportedLocale = (
 
 export const getLocation = (
   location: string | AddressFilter | Nullish
-): string => {
-  return isAddressFilter(location)
-    ? location.address
-    : location || DEFAULT_LOCALE;
+): string | null => {
+  return isAddressFilter(location) ? location.address : location || null;
 };
 
 export const createLocationFilterFromString = (
   locationParam: unknown
 ): LocationFilter =>
-  isNullish(locationParam)
-    ? DEFAULT_LOCALE
-    : isSupportedLocale(locationParam)
+  isSupportedLocale(locationParam)
     ? locationParam
     : typeof locationParam === "string" && locationParam.length > 0
     ? ({ address: locationParam } as AddressFilter)
-    : DEFAULT_LOCALE;
+    : null;
 
+// City Level
 export const isCityLevel = (location: LocationFilter): boolean =>
-  isAddressFilter(location) || location === SupportedLocale.Chicago;
+  isLocationChicago(location);
+
+export const isLocationChicago = (location: LocationFilter) =>
+  isAddressChicago(location) || location === SupportedLocale.Chicago;
+
+const isAddressChicago = (location: LocationFilter) =>
+  isAddressFilter(location) && location.address.includes("Chicago, IL");
+
+// State Level
 
 export const isStateLevel = (location: LocationFilter): boolean =>
-  !isAddressFilter(location) && location === SupportedLocale.Illinois;
+  isLocationIL(location);
+
+const isAddressIL = (location: LocationFilter) =>
+  isAddressFilter(location) && location.address.includes(", IL");
+
+export const isLocationIL = (location: LocationFilter) =>
+  isAddressIL(location) || location === SupportedLocale.Illinois;
 
 export const hasTags = (tags: unknown): tags is string[] => {
   return Boolean(tags && Array.isArray(tags) && tags.length > 0);
 };
+
+export const getTagsBeingFiltered = (
+  filters: Pick<FilterParams, "tags" | "availableTags">
+) => {
+  return hasTags(filters?.tags) ? filters.tags : filters.availableTags;
+};
+
 export const stringifyTags = (tags: string[]) => {
   return tags.join(",");
 };
@@ -102,25 +123,53 @@ export const parseRepLevel = (level?: string | null): RepLevel | null => {
   return !level ? null : level === "true" ? null : (level as RepLevel);
 };
 
-export const parseDontShowSponsoredByReps = (v: unknown): true | null => {
-  return (typeof v === "string" && v === "true") || null;
-};
+export const hasSponsoredByRepTag = (tags: string[] | null) =>
+  tags?.includes(SPONSORED_BY_REP_TAG);
 
 export const createFilterParams = (p: {
   location: string | Nullish;
   level: string | Nullish;
   tags: string | Nullish;
-  dontShowSponsoredByReps: string | Nullish;
 }) => {
+  const location = createLocationFilterFromString(p.location);
   return {
-    location: createLocationFilterFromString(p.location),
+    location,
     level: parseRepLevel(p.level),
     tags: parseTagsString(p.tags),
-    dontShowSponsoredByReps: parseDontShowSponsoredByReps(
-      p.dontShowSponsoredByReps
-    ),
-    availableTags: AVAILABLE_TAGS,
+    availableTags: parseAvailableTags(location),
   };
+};
+
+export const parseAvailableTags = (location: LocationFilter) => {
+  const availableTags = [];
+  const isAddress = isAddressFilter(location);
+  if (isAddress) {
+    availableTags.push(SPONSORED_BY_REP_TAG);
+  }
+
+  if (isLocationChicago(location)) {
+    availableTags.push(...ChicagoTags);
+  }
+
+  availableTags.push(...AVAILABLE_TAGS);
+
+  return availableTags;
+};
+
+export const getLocationInformationText = (location: LocationFilter) => {
+  let locationName = "";
+  let levelText = "";
+  if (isLocationChicago(location)) {
+    locationName = "Chicago";
+    levelText = "Local, State, & National";
+  } else if (isLocationIL(location)) {
+    locationName = "Illinois";
+    levelText = "State & National";
+  } else {
+    locationName = "America";
+    levelText = "National";
+  }
+  return { locationName, levelText };
 };
 
 export const getBillUpdateAt = (bill: WindyCiviBill) =>

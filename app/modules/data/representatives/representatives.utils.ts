@@ -53,11 +53,30 @@ export const getLegislators = (
   }
   return (
     offices
+      // Only supporting Illinois at the moment
+      .filter((officialOffice) => {
+        if (
+          officialOffice.office.divisionId.includes("state:") &&
+          !officialOffice.office.divisionId.includes("state:il")
+        ) {
+          return false;
+        }
+        return true;
+      })
       // We don't support county level
       .filter(
         (officialOffice) =>
           !officialOffice.office.divisionId.includes("county:")
       )
+      // We only support Chicago city legislation
+      .filter((officialOffice) => {
+        if (officialOffice.office.divisionId.includes("place:chicago")) {
+          return true;
+        } else if (officialOffice.office.divisionId.includes("place:")) {
+          return false;
+        }
+        return true;
+      })
       .filter((officialOffice) =>
         hasOverlap(officialOffice.office.roles, [
           "legislatorLowerBody",
@@ -76,12 +95,7 @@ export const getLegislators = (
         return {
           office: officialOffice.office,
           official: officialOffice.official,
-          title: officialOffice.office.name
-            .replace("Chicago City Alderperson", "Alder")
-            .replace("IL State Representative", "State Rep")
-            .replace("IL State Senator", "State Senator")
-            .replace("U.S. Representative", "Rep")
-            .replace("U.S. Senator", "Senator"),
+          title: officialOffice.office.name,
           name: name,
           link: officialOffice.official.urls[0],
           level: officialOffice.office.name.includes("Chicago")

@@ -14,7 +14,6 @@ type CiviGptData = CiviGptLegislationData[keyof CiviGptLegislationData];
 export interface FilteredLegislationData {
   bill: CiviLegislationData;
   gpt?: CiviGptData;
-  coded_tags: string[];
   allTags: string[];
   level: RepLevel;
 }

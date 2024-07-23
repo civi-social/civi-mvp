@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { CustomTags } from "~app/modules/data/filters";
+import {
+  CustomChicagoTag,
+  SPONSORED_BY_REP_TAG,
+} from "~app/modules/data/filters";
 import { classNames } from "../styles";
 
 export const Tag: React.FC<{
   type?: "tiny";
-  className?: string;
   text: string;
   onClick?: Function;
-}> = ({ type, text, className, onClick }) => {
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ type, text, className, style, onClick }) => {
   let icon: string;
   let background: string;
   switch (text) {
@@ -59,13 +63,17 @@ export const Tag: React.FC<{
       icon = "🛂";
       background = "bg-cyan-500";
       break;
-    case CustomTags.Ordinance:
+    case CustomChicagoTag.Ordinance:
       icon = "🏙️";
       background = "bg-teal-500";
       break;
-    case CustomTags.Resolution:
+    case CustomChicagoTag.Resolution:
       icon = "📜";
       background = "bg-rose-500";
+      break;
+    case SPONSORED_BY_REP_TAG:
+      icon = "👤";
+      background = "bg-blue-600";
       break;
     case "Other":
     default:
@@ -76,16 +84,18 @@ export const Tag: React.FC<{
     <span
       role={onClick ? "option" : "none"}
       onClick={() => onClick?.()}
+      style={style}
       className={
         type === "tiny"
           ? classNames(
-              "text-2xs m-1 rounded-full px-1",
+              "m-1 rounded-full px-3 text-xs",
               background,
-              "bg-opacity-60"
+              "bg-opacity-60",
+              className
             )
           : classNames(
               baseTag,
-              "font-medium uppercase text-opacity-90",
+              "text-sm font-medium uppercase text-opacity-90 lg:text-base",
               background,
               "text-white",
               className
@@ -120,14 +130,14 @@ export const Tagging = ({
   };
 
   return (
-    <div className="flex flex-wrap justify-center text-center lg:justify-end">
+    <div className="flex flex-wrap justify-center text-center">
       {tags.map((tag) => (
         <Tag
           text={tag}
           key={tag}
           onClick={() => handleTagClick(tag)}
           className={classNames(
-            "cursor-pointer text-xs font-bold text-opacity-90 lg:text-sm",
+            "cursor-pointer",
             selectedTags.includes(tag) || selectedTags.length === 0
               ? "bg-opacity-70"
               : "bg-opacity-20 opacity-70 grayscale"
@@ -138,4 +148,4 @@ export const Tagging = ({
   );
 };
 
-const baseTag = "px-3 py-1 m-1 mr-0 rounded-full border-none";
+const baseTag = "px-3 py-1 m-1 mr-0 rounded-full border-none text-center";

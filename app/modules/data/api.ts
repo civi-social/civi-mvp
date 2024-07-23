@@ -12,6 +12,8 @@ import {
   selectBillsFromFilters,
   sortByUpdatedAt,
   getAddress,
+  SPONSORED_BY_REP_TAG,
+  hasSponsoredByRepTag,
 } from "./legislation";
 import { getRepresentatives } from "./representatives/api";
 
@@ -22,11 +24,14 @@ export const getFilteredLegislation = async ({
   env: Env;
   filters: FilterParams;
 }): Promise<FeedData> => {
-  const { representatives, offices } = await getRepsAndOffices(
-    env,
-    filters.location
-  );
-
+  // Must set location to get data
+  if (!filters.location) {
+    return {
+      fullLegislation: [],
+      filteredLegislation: [],
+      offices: null,
+    };
+  }
   // Check which bills to retrieve
   // todo: put this in a generic map to allow for extensibility
   const shouldGetChicago =
@@ -42,8 +47,13 @@ export const getFilteredLegislation = async ({
     shouldGetIllinois && (await getLegislations(DataStores.Illinois));
   const allUSBills = await getLegislations(DataStores.USA);
 
-  const shouldShowSponsoredOrdinances = Boolean(
-    representatives && !filters.dontShowSponsoredByReps
+  const { representatives, offices } = await getRepsAndOffices(
+    env,
+    filters.location
+  );
+
+  const showSponsoredBills = Boolean(
+    representatives && hasSponsoredByRepTag(filters.tags)
   );
 
   // First select all bills that are sponsored, if the user wants sponsored bills
@@ -51,18 +61,14 @@ export const getFilteredLegislation = async ({
     [
       allChicagoBills,
       RepLevel.City,
-      [filterNoisyCityBills(shouldShowSponsoredOrdinances)],
+      [filterNoisyCityBills(showSponsoredBills)],
     ],
     [allILBills, RepLevel.State, null],
     [allUSBills, RepLevel.National, null],
   ]);
 
   // Then select and filter bills based on user filters
-  let filteredLegislation = selectBillsFromFilters(
-    fullLegislation,
-    filters,
-    representatives
-  );
+  let filteredLegislation = selectBillsFromFilters(fullLegislation, filters);
 
   // Sort by updated_at
   filteredLegislation = sortByUpdatedAt(filteredLegislation);

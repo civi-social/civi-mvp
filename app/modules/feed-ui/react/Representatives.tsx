@@ -1,8 +1,13 @@
 import { useState, type FC } from "react";
 import { getLegislators } from "~app/modules/data/representatives";
 import type { OfficialOffice } from "~app/modules/data/representatives/representatives.types";
-import { DataField, ResultCard } from "~app/modules/design-system";
+import { DataField, Divider, ResultCard } from "~app/modules/design-system";
 import { FeedFilterProps } from "../feed-ui.types";
+import {
+  LocationFilter,
+  getAddress,
+  getLocationInformationText,
+} from "~app/modules/data/filters";
 
 export const RepresentativesList: FC<{
   officialOffice: OfficialOffice[];
@@ -69,6 +74,7 @@ export const Legislator = (
 
 type LegislatorsFunc = {
   offices: OfficialOffice[] | null;
+  location: LocationFilter;
   showAllReps: FeedFilterProps["showAllReps"];
 };
 
@@ -109,16 +115,70 @@ export const Legislators = ({ offices, showAllReps }: LegislatorsFunc) => {
 export const LegislatorsToggle = (props: LegislatorsFunc) => {
   const [showSponsorBoxMobile, setShowSponsorBoxMobile] = useState(false);
 
-  return showSponsorBoxMobile ? (
-    <div className="rounded bg-black bg-opacity-20 p-2 text-xs">
-      <Legislators offices={props.offices} showAllReps={props.showAllReps} />
+  return (
+    <>
+      <div className="flex justify-center">
+        <div className="inline-block rounded bg-black bg-opacity-20 px-5 py-1">
+          <div
+            className="cursor-pointer text-xs underline decoration-dotted"
+            onClick={() => setShowSponsorBoxMobile(!showSponsorBoxMobile)}
+          >
+            {showSponsorBoxMobile ? "Close" : "See Your Representatives"}
+          </div>
+          {showSponsorBoxMobile && (
+            <div className="p-2 text-xs">
+              <LegislatorsBox {...props} />
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const LegislatorsInfo = (
+  props: LegislatorsFunc & { className?: string }
+) => {
+  const legislators = getLegislators(props.offices);
+  if (!legislators.length) {
+    return <></>;
+  }
+  return (
+    <div className={props.className}>
+      {/* For Mobile */}
+      <div className="block lg:hidden">
+        <LegislatorsToggle
+          offices={props.offices}
+          location={props.location}
+          showAllReps={props.showAllReps}
+        />
+      </div>
+      {/* For Desktop */}
+      <div className="my-2 hidden text-base lg:block">
+        <LegislatorsBox {...props} />
+      </div>
     </div>
-  ) : (
-    <div
-      className="inline-block cursor-pointer rounded bg-black bg-opacity-20 px-5 py-1 text-xs underline decoration-dotted"
-      onClick={() => setShowSponsorBoxMobile(true)}
-    >
-      See Your Representatives
+  );
+};
+
+const LegislatorsBox = (props: LegislatorsFunc) => {
+  const { levelText } = getLocationInformationText(props.location);
+  const legislators = getLegislators(props.offices);
+  if (!legislators) {
+    return <></>;
+  }
+  return (
+    <div>
+      <div className="mb-1 text-sm uppercase opacity-70 lg:text-base lg:font-bold">
+        Legislators at {levelText} level
+      </div>
+      <div className="px-2">
+        <Legislators
+          offices={props.offices}
+          showAllReps={props.showAllReps}
+          location={props.location}
+        />
+      </div>
     </div>
   );
 };
