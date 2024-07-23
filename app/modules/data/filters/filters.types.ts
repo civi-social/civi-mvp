@@ -10,7 +10,6 @@ export type Nullish = undefined | "" | null;
 
 export interface FilterParams {
   location: LocationFilter;
-  dontShowSponsoredByReps: true | null;
   tags: string[] | null;
   availableTags: string[];
   level: RepLevel | null;

@@ -16,15 +16,17 @@ export const ALLOWED_GPT_TAGS = [
 ];
 
 // City level filters for tags that are not GPT tags
-export enum CustomCityTags {
-  "Ordinance" = "City Ordinance",
-  "Resolution" = "City Resolution",
+export enum CustomChicagoTag {
+  "Ordinance" = "City Wide Ordinance",
+  "Resolution" = "City Wide Resolution",
 }
 
-export const AVAILABLE_TAGS = [
-  ...Object.values(CustomCityTags),
-  ...ALLOWED_GPT_TAGS,
-];
+export const ChicagoTags = Object.values(CustomChicagoTag);
+
+export const SPONSORED_BY_REP_TAG =
+  "Any Bills Sponsored By Your Representatives";
+
+export const AVAILABLE_TAGS = [...ALLOWED_GPT_TAGS];
 
 export enum RepLevel {
   City = "city",
@@ -50,5 +52,4 @@ export const DEFAULT_FILTERS: FilterParams = {
   level: null,
   tags: null,
   availableTags: AVAILABLE_TAGS,
-  dontShowSponsoredByReps: null,
 };

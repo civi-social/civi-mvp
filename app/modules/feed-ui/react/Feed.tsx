@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getLocation } from "~app/modules/data/filters";
+import { FilterParams, getLocation } from "~app/modules/data/filters";
 import type { StyleHack } from "~app/modules/design-system";
 import {
   Container,
@@ -9,67 +9,70 @@ import {
   classNames,
   getRadioStyle,
 } from "~app/modules/design-system";
-import type { FeedFilterProps, FeedProps } from "../feed-ui.types";
+import { FeedFilterProps, FeedProps } from "../feed-ui.types";
 import { FeedBills } from "./Bills";
 import { BillFilters, YourFilterSummary } from "./Filters";
 import { CiviUpdates, Logo } from "./Intro";
 import { RepresentativesList } from "./Representatives";
+import { RouteOption } from "../feed-ui.constants";
 
 const Navigation = (props: FeedFilterProps) => {
-  const shouldShowExplore =
-    props.globalState.noSavedFeed || props.globalState.showExplore;
-
-  const hideNav = props.globalState.noSavedFeed;
-
-  const [exploring, setIsExploringState] = useState(shouldShowExplore);
-  const setIsExploring = (next: boolean) => {
+  const [route, setRouteState] = useState(props.globalState.route);
+  const setRoute = (next: RouteOption) => {
     props.updateGlobalState({
-      showExplore: next,
+      route: next,
     });
-    setIsExploringState(next);
+    setRouteState(next);
   };
+
+  const hideNav = route === RouteOption.INTRO;
 
   let mode: React.ReactNode;
 
-  if (exploring) {
+  if (route === RouteOption.INTRO || route === RouteOption.EXPLORE) {
     mode = (
-      <BillFilters
-        onSave={() => {
-          props.saveToFeed();
-          props.updateGlobalState({
-            noSavedFeed: false,
-            showExplore: false,
-          });
-          setIsExploringState(false);
-        }}
-        {...props}
-        title={
-          hideNav
-            ? "We Want To Help You Engage With The Legislation That Impacts You"
-            : "Explore Legislation"
-        }
-      />
+      <div className="px-3">
+        <BillFilters
+          {...props}
+          saveToFeed={(next) => {
+            props.saveToFeed(next);
+            setRoute(RouteOption.FEED);
+          }}
+          title={
+            route === RouteOption.INTRO
+              ? "We Want To Help You Engage With The Legislation That Impacts You"
+              : "Explore Legislation"
+          }
+        />
+      </div>
     );
   } else {
-    mode = <YourFilterSummary {...props} setIsExploring={setIsExploring} />;
+    mode = (
+      <YourFilterSummary
+        {...props}
+        setIsExploring={() => {
+          setRoute(RouteOption.EXPLORE);
+        }}
+      />
+    );
   }
   return (
     <div>
-      <div className="mb-2 flex items-center">
+      <div className="mb-2 flex items-center px-3 pt-3">
         <div className="flex-1">
           <Logo />
         </div>
         <div className={classNames(hideNav && "hidden")}>
           <RadioPicker
-            key={String(exploring)}
+            key={String(route)}
             type="transparent"
             handleChange={(next) => {
-              setIsExploring(next);
+              setRoute(next);
             }}
-            defaultValue={exploring}
+            defaultValue={route}
             options={[
-              { label: "Your Feed", value: false },
-              { label: "Explore", value: true },
+              { label: "Your Feed", value: RouteOption.FEED },
+              { label: "Explore", value: RouteOption.EXPLORE },
             ]}
           />
         </div>
@@ -99,6 +102,14 @@ const FeedShell = ({
 }) => {
   const skipToContentId = "main-content";
   const ContainerComponent = showRight ? Grid : Container;
+  const backgroundTheme =
+    "linear-gradient(to bottom, rgba(255,29,135,1) 0px, rgba(255,82,37,1) 600px, rgba(238,145, 126,1) 1000px, rgba(0,0,0,0.1) 1500px)";
+  const backgroundThemeMuted =
+    "linear-gradient(to bottom, rgba(0,0,0,0.3) 0vh, rgba(0,0,0,0.2) 100vh)";
+
+  const screenCentered =
+    "flex min-h-screen min-w-full flex-col items-center lg:justify-center";
+
   return (
     <Container className="select-none">
       <a
@@ -109,13 +120,25 @@ const FeedShell = ({
       </a>
       <ContainerComponent
         style={{
-          background:
-            "linear-gradient(to bottom, rgba(255,29,135,1) 0px, rgba(255,82,37,1) 600px, rgba(238,145, 126,1) 1000px, rgba(0,0,0,0.1) 1500px)" as StyleHack,
+          background: backgroundTheme as StyleHack,
         }}
-        className="flex min-h-screen flex-col items-center justify-center bg-gray-300 bg-opacity-50"
+        className={classNames(screenCentered)}
       >
-        <aside className="via-opacity-30 flex h-full flex-col text-left">
-          <div className="px-3 pt-3">
+        <aside
+          className={classNames(
+            "via-opacity-30 flex h-full flex-col text-left",
+            !showRight && screenCentered,
+            !showRight && "pb-5"
+          )}
+          style={
+            !showRight
+              ? {
+                  background: backgroundThemeMuted as StyleHack,
+                }
+              : {}
+          }
+        >
+          <div className="lg:px-3">
             {left}
             <CiviUpdates />
           </div>
@@ -138,6 +161,7 @@ export const Feed = (props: FeedProps) => {
   };
 
   const location = getLocation(props.filters.location);
+  const introMode = props.globalState.route === RouteOption.INTRO;
 
   return (
     <>
@@ -157,7 +181,7 @@ export const Feed = (props: FeedProps) => {
         <FeedShell
           left={<Navigation {...props} showAllReps={showAllReps} />}
           right={<FeedBills {...props} />}
-          showRight={location !== null}
+          showRight={!introMode}
         />
       )}
     </>

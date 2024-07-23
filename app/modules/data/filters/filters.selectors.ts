@@ -6,11 +6,13 @@ import type { RepresentativesResult } from "~app/modules/data/representatives";
 import type { FilterParams, WindyCiviBill } from "../legislation";
 import {
   ALLOWED_GPT_TAGS,
-  CustomCityTags,
+  CustomChicagoTag,
   RepLevel,
+  SPONSORED_BY_REP_TAG,
   findOverlap,
   findStringOverlap,
   getBillUpdateAt,
+  hasSponsoredByRepTag,
   hasTags,
   tagsOverLap,
 } from "../legislation";
@@ -100,28 +102,32 @@ const sanitizeAndOrderName = (name: string): string => {
 // End Rep Filters
 
 // Start Chicago Filters
+const filterOnlyImportantCityBills = (bill: CiviLegislationData) =>
+  isChicagoImportantOrdinance(bill) || isChicagoResolution(bill);
 
-const filterOnlyResolutions = (bill: CiviLegislationData) => {
-  const isCityResolution = bill.classification === "resolution";
-  if (!isCityResolution) {
-    return false;
-  }
-  if (bill.tags?.includes("City Council Rules")) {
-    return false;
-  }
-  if (bill.title.toLowerCase().includes("birthday")) {
-    return false;
-  }
-  return true;
+const isChicagoImportantOrdinance = (bill: CiviLegislationData) => {
+  return (
+    bill.classification === "ordinance" &&
+    bill.tags?.includes("City Matters") &&
+    bill.tags?.includes("Municipal Code")
+  );
+};
+
+const isChicagoResolution = (bill: CiviLegislationData) => {
+  return (
+    bill.classification === "resolution" &&
+    !bill.tags?.includes("City Council Rules") &&
+    !bill.title.toLowerCase().includes("birthday")
+  );
 };
 
 export const filterNoisyCityBills =
-  (shouldKeepOrdinances: boolean) => (bill: WindyCiviBill) => {
+  (showSponsoredBills: boolean) => (bill: WindyCiviBill) => {
     // Filter out city ordinance and noisy bills if we don't have city representatives data
-    if (shouldKeepOrdinances) {
+    if (showSponsoredBills) {
       return true;
     } else {
-      return filterOnlyResolutions(bill.bill);
+      return filterOnlyImportantCityBills(bill.bill);
     }
   };
 
@@ -183,40 +189,43 @@ const createFeedBill =
   (bill: CiviLegislationData): WindyCiviBill => {
     const gptSummaries = gpt[bill.id];
     // todo: move to civi-legislation-data
-    let gptTags = gptSummaries.gpt_tags;
-    let overlapped = findStringOverlap(gptTags || [], ALLOWED_GPT_TAGS);
+    let gptTags = gptSummaries.gpt_tags || [];
 
-    // remove any extra others if it has other categories
-    if (overlapped.length > 1) {
-      overlapped = overlapped.filter((str) => str !== "Other");
-    }
+    // Remove Other filter
+    gptTags = gptTags.filter((str) => str !== "Other");
+
+    // Verify GPT tag exists in allowed tags
+    gptTags = findStringOverlap(gptTags, ALLOWED_GPT_TAGS);
 
     // if it has no categories, add other
-    if (overlapped.length === 0) {
-      overlapped.push("Other");
+    if (gptTags.length === 0) {
+      gptTags.push("Other");
     }
+
     const cleanedGpt = {
       gpt_summary: gptSummaries.gpt_summary,
-      gpt_tags: overlapped,
+      gpt_tags: gptTags,
     };
     const sponsoredByRep = getUserRepNameIfBillIsSponsored(
       representatives,
       bill.sponsors,
       level
     );
-    const coded_tags =
-      bill.classification === "ordinance"
-        ? [CustomCityTags.Ordinance]
-        : bill.classification === "resolution"
-        ? [CustomCityTags.Resolution]
-        : [];
 
-    const allTags = [...(cleanedGpt?.gpt_tags || []), ...coded_tags];
+    // move this to the generated data
+    const chicagoTags = isChicagoImportantOrdinance(bill)
+      ? [CustomChicagoTag.Ordinance]
+      : isChicagoResolution(bill)
+      ? [CustomChicagoTag.Resolution]
+      : [];
+
+    const sponsoredByRepTag = sponsoredByRep ? [SPONSORED_BY_REP_TAG] : [];
+
+    const allTags = [...sponsoredByRepTag, ...chicagoTags, ...gptTags];
 
     return {
       bill,
       gpt: cleanedGpt,
-      coded_tags,
       allTags,
       level,
       sponsoredByRep,
@@ -264,20 +273,16 @@ export const createFeedBillsFromMultipleSources = (
 
 export const selectBillsFromFilters = (
   bills: WindyCiviBill[],
-  filters: FilterParams,
-  reps: RepresentativesResult | null
+  filters: FilterParams
 ) => {
-  const shouldIncludeSponsored = reps && !filters.dontShowSponsoredByReps;
-  const shouldIncludesTags = hasTags(filters.tags);
+  const hasTagsSelected = hasTags(filters.tags);
 
   let filteredLegislation: typeof bills = [];
 
   // Stuff to add
   bills.forEach((bill) => {
     // If no filters are selected, show all bills
-    if (!shouldIncludeSponsored && !shouldIncludesTags) {
-      filteredLegislation.push(bill);
-    } else if (shouldIncludeSponsored && bill.sponsoredByRep) {
+    if (!hasTagsSelected) {
       filteredLegislation.push(bill);
     } else if (tagsOverLap(bill.allTags, filters.tags)) {
       filteredLegislation.push(bill);

@@ -12,6 +12,8 @@ import {
   selectBillsFromFilters,
   sortByUpdatedAt,
   getAddress,
+  SPONSORED_BY_REP_TAG,
+  hasSponsoredByRepTag,
 } from "./legislation";
 import { getRepresentatives } from "./representatives/api";
 
@@ -50,8 +52,8 @@ export const getFilteredLegislation = async ({
     filters.location
   );
 
-  const shouldShowSponsoredOrdinances = Boolean(
-    representatives && !filters.dontShowSponsoredByReps
+  const showSponsoredBills = Boolean(
+    representatives && hasSponsoredByRepTag(filters.tags)
   );
 
   // First select all bills that are sponsored, if the user wants sponsored bills
@@ -59,18 +61,14 @@ export const getFilteredLegislation = async ({
     [
       allChicagoBills,
       RepLevel.City,
-      [filterNoisyCityBills(shouldShowSponsoredOrdinances)],
+      [filterNoisyCityBills(showSponsoredBills)],
     ],
     [allILBills, RepLevel.State, null],
     [allUSBills, RepLevel.National, null],
   ]);
 
   // Then select and filter bills based on user filters
-  let filteredLegislation = selectBillsFromFilters(
-    fullLegislation,
-    filters,
-    representatives
-  );
+  let filteredLegislation = selectBillsFromFilters(fullLegislation, filters);
 
   // Sort by updated_at
   filteredLegislation = sortByUpdatedAt(filteredLegislation);
