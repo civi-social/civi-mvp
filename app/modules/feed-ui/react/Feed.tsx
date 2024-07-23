@@ -113,41 +113,43 @@ const FeedShell = ({
 
   return (
     <Container className="select-none">
-      <PWAInstall />
       <a
         className="bg-primary text-primary-content absolute left-0 z-10 m-3 -translate-y-16 p-3 transition focus:translate-y-0"
         href={`#${skipToContentId}`}
       >
         Skip To Content
       </a>
-      <ContainerComponent
+      <Container
         style={{
           background: backgroundTheme as StyleHack,
         }}
         className={classNames(screenCentered)}
       >
-        <aside
-          className={classNames(
-            "via-opacity-30 flex h-full flex-col text-left",
-            !showRight && screenCentered,
-            !showRight && "pb-5"
+        <PWAInstall />
+        <ContainerComponent className={screenCentered}>
+          <aside
+            className={classNames(
+              "via-opacity-30 flex h-full flex-col text-left",
+              !showRight && screenCentered,
+              !showRight && "pb-5"
+            )}
+            style={
+              !showRight
+                ? {
+                    background: backgroundThemeMuted as StyleHack,
+                  }
+                : {}
+            }
+          >
+            <div className="lg:px-3">{left}</div>
+          </aside>
+          {showRight && (
+            <main id={skipToContentId} className="h-full">
+              <div className="mx-3">{right}</div>
+            </main>
           )}
-          style={
-            !showRight
-              ? {
-                  background: backgroundThemeMuted as StyleHack,
-                }
-              : {}
-          }
-        >
-          <div className="lg:px-3">{left}</div>
-        </aside>
-        {showRight && (
-          <main id={skipToContentId} className="h-full">
-            <div className="mx-3">{right}</div>
-          </main>
-        )}
-      </ContainerComponent>
+        </ContainerComponent>
+      </Container>
     </Container>
   );
 };

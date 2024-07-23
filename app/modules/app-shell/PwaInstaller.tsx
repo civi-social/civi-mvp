@@ -134,10 +134,7 @@ const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
   };
 
   const desktopStyle: CSSProperties = {
-    position: "fixed",
-    top: "0px",
     width: "100%",
-    zIndex: ZIndex["z-index-4"],
   };
 
   const close = (
@@ -150,7 +147,7 @@ const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
     return (
       <div style={mobileStyle}>
         <div
-          className="bg-black bg-opacity-80 p-6 text-white opacity-70 backdrop-blur-2xl"
+          className="bg-black bg-opacity-80 p-6 text-white backdrop-blur-2xl"
           style={{ boxShadow: "rgba(0, 0, 0, 0.4) 0px -7px 10px" }}
         >
           <div className="mb-2 flex items-start text-sm">

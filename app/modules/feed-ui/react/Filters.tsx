@@ -239,39 +239,43 @@ export const YourFilterSummary = (
 
   const preferencesText = (
     <span>
-      <span className="opacity-60">Preferences</span> (
-      <span
-        role="button"
-        className="underline opacity-80"
-        onClick={() => {
-          props.setIsExploring(true);
-        }}
-      >
-        Edit
+      <span className="opacity-60">Preferences</span>
+      <span className="opacity-50">
+        {" "}
+        (
+        <span
+          role="button"
+          className="underline"
+          onClick={() => {
+            props.setIsExploring(true);
+          }}
+        >
+          Edit
+        </span>
+        |
+        <span
+          role="button"
+          className="underline"
+          onClick={() => {
+            const confirm = window.confirm(
+              "Are you sure you want to reset everything? All preferences will be lost"
+            );
+            if (confirm) {
+              props.deleteAllData();
+            }
+          }}
+        >
+          Reset
+        </span>
+        )
       </span>
-      |
-      <span
-        role="button"
-        className="underline opacity-80"
-        onClick={() => {
-          const confirm = window.confirm(
-            "Are you sure you want to reset everything? All preferences will be lost"
-          );
-          if (confirm) {
-            props.deleteAllData();
-          }
-        }}
-      >
-        Reset
-      </span>
-      )
     </span>
   );
 
   const tagsToShow = getTagsBeingFiltered(props.filters);
 
   return (
-    <div className="bg-black bg-opacity-30 p-2 shadow-inner lg:rounded-lg">
+    <div className="bg-black bg-opacity-30 p-2 shadow-inner lg:mt-5 lg:rounded-lg">
       <div className="text-center text-white lg:text-left">
         <div className="lg:text-right">{preferencesText}</div>
         <div className="hidden lg:block">
