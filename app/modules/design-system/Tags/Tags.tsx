@@ -88,17 +88,17 @@ export const Tag: React.FC<{
       className={
         type === "tiny"
           ? classNames(
+              className,
               "m-1 rounded-full px-3 text-xs",
               background,
-              "bg-opacity-60",
-              className
+              "bg-opacity-60"
             )
           : classNames(
+              className,
               baseTag,
-              "text-sm font-medium uppercase text-opacity-90 lg:text-base",
+              "font-medium uppercase text-opacity-90",
               background,
-              "text-white",
-              className
+              "text-white"
             )
       }
     >

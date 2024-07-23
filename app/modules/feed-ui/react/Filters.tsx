@@ -69,7 +69,21 @@ const LocationFilterContainer = (props: {
   return (
     <FilterContainer
       largeTitle={props.introMode}
-      title={<div>Set Location</div>}
+      title={
+        <div>
+          Location (
+          <span
+            role="button"
+            className="cursor-pointer underline"
+            onClick={() => {
+              setIsEditing(false);
+            }}
+          >
+            Cancel
+          </span>
+          )
+        </div>
+      }
     >
       <div>
         <div
@@ -286,7 +300,13 @@ export const YourFilterSummary = (
           </div>
           <div className="my-1 flex flex-wrap justify-center font-sans">
             {tagsToShow.map((v) => {
-              return <Tag key={v} text={v} className="bg-opacity-60" />;
+              return (
+                <Tag
+                  key={v}
+                  text={v}
+                  className="bg-opacity-60 text-sm lg:text-base"
+                />
+              );
             })}
           </div>
         </div>
@@ -366,7 +386,7 @@ export const BillFilters = (
         {props.title}
       </div>
 
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center">
         <div
           className={classNames(
             "flex w-full max-w-screen-md flex-col justify-center"
@@ -391,7 +411,7 @@ export const BillFilters = (
           {/* Tags Filter */}
           {filterState.location && (
             <>
-              <FilterContainer title="Follow Bills" largeTitle={introMode}>
+              <FilterContainer title="Interests" largeTitle={introMode}>
                 <Tagging
                   tags={filterState.availableTags}
                   selected={filterState.tags}
