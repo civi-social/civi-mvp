@@ -226,6 +226,21 @@ export const YourFilterSummary = (
       >
         Edit
       </span>
+      |
+      <span
+        role="button"
+        className="underline opacity-80"
+        onClick={() => {
+          const confirm = window.confirm(
+            "Are you sure you want to reset everything? All preferences will be lost"
+          );
+          if (confirm) {
+            props.deleteAllData();
+          }
+        }}
+      >
+        Reset
+      </span>
       )
     </span>
   );
@@ -313,7 +328,6 @@ const FilterTitle: React.FC<{ largeTitle?: boolean }> = (props) => {
 export const BillFilters = (
   props: FeedFilterProps & {
     title: string;
-    saveToFeed: FeedProps["saveToFeed"];
   }
 ) => {
   const introMode = props.globalState.route === RouteOption.INTRO;

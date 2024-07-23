@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getEnv } from "~app/modules/config";
 
 import { useEffect, useState } from "react";
-import { Feed } from "~app/modules/feed-ui";
+import { getFilteredLegislation } from "~app/modules/data/api";
 import type { FilterParams } from "~app/modules/data/filters";
 import {
   DEFAULT_FILTERS,
@@ -14,27 +14,22 @@ import {
   parseRepLevel,
   stringifyTags,
 } from "~app/modules/data/filters";
-import { getFilteredLegislation } from "~app/modules/data/api";
+import { Feed } from "~app/modules/feed-ui";
+import { DEFAULT_GLOBAL_STATE, RouteOption } from "./feed-ui.constants";
 import {
   type FeedLoaderData,
   type FeedProps,
-  type GlobalState,
   type UpdateFiltersFn,
   type UpdateGlobalStateFn,
 } from "./feed-ui.types";
 import {
+  cookieFactory,
   formatDate,
   getCookieFromString,
-  cookieFactory,
 } from "./feed-ui.utils";
-import { RouteOption } from "./feed-ui.constants";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const globalState: GlobalState = {
-    lastVisited: "",
-    route: RouteOption.INTRO,
-    hideLLMWarning: false,
-  };
+  const globalState = DEFAULT_GLOBAL_STATE;
 
   // Feed State is in Cookies
   const cookieHeader = request.headers.get("Cookie");
@@ -212,6 +207,19 @@ export default function ForYouPage() {
     setSearchParams(new URLSearchParams());
   };
 
+  const deleteAllData = () => {
+    const cookies = cookieFactory(document);
+    cookies.delete("location");
+    cookies.delete("tags");
+    cookies.delete("level");
+    cookies.delete("lastVisited");
+    cookies.delete("lastVisitHold");
+    cookies.delete("hideLLMWarning");
+    setFilters(DEFAULT_FILTERS);
+    setGlobalState(DEFAULT_GLOBAL_STATE);
+    setSearchParams(new URLSearchParams());
+  };
+
   const updateGlobalState: UpdateGlobalStateFn = (next) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const cookies = cookieFactory(document);
@@ -253,6 +261,7 @@ export default function ForYouPage() {
       updateGlobalState={updateGlobalState}
       updateFilters={updateFilters}
       saveToFeed={saveToFeed}
+      deleteAllData={deleteAllData}
     />
   );
 }

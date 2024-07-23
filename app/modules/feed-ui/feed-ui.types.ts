@@ -13,6 +13,7 @@ export interface FeedProps extends FeedLoaderData {
   updateFilters: UpdateFiltersFn;
   updateGlobalState: UpdateGlobalStateFn;
   saveToFeed: (next: Partial<FilterParams>) => void;
+  deleteAllData: () => void;
 }
 
 export interface GlobalState {
