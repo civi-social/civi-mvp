@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FilterParams, getLocation } from "~app/modules/data/filters";
+import { getLocation } from "~app/modules/data/filters";
 import type { StyleHack } from "~app/modules/design-system";
 import {
   Container,
@@ -15,6 +15,7 @@ import { BillFilters, YourFilterSummary } from "./Filters";
 import { RepresentativesList } from "./Representatives";
 import { RouteOption } from "../feed-ui.constants";
 import { Logo } from "~app/modules/design-system/Logo/Logo";
+import { PWAInstall } from "~app/modules/app-shell/PwaInstaller";
 
 const Navigation = (props: FeedFilterProps) => {
   const [route, setRouteState] = useState(props.globalState.route);
@@ -118,34 +119,37 @@ const FeedShell = ({
       >
         Skip To Content
       </a>
-      <ContainerComponent
+      <Container
         style={{
           background: backgroundTheme as StyleHack,
         }}
         className={classNames(screenCentered)}
       >
-        <aside
-          className={classNames(
-            "via-opacity-30 flex h-full flex-col text-left",
-            !showRight && screenCentered,
-            !showRight && "pb-5"
+        <PWAInstall />
+        <ContainerComponent className={screenCentered}>
+          <aside
+            className={classNames(
+              "via-opacity-30 flex h-full flex-col text-left",
+              !showRight && screenCentered,
+              !showRight && "pb-5"
+            )}
+            style={
+              !showRight
+                ? {
+                    background: backgroundThemeMuted as StyleHack,
+                  }
+                : {}
+            }
+          >
+            <div className="lg:px-3">{left}</div>
+          </aside>
+          {showRight && (
+            <main id={skipToContentId} className="h-full">
+              <div className="mx-3">{right}</div>
+            </main>
           )}
-          style={
-            !showRight
-              ? {
-                  background: backgroundThemeMuted as StyleHack,
-                }
-              : {}
-          }
-        >
-          <div className="lg:px-3">{left}</div>
-        </aside>
-        {showRight && (
-          <main id={skipToContentId} className="h-full">
-            <div className="mx-3">{right}</div>
-          </main>
-        )}
-      </ContainerComponent>
+        </ContainerComponent>
+      </Container>
     </Container>
   );
 };

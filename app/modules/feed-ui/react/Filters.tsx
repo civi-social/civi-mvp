@@ -35,7 +35,7 @@ const LocationFilterContainer = (props: {
   introMode: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState(props.introMode);
-
+  const [showCancel, setShowCancel] = useState(!props.introMode);
   if (!isEditing) {
     return (
       <FilterContainer
@@ -48,6 +48,9 @@ const LocationFilterContainer = (props: {
               className="cursor-pointer underline"
               onClick={() => {
                 setIsEditing(true);
+                if (!showCancel) {
+                  setShowCancel(true);
+                }
               }}
             >
               Edit
@@ -71,17 +74,23 @@ const LocationFilterContainer = (props: {
       largeTitle={props.introMode}
       title={
         <div>
-          Location (
-          <span
-            role="button"
-            className="cursor-pointer underline"
-            onClick={() => {
-              setIsEditing(false);
-            }}
-          >
-            Cancel
-          </span>
-          )
+          Location
+          {showCancel && (
+            <>
+              {" "}
+              (
+              <span
+                role="button"
+                className="cursor-pointer underline"
+                onClick={() => {
+                  setIsEditing(false);
+                }}
+              >
+                Cancel
+              </span>
+              )
+            </>
+          )}
         </div>
       }
     >
@@ -230,39 +239,43 @@ export const YourFilterSummary = (
 
   const preferencesText = (
     <span>
-      <span className="opacity-60">Preferences</span> (
-      <span
-        role="button"
-        className="underline opacity-80"
-        onClick={() => {
-          props.setIsExploring(true);
-        }}
-      >
-        Edit
+      <span className="opacity-60">Preferences</span>
+      <span className="opacity-50">
+        {" "}
+        (
+        <span
+          role="button"
+          className="underline"
+          onClick={() => {
+            props.setIsExploring(true);
+          }}
+        >
+          Edit
+        </span>
+        |
+        <span
+          role="button"
+          className="underline"
+          onClick={() => {
+            const confirm = window.confirm(
+              "Are you sure you want to reset everything? All preferences will be lost"
+            );
+            if (confirm) {
+              props.deleteAllData();
+            }
+          }}
+        >
+          Reset
+        </span>
+        )
       </span>
-      |
-      <span
-        role="button"
-        className="underline opacity-80"
-        onClick={() => {
-          const confirm = window.confirm(
-            "Are you sure you want to reset everything? All preferences will be lost"
-          );
-          if (confirm) {
-            props.deleteAllData();
-          }
-        }}
-      >
-        Reset
-      </span>
-      )
     </span>
   );
 
   const tagsToShow = getTagsBeingFiltered(props.filters);
 
   return (
-    <div className="bg-black bg-opacity-30 p-2 shadow-inner lg:rounded-lg">
+    <div className="bg-black bg-opacity-30 p-2 lg:mt-5 lg:rounded-lg lg:px-5 lg:py-3">
       <div className="text-center text-white lg:text-left">
         <div className="lg:text-right">{preferencesText}</div>
         <div className="hidden lg:block">
@@ -336,7 +349,7 @@ const FilterTitle: React.FC<{ largeTitle?: boolean }> = (props) => {
       <span
         className={classNames(
           "rounded-sm font-bold uppercase text-white opacity-70",
-          props.largeTitle ? "text-md lg:text-xl" : "text-sm"
+          props.largeTitle ? "text-md lg:text-lg" : "text-sm"
         )}
       >
         {props.children}
