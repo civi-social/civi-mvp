@@ -126,11 +126,11 @@ const FeedShell = ({
         className={classNames(screenCentered)}
       >
         <PWAInstall />
-        <ContainerComponent className={screenCentered}>
+        <ContainerComponent className="flex h-full w-full flex-1 flex-col">
           <aside
             className={classNames(
-              "via-opacity-30 flex h-full flex-col text-left",
-              !showRight && screenCentered,
+              "via-opacity-30 flex h-full flex-1 flex-col text-left",
+              !showRight && "items-center lg:justify-center",
               !showRight && "pb-5"
             )}
             style={
