@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FilterParams, getLocation } from "~app/modules/data/filters";
+import { getLocation } from "~app/modules/data/filters";
 import type { StyleHack } from "~app/modules/design-system";
 import {
   Container,
@@ -15,6 +15,7 @@ import { BillFilters, YourFilterSummary } from "./Filters";
 import { RepresentativesList } from "./Representatives";
 import { RouteOption } from "../feed-ui.constants";
 import { Logo } from "~app/modules/design-system/Logo/Logo";
+import { PWAInstall } from "~app/modules/app-shell/PwaInstaller";
 
 const Navigation = (props: FeedFilterProps) => {
   const [route, setRouteState] = useState(props.globalState.route);
@@ -112,6 +113,7 @@ const FeedShell = ({
 
   return (
     <Container className="select-none">
+      <PWAInstall />
       <a
         className="bg-primary text-primary-content absolute left-0 z-10 m-3 -translate-y-16 p-3 transition focus:translate-y-0"
         href={`#${skipToContentId}`}

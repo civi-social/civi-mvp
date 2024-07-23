@@ -35,7 +35,7 @@ const LocationFilterContainer = (props: {
   introMode: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState(props.introMode);
-
+  const [showCancel, setShowCancel] = useState(!props.introMode);
   if (!isEditing) {
     return (
       <FilterContainer
@@ -48,6 +48,9 @@ const LocationFilterContainer = (props: {
               className="cursor-pointer underline"
               onClick={() => {
                 setIsEditing(true);
+                if (!showCancel) {
+                  setShowCancel(true);
+                }
               }}
             >
               Edit
@@ -71,17 +74,23 @@ const LocationFilterContainer = (props: {
       largeTitle={props.introMode}
       title={
         <div>
-          Location (
-          <span
-            role="button"
-            className="cursor-pointer underline"
-            onClick={() => {
-              setIsEditing(false);
-            }}
-          >
-            Cancel
-          </span>
-          )
+          Location
+          {showCancel && (
+            <>
+              {" "}
+              (
+              <span
+                role="button"
+                className="cursor-pointer underline"
+                onClick={() => {
+                  setIsEditing(false);
+                }}
+              >
+                Cancel
+              </span>
+              )
+            </>
+          )}
         </div>
       }
     >
@@ -336,7 +345,7 @@ const FilterTitle: React.FC<{ largeTitle?: boolean }> = (props) => {
       <span
         className={classNames(
           "rounded-sm font-bold uppercase text-white opacity-70",
-          props.largeTitle ? "text-md lg:text-xl" : "text-sm"
+          props.largeTitle ? "text-md lg:text-lg" : "text-sm"
         )}
       >
         {props.children}

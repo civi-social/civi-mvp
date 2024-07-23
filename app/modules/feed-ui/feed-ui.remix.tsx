@@ -215,6 +215,7 @@ export default function ForYouPage() {
     cookies.delete("lastVisited");
     cookies.delete("lastVisitHold");
     cookies.delete("hideLLMWarning");
+    cookies.delete("pwa-install-prompt");
     setFilters(DEFAULT_FILTERS);
     setGlobalState(DEFAULT_GLOBAL_STATE);
     setSearchParams(new URLSearchParams());
