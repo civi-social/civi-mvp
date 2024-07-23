@@ -16,8 +16,6 @@ export const Button: React.FC<{
       break;
   }
 
-  console.log("TYPE CLASS", typeClass);
-
   return (
     <div
       role="button"

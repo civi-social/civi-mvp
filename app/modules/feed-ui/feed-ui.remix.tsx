@@ -75,17 +75,19 @@ export const loader: LoaderFunction = async ({ request }) => {
     globalState.route = RouteOption.FEED;
   }
 
-  const shouldAcceptSearchParams = globalState.route === RouteOption.EXPLORE;
+  const shouldAcceptSearchParams =
+    globalState.route === RouteOption.EXPLORE ||
+    globalState.route === RouteOption.INTRO;
 
   const levelSearchParam = url.searchParams.get("level");
+  const locationSearchParam = url.searchParams.get("location");
 
   let searchParams: FilterParams | null = null;
   if (shouldAcceptSearchParams) {
     const tags = url.searchParams.get("tags");
-    const location = url.searchParams.get("location");
     const level = levelSearchParam;
     searchParams = createFilterParams({
-      location,
+      location: locationSearchParam,
       level,
       tags,
     });
@@ -162,30 +164,32 @@ export default function ForYouPage() {
 
   const updateFilters: UpdateFiltersFn = (next) => {
     // Decide which storage to use
-    const storage = new URLSearchParams(searchParams.toString());
+    const newSearchParams = new URLSearchParams(searchParams.toString());
     // Update Filters
     if ("location" in next) {
       // Always delete level to reset
-      storage.delete("level");
+      newSearchParams.delete("level");
 
       const locationString = getLocation(next.location);
       if (!locationString) {
-        storage.delete("location");
+        newSearchParams.delete("location");
       } else {
-        storage.set("location", locationString);
+        newSearchParams.set("location", locationString);
       }
     } else if ("level" in next) {
-      next.level ? storage.set("level", next.level) : storage.delete("level");
+      next.level
+        ? newSearchParams.set("level", next.level)
+        : newSearchParams.delete("level");
     }
 
     if ("tags" in next) {
       hasTags(next.tags)
-        ? storage.set("tags", stringifyTags(next.tags))
-        : storage.delete("tags");
+        ? newSearchParams.set("tags", stringifyTags(next.tags))
+        : newSearchParams.delete("tags");
     }
 
     setFilters({ ...filters, ...next });
-    setSearchParams(storage);
+    setSearchParams(newSearchParams);
   };
 
   const saveToFeed: FeedProps["saveToFeed"] = (next) => {
@@ -225,7 +229,6 @@ export default function ForYouPage() {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const cookies = cookieFactory(document);
     if ("route" in next) {
-      const showExplore = next.route === RouteOption.EXPLORE;
       // Get default filter data from your feed
       if (next.route === RouteOption.EXPLORE) {
         newSearchParams.set("showExplore", "true");
@@ -235,7 +238,7 @@ export default function ForYouPage() {
 
       // Go through the filters and add/remove them based on the mode
       ["location", "tags", "level"].forEach((filterParam) => {
-        if (showExplore) {
+        if (next.route === RouteOption.EXPLORE) {
           const savedParam = cookies.get(filterParam);
           if (savedParam) {
             newSearchParams.set(filterParam, savedParam);
@@ -244,6 +247,17 @@ export default function ForYouPage() {
           newSearchParams.delete(filterParam);
         }
       });
+
+      if (next.route === RouteOption.FEED) {
+        const savedPreferences = createFilterParams({
+          location: cookies.get("location"),
+          level: cookies.get("level"),
+          tags: cookies.get("tags"),
+        });
+        setFilters({ ...filters, ...savedPreferences });
+
+        newSearchParams.delete("showExplore");
+      }
     }
 
     if ("hideLLMWarning" in next) {

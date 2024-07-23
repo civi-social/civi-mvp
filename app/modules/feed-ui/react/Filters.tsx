@@ -34,8 +34,9 @@ const LocationFilterContainer = (props: {
   onClear: Function;
   introMode: boolean;
 }) => {
-  const [isEditing, setIsEditing] = useState(props.introMode);
-  const [showCancel, setShowCancel] = useState(!props.introMode);
+  const hasLocation = Boolean(props.location);
+  const [isEditing, setIsEditing] = useState(!hasLocation);
+  const [showCancel, setShowCancel] = useState(hasLocation);
   if (!isEditing) {
     return (
       <FilterContainer
@@ -367,12 +368,9 @@ export const BillFilters = (
   const [filterState, setFilterState] = useState<FilterParams>(props.filters);
 
   const updateFilters = (next: Partial<FilterParams>) => {
-    if (!introMode) {
-      props.updateFilters(next);
-    }
+    props.updateFilters(next);
     if ("location" in next) {
       next.availableTags = parseAvailableTags(next.location);
-      console.log("NEXT AVAILABLE TAGS", next.availableTags);
     }
     setFilterState({ ...filterState, ...next });
   };
@@ -385,7 +383,7 @@ export const BillFilters = (
     <>
       <Divider type="white" className="my-2 lg:my-3" />
       <LegislatorsInfo
-        className="opacity-80"
+        className={classNames("opacity-80", introMode && "text-center")}
         offices={props.offices}
         location={filterState.location}
         showAllReps={props.showAllReps}
