@@ -1,19 +1,18 @@
 import { Env } from "~app/modules/config";
 import {
-  FilterParams,
-  FeedData,
-  SupportedLocale,
-  isAddressFilter,
-  getLegislations,
   DataStores,
-  createFeedBillsFromMultipleSources,
+  FeedData,
+  FilterParams,
   RepLevel,
+  createFeedBillsFromMultipleSources,
   filterNoisyCityBills,
+  getAddress,
+  getLegislations,
+  hasSponsoredByRepTag,
+  isLocationChicago,
+  isLocationIL,
   selectBillsFromFilters,
   sortByUpdatedAt,
-  getAddress,
-  SPONSORED_BY_REP_TAG,
-  hasSponsoredByRepTag,
 } from "./legislation";
 import { getRepresentatives } from "./representatives/api";
 
@@ -34,11 +33,8 @@ export const getFilteredLegislation = async ({
   }
   // Check which bills to retrieve
   // todo: put this in a generic map to allow for extensibility
-  const shouldGetChicago =
-    filters.location === SupportedLocale.Chicago ||
-    isAddressFilter(filters.location);
-  const shouldGetIllinois =
-    shouldGetChicago || filters.location === SupportedLocale.Illinois;
+  const shouldGetChicago = isLocationChicago(filters.location);
+  const shouldGetIllinois = shouldGetChicago || isLocationIL(filters.location);
 
   // Get all bills from all the network
   const allChicagoBills =
