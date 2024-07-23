@@ -48,7 +48,7 @@ export const getLegislators = (
   link: string;
   level: RepLevel;
 }[] => {
-  if (!offices) {
+  if (!(Array.isArray(offices) && offices.length > 0)) {
     return [];
   }
   return (
@@ -97,7 +97,7 @@ export const getLegislators = (
           official: officialOffice.official,
           title: officialOffice.office.name,
           name: name,
-          link: officialOffice.official.urls[0],
+          link: officialOffice.official.urls?.[0],
           level: officialOffice.office.name.includes("Chicago")
             ? RepLevel.City
             : officialOffice.office.name.includes("IL")
