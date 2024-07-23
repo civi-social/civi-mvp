@@ -275,7 +275,7 @@ export const YourFilterSummary = (
   const tagsToShow = getTagsBeingFiltered(props.filters);
 
   return (
-    <div className="bg-black bg-opacity-30 p-2 shadow-inner lg:mt-5 lg:rounded-lg">
+    <div className="bg-black bg-opacity-30 p-2 lg:mt-5 lg:rounded-lg lg:px-5 lg:py-3">
       <div className="text-center text-white lg:text-left">
         <div className="lg:text-right">{preferencesText}</div>
         <div className="hidden lg:block">
