@@ -193,7 +193,7 @@ const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
       <div style={isAndroid(window) ? mobileStyle : desktopStyle}>
         <div
           className={classNames(
-            "flex items-center justify-center gap-3 bg-black bg-opacity-60 text-white opacity-90  shadow-lg backdrop-blur-2xl lg:rounded",
+            "flex items-center justify-center gap-3 bg-black bg-opacity-60 text-white opacity-90 shadow-lg backdrop-blur-2xl",
             android ? "p-4" : "p-1"
           )}
         >
