@@ -12,9 +12,9 @@ import {
 import { FeedFilterProps, FeedProps } from "../feed-ui.types";
 import { FeedBills } from "./Bills";
 import { BillFilters, YourFilterSummary } from "./Filters";
-import { CiviUpdates, Logo } from "./Intro";
 import { RepresentativesList } from "./Representatives";
 import { RouteOption } from "../feed-ui.constants";
+import { Logo } from "~app/modules/design-system/Logo/Logo";
 
 const Navigation = (props: FeedFilterProps) => {
   const [route, setRouteState] = useState(props.globalState.route);
@@ -138,10 +138,7 @@ const FeedShell = ({
               : {}
           }
         >
-          <div className="lg:px-3">
-            {left}
-            <CiviUpdates />
-          </div>
+          <div className="lg:px-3">{left}</div>
         </aside>
         {showRight && (
           <main id={skipToContentId} className="h-full">
