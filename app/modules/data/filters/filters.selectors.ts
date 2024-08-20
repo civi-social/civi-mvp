@@ -186,7 +186,7 @@ const createFeedBill =
     level: RepLevel
   ) =>
   (bill: CiviLegislationData): WindyCiviBill => {
-    const gptSummaries = gpt[bill.id];
+    const gptSummaries = gpt[bill.id] || {};
     // todo: move to civi-legislation-data
     let gptTags = gptSummaries.gpt_tags || [];
 
