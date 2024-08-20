@@ -33,6 +33,11 @@ export const mapToReadableStatus = (
       switch (status) {
         case "Engross":
           return { name: "Passed House", type: "in-progress" };
+        case "Enroll":
+          return {
+            name: "Awaiting Presidential Approval",
+            type: "in-progress",
+          };
         case "Pass":
           return { name: "Became Law", type: "pass" };
       }
