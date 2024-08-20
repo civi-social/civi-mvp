@@ -2,8 +2,8 @@ import axios from "axios";
 import type {
   CiviGptLegislationData,
   CiviLegislationData,
-} from "civi-legislation-data";
-import { civiLegislationApi } from "civi-legislation-data";
+} from "../../../../temp-civi-legislation-data/dist_api/types";
+import { civiLegislationApi } from "../../../../temp-civi-legislation-data/dist_api/api";
 import { DataStores } from "../../filters";
 import { LegislationResult } from "../legislation.types";
 import { legislationCache } from "./legislation-cache";

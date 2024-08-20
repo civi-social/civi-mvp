@@ -1,7 +1,7 @@
 import type {
   CiviGptLegislationData,
   CiviLegislationData,
-} from "civi-legislation-data";
+} from "../../../temp-civi-legislation-data/dist_api/types";
 import type { RepresentativesResult } from "~app/modules/data/representatives";
 import type { FilterParams, WindyCiviBill } from "../legislation";
 import {
@@ -12,7 +12,6 @@ import {
   findOverlap,
   findStringOverlap,
   getBillUpdateAt,
-  hasSponsoredByRepTag,
   hasTags,
   tagsOverLap,
 } from "../legislation";

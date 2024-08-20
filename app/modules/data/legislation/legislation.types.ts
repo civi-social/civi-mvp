@@ -1,7 +1,7 @@
 import {
   CiviGptLegislationData,
   CiviLegislationData,
-} from "civi-legislation-data";
+} from "../../../temp-civi-legislation-data/dist_api/types";
 import { RepLevel } from "../filters/filters.constants";
 
 export type LegislationResult = {
