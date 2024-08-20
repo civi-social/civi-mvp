@@ -112,6 +112,7 @@ jobs:
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v3
         with:
+          working-directory: remix-app
           start: npm run start:mocks
           wait-on: "http://localhost:8811"
         env:
