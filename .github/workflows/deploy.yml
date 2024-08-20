@@ -161,7 +161,7 @@ jobs:
       - name: 🐳 Docker build
         uses: docker/build-push-action@v2
         with:
-          context: "{{defaultContext}}:remix-app"
+          context: .
           push: true
           tags: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
