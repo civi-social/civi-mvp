@@ -197,7 +197,7 @@ jobs:
         uses: SebRollen/toml-action@v1.0.0
         id: app_name
         with:
-          file: "fly.toml"
+          file: "remix-app/fly.toml"
           field: "app"
 
       - name: 🚀 Deploy Staging
